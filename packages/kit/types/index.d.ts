@@ -1,33 +1,6 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 
-import './ambient.js';
-
-import { CompileOptions } from 'svelte/types/compiler/interfaces';
-import {
-	AdapterEntry,
-	CspDirectives,
-	HttpMethod,
-	Logger,
-	MaybePromise,
-	Prerendered,
-	PrerenderHttpErrorHandlerValue,
-	PrerenderMissingIdHandlerValue,
-	PrerenderOption,
-	RequestOptions,
-	RouteSegment,
-	UniqueInterface
-} from './private.js';
-import {
-	AssetDependenciesWithLegacy,
-	SSRNodeLoader,
-	SSRRoute,
-	ValidatedConfig
-} from './internal.js';
-
-export { PrerenderOption } from './private.js';
-
-
 declare module '@sveltejs/kit' {
 	import type { SvelteConfig } from '@sveltejs/vite-plugin-svelte';
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
@@ -611,115 +584,6 @@ declare module '@sveltejs/kit' {
 		/**
 		 * Options related to the build output format
 		 */
-		id: RouteId;
-	};
-	/**
-	 * If you need to set headers for the response, you can do so using the this method. This is useful if you want the page to be cached, for example:
-	 *
-	 *	```js
-	 *	/// file: src/routes/blog/+page.js
-	 *	export async function load({ fetch, setHeaders }) {
-	 *		const url = `https://cms.example.com/articles.json`;
-	 *		const response = await fetch(url);
-	 *
-	 *		setHeaders({
-	 *			age: response.headers.get('age'),
-	 *			'cache-control': response.headers.get('cache-control')
-	 *		});
-	 *
-	 *		return response.json();
-	 *	}
-	 *	```
-	 *
-	 * Setting the same header multiple times (even in separate `load` functions) is an error — you can only set a given header once.
-	 *
-	 * You cannot add a `set-cookie` header with `setHeaders` — use the [`cookies`](https://kit.svelte.dev/docs/types#public-types-cookies) API instead.
-	 */
-	setHeaders(headers: Record<string, string>): void;
-	/**
-	 * The requested URL.
-	 */
-	url: URL;
-	/**
-	 * `true` if the request comes from the client asking for `+page/layout.server.js` data. The `url` property will be stripped of the internal information
-	 * related to the data request in this case. Use this property instead if the distinction is important to you.
-	 */
-	isDataRequest: boolean;
-}
-
-/**
- * A `(event: RequestEvent) => Response` function exported from a `+server.js` file that corresponds to an HTTP verb (`GET`, `PUT`, `PATCH`, etc) and handles requests with that method.
- *
- * It receives `Params` as the first generic argument, which you can skip by using [generated types](https://kit.svelte.dev/docs/types#generated-types) instead.
- */
-export interface RequestHandler<
-	Params extends Partial<Record<string, string>> = Partial<Record<string, string>>,
-	RouteId extends string | null = string | null
-> {
-	(event: RequestEvent<Params, RouteId>): MaybePromise<Response>;
-}
-
-export interface ResolveOptions {
-	/**
-	 * Applies custom transforms to HTML. If `done` is true, it's the final chunk. Chunks are not guaranteed to be well-formed HTML
-	 * (they could include an element's opening tag but not its closing tag, for example)
-	 * but they will always be split at sensible boundaries such as `%sveltekit.head%` or layout/page components.
-	 * @param input the html chunk and the info if this is the last chunk
-	 */
-	transformPageChunk?(input: { html: string; done: boolean }): MaybePromise<string | undefined>;
-	/**
-	 * Determines which headers should be included in serialized responses when a `load` function loads a resource with `fetch`.
-	 * By default, none will be included.
-	 * @param name header name
-	 * @param value header value
-	 */
-	filterSerializedResponseHeaders?(name: string, value: string): boolean;
-	/**
-	 * Determines what should be added to the `<head>` tag to preload it.
-	 * By default, `js`, `css` and `font` files will be preloaded.
-	 * @param input the type of the file and its path
-	 */
-	preload?(input: { type: 'font' | 'css' | 'js' | 'asset'; path: string }): boolean;
-}
-
-export interface RouteDefinition<Config = any> {
-	id: string;
-	api: {
-		methods: HttpMethod[];
-	};
-	page: {
-		methods: Extract<HttpMethod, 'GET' | 'POST'>[];
-	};
-	pattern: RegExp;
-	prerender: PrerenderOption;
-	segments: RouteSegment[];
-	methods: HttpMethod[];
-	config: Config;
-}
-
-export class Server {
-	constructor(manifest: SSRManifest);
-	init(options: ServerInitOptions): Promise<void>;
-	respond(request: Request, options: RequestOptions): Promise<Response>;
-}
-
-export interface ServerInitOptions {
-	env: Record<string, string>;
-}
-
-export interface SSRManifest {
-	appDir: string;
-	appPath: string;
-	assets: Set<string>;
-	mimeTypes: Record<string, string>;
-
-	/** private fields */
-	_: {
-		client: {
-			start: AssetDependenciesWithLegacy;
-			app: AssetDependenciesWithLegacy;
-			legacy_polyfills_file: string | null;
-			modern_polyfills_file: string | null;
 		output?: {
 			/**
 			 * SvelteKit will preload the JavaScript modules needed for the initial page to avoid import 'waterfalls', resulting in faster application startup. There
@@ -2571,6 +2435,10 @@ export interface SSRManifest {
 			stylesheets: string[];
 			fonts: string[];
 			uses_env_dynamic_public: boolean;
+			legacy_start?: string;
+			legacy_app?: string;
+			modern_polyfills_file?: string;
+			legacy_polyfills_file?: string;
 			/** Only set in case of `bundleStrategy === 'inline'`. */
 			inline?: {
 				script: string;
