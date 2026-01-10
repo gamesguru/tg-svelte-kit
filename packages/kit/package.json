@@ -1,7 +1,7 @@
 {
-	"name": "@sveltejs/kit",
+	"name": "@tg-svelte/kit",
 	"version": "2.49.4",
-	"description": "SvelteKit is the fastest way to build Svelte apps",
+	"description": "SvelteKit fork with legacy browser support (IE11) and static builds",
 	"keywords": [
 		"framework",
 		"official",
@@ -9,6 +9,8 @@
 		"sveltekit",
 		"vite"
 	],
+	"author": "Shane Jaroch <chown_tee@proton.me>",
+	"contributors": ["Tal Hadad <tal_hd@hotmail.com>"],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/sveltejs/kit.git",

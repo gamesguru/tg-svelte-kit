@@ -1096,27 +1096,26 @@ async function kit({ svelte_config }) {
 					const getLastFlat = (/** @type {unknown} */ arrOrObj) =>
 						Array.isArray(arrOrObj) ? arrOrObj[arrOrObj.length - 1] : arrOrObj;
 
+					const buildResult = await vite.build({
+						configFile: vite_config.configFile,
+						// CLI args
+						mode: vite_config_env.mode,
+						logLevel: vite_config.logLevel,
+						clearScreen: vite_config.clearScreen,
+						build: {
+							minify: initial_config.build?.minify,
+							assetsInlineLimit: vite_config.build.assetsInlineLimit,
+							sourcemap: vite_config.build.sourcemap
+						},
+						optimizeDeps: {
+							force: vite_config.optimizeDeps.force
+						}
+					});
 					const bundle = /** @type {import('vite').Rollup.RollupOutput} */ (
-						getLastFlat(
-							await vite.build({
-								configFile: vite_config.configFile,
-								// CLI args
-								mode: vite_config_env.mode,
-								logLevel: vite_config.logLevel,
-								clearScreen: vite_config.clearScreen,
-								build: {
-									minify: initial_config.build?.minify,
-									assetsInlineLimit: vite_config.build.assetsInlineLimit,
-									sourcemap: vite_config.build.sourcemap
-								},
-								optimizeDeps: {
-									force: vite_config.optimizeDeps.force
-								}
-							})
-						)
+						getLastFlat(buildResult)
 					);
 
-					client_chunks = bundle.output;
+					client_chunks = bundle.output || Object.values(bundle);
 				} catch (e) {
 					const error =
 						e instanceof Error ? e : new Error(/** @type {any} */ (e).message ?? e ?? '<unknown>');
@@ -1192,7 +1191,7 @@ async function kit({ svelte_config }) {
 					)
 				});
 
-				const start_deps = find_deps_with_optional_legacy(`${runtime_directory}/client`, 'start');
+				const start_deps = find_deps_with_optional_legacy(`${runtime_directory}/client`, 'entry');
 				const app_deps = find_deps_with_optional_legacy(`${kit.outDir}/generated/client-optimized`, 'app');
 
 				build_data.client = {
@@ -1217,7 +1216,7 @@ async function kit({ svelte_config }) {
 
 				if (svelte_config.kit.output.bundleStrategy === 'split') {
 					// Legacy PR: Use the legacy-aware objects we created above, but ensure imports/stylesheets/fonts are merged
-					const start_legacy = find_deps_with_optional_legacy(`${runtime_directory}/client`, 'start');
+					const start_legacy = find_deps_with_optional_legacy(`${runtime_directory}/client`, 'entry');
 					const app_legacy = find_deps_with_optional_legacy(`${kit.outDir}/generated/client-optimized`, 'app');
 
 					build_data.client = {
