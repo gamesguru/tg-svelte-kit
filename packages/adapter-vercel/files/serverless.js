@@ -1,51 +1,42 @@
-import { installPolyfills } from '@sveltejs/kit/node/polyfills';
-import { getRequest, setResponse } from '@sveltejs/kit/node';
+import { createReadableStream } from '@sveltejs/kit/node';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
-
-installPolyfills();
+import process from 'node:process';
 
 const server = new Server(manifest);
 
 await server.init({
-	env: /** @type {Record<string, string>} */ (process.env)
+	env: /** @type {Record<string, string>} */ (process.env),
+	read: createReadableStream
 });
 
 const DATA_SUFFIX = '/__data.json';
 
-/**
- * @param {import('http').IncomingMessage} req
- * @param {import('http').ServerResponse} res
- */
-export default async (req, res) => {
-	if (req.url) {
-		const [path, search] = req.url.split('?');
-
-		const params = new URLSearchParams(search);
-		const pathname = params.get('__pathname');
+export default {
+	/**
+	 * @param {Request} request
+	 * @returns {Promise<Response>}
+	 */
+	fetch(request) {
+		// If this is an ISR request, the requested pathname is encoded
+		// as a search parameter, so we need to extract it
+		const url = new URL(request.url);
+		let pathname = url.searchParams.get('__pathname');
 
 		if (pathname) {
-			params.delete('__pathname');
-			req.url = `${pathname}${path.endsWith(DATA_SUFFIX) ? DATA_SUFFIX : ''}?${params}`;
+			// Optional routes' pathname replacements look like `/foo/$1/bar` which means we could end up with an url like /foo//bar
+			pathname = pathname.replace(/\/+/g, '/');
+
+			url.pathname = pathname + (url.pathname.endsWith(DATA_SUFFIX) ? DATA_SUFFIX : '');
+			url.searchParams.delete('__pathname');
+
+			request = new Request(url, request);
 		}
-	}
 
-	/** @type {Request} */
-	let request;
-
-	try {
-		request = await getRequest({ base: `https://${req.headers.host}`, request: req });
-	} catch (err) {
-		res.statusCode = /** @type {any} */ (err).status || 400;
-		return res.end('Invalid request body');
-	}
-
-	setResponse(
-		res,
-		await server.respond(request, {
+		return server.respond(request, {
 			getClientAddress() {
 				return /** @type {string} */ (request.headers.get('x-forwarded-for'));
 			}
-		})
-	);
+		});
+	}
 };

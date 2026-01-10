@@ -1,30 +1,40 @@
-import { existsSync, statSync, createReadStream, createWriteStream } from 'node:fs';
-import { join } from 'node:path/posix';
+/** @import { Builder } from '@sveltejs/kit' */
+/** @import { ResolvedConfig } from 'vite' */
+/** @import { RouteDefinition } from '@sveltejs/kit' */
+/** @import { RouteData, ValidatedConfig, BuildData, ServerMetadata, ServerMetadataRoute, Prerendered, PrerenderMap, Logger, RemoteChunk } from 'types' */
+import colors from 'kleur';
+import { createReadStream, createWriteStream, existsSync, statSync } from 'node:fs';
+import { extname, resolve, join, dirname, relative } from 'node:path';
 import { pipeline } from 'node:stream';
 import { promisify } from 'node:util';
 import zlib from 'node:zlib';
-import glob from 'tiny-glob';
-import { copy, rimraf, mkdirp } from '../../utils/filesystem.js';
+import { copy, rimraf, mkdirp, posixify } from '../../utils/filesystem.js';
 import { generate_manifest } from '../generate_manifest/index.js';
 import { get_route_segments } from '../../utils/routing.js';
 import { get_env } from '../../exports/vite/utils.js';
 import generate_fallback from '../postbuild/fallback.js';
 import { write } from '../sync/utils.js';
+import { list_files } from '../utils.js';
+import { find_server_assets } from '../generate_manifest/find_server_assets.js';
+import { reserved } from '../env.js';
 
 const pipe = promisify(pipeline);
+const extensions = ['.html', '.js', '.mjs', '.json', '.css', '.svg', '.xml', '.wasm'];
 
 /**
  * Creates the Builder which is passed to adapters for building the application.
  * @param {{
- *   config: import('types').ValidatedConfig;
- *   build_data: import('types').BuildData;
- *   server_metadata: import('types').ServerMetadata;
- *   route_data: import('types').RouteData[];
- *   prerendered: import('types').Prerendered;
- *   prerender_map: import('types').PrerenderMap;
- *   log: import('types').Logger;
+ *   config: ValidatedConfig;
+ *   build_data: BuildData;
+ *   server_metadata: ServerMetadata;
+ *   route_data: RouteData[];
+ *   prerendered: Prerendered;
+ *   prerender_map: PrerenderMap;
+ *   log: Logger;
+ *   vite_config: ResolvedConfig;
+ *   remotes: RemoteChunk[]
  * }} opts
- * @returns {import('types').Builder}
+ * @returns {Builder}
  */
 export function create_builder({
 	config,
@@ -33,9 +43,11 @@ export function create_builder({
 	route_data,
 	prerendered,
 	prerender_map,
-	log
+	log,
+	vite_config,
+	remotes
 }) {
-	/** @type {Map<import('types').RouteDefinition, import('types').RouteData>} */
+	/** @type {Map<RouteDefinition, RouteData>} */
 	const lookup = new Map();
 
 	/**
@@ -43,11 +55,11 @@ export function create_builder({
 	 * we expose a stable type that adapters can use to group/filter routes
 	 */
 	const routes = route_data.map((route) => {
-		const { config, methods, page, api } = /** @type {import('types').ServerMetadataRoute} */ (
+		const { config, methods, page, api } = /** @type {ServerMetadataRoute} */ (
 			server_metadata.routes.get(route.id)
 		);
 
-		/** @type {import('types').RouteDefinition} */
+		/** @type {RouteDefinition} */
 		const facade = {
 			id: route.id,
 			api,
@@ -83,15 +95,12 @@ export function create_builder({
 				return;
 			}
 
-			const files = await glob('**/*.{html,js,mjs,json,css,svg,xml,wasm}', {
-				cwd: directory,
-				dot: true,
-				absolute: true,
-				filesOnly: true
-			});
+			const files = list_files(directory, (file) => extensions.includes(extname(file))).map(
+				(file) => resolve(directory, file)
+			);
 
 			await Promise.all(
-				files.map((file) => Promise.all([compress_file(file, 'gz'), compress_file(file, 'br')]))
+				files.flatMap((file) => [compress_file(file, 'gz'), compress_file(file, 'br')])
 			);
 		},
 
@@ -136,33 +145,61 @@ export function create_builder({
 						generateManifest: ({ relativePath }) =>
 							generate_manifest({
 								build_data,
+								prerendered: [],
 								relative_path: relativePath,
-								routes: Array.from(filtered)
+								routes: Array.from(filtered),
+								remotes
 							})
 					});
 				}
 			}
 		},
 
+		findServerAssets(route_data) {
+			return find_server_assets(
+				build_data,
+				route_data.map((route) => /** @type {import('types').RouteData} */ (lookup.get(route)))
+			);
+		},
+
 		async generateFallback(dest) {
 			const manifest_path = `${config.kit.outDir}/output/server/manifest-full.js`;
-			const env = get_env(config.kit.env, 'production');
+			const env = get_env(config.kit.env, vite_config.mode);
 
 			const fallback = await generate_fallback({
 				manifest_path,
 				env: { ...env.private, ...env.public }
 			});
 
+			if (existsSync(dest)) {
+				console.log(
+					colors
+						.bold()
+						.yellow(
+							`Overwriting ${dest} with fallback page. Consider using a different name for the fallback.`
+						)
+				);
+			}
+
 			write(dest, fallback);
 		},
 
-		generateManifest: ({ relativePath, routes: subset }) => {
+		generateEnvModule() {
+			const dest = `${config.kit.outDir}/output/prerendered/dependencies/${config.kit.appDir}/env.js`;
+			const env = get_env(config.kit.env, vite_config.mode);
+
+			write(dest, `export const env=${JSON.stringify(env.public)}`);
+		},
+
+		generateManifest({ relativePath, routes: subset }) {
 			return generate_manifest({
 				build_data,
+				prerendered: prerendered.paths,
 				relative_path: relativePath,
 				routes: subset
 					? subset.map((route) => /** @type {import('types').RouteData} */ (lookup.get(route)))
-					: route_data
+					: route_data.filter((route) => prerender_map.get(route.id) !== true),
+				remotes
 			});
 		},
 
@@ -183,29 +220,71 @@ export function create_builder({
 		},
 
 		writeClient(dest) {
-			const server_assets = copy(
-				`${config.kit.outDir}/output/server/${config.kit.appDir}/immutable/assets`,
-				join(dest, config.kit.appDir, 'immutable/assets')
-			).map((filename) => join(config.kit.appDir, 'immutable/assets', filename));
-			const client_assets = copy(`${config.kit.outDir}/output/client`, dest);
-			return Array.from(new Set([...server_assets, ...client_assets]));
+			return copy(`${config.kit.outDir}/output/client`, dest, {
+				// avoid making vite build artefacts public
+				filter: (basename) => basename !== '.vite'
+			});
 		},
 
-		// @ts-expect-error
-		writePrerendered(dest, opts) {
-			// TODO remove for 1.0
-			if (opts?.fallback) {
-				throw new Error(
-					'The fallback option no longer exists — use builder.generateFallback(fallback) instead'
-				);
-			}
-
+		writePrerendered(dest) {
 			const source = `${config.kit.outDir}/output/prerendered`;
-			return [...copy(`${source}/pages`, dest), ...copy(`${source}/dependencies`, dest)];
+
+			return [
+				...copy(`${source}/pages`, dest),
+				...copy(`${source}/dependencies`, dest),
+				...copy(`${source}/data`, dest)
+			];
 		},
 
 		writeServer(dest) {
 			return copy(`${config.kit.outDir}/output/server`, dest);
+		},
+
+		hasServerInstrumentationFile() {
+			return existsSync(`${config.kit.outDir}/output/server/instrumentation.server.js`);
+		},
+
+		instrument({
+			entrypoint,
+			instrumentation,
+			start = join(dirname(entrypoint), 'start.js'),
+			module = {
+				exports: ['default']
+			}
+		}) {
+			if (!existsSync(instrumentation)) {
+				throw new Error(
+					`Instrumentation file ${instrumentation} not found. This is probably a bug in your adapter.`
+				);
+			}
+			if (!existsSync(entrypoint)) {
+				throw new Error(
+					`Entrypoint file ${entrypoint} not found. This is probably a bug in your adapter.`
+				);
+			}
+
+			copy(entrypoint, start);
+			if (existsSync(`${entrypoint}.map`)) {
+				copy(`${entrypoint}.map`, `${start}.map`);
+			}
+
+			const relative_instrumentation = posixify(relative(dirname(entrypoint), instrumentation));
+			const relative_start = posixify(relative(dirname(entrypoint), start));
+
+			const facade =
+				'generateText' in module
+					? module.generateText({
+							instrumentation: relative_instrumentation,
+							start: relative_start
+						})
+					: create_instrumentation_facade({
+							instrumentation: relative_instrumentation,
+							start: relative_start,
+							exports: module.exports
+						});
+
+			rimraf(entrypoint);
+			write(entrypoint, facade);
 		}
 	};
 }
@@ -223,11 +302,68 @@ async function compress_file(file, format = 'gz') {
 						[zlib.constants.BROTLI_PARAM_QUALITY]: zlib.constants.BROTLI_MAX_QUALITY,
 						[zlib.constants.BROTLI_PARAM_SIZE_HINT]: statSync(file).size
 					}
-			  })
+				})
 			: zlib.createGzip({ level: zlib.constants.Z_BEST_COMPRESSION });
 
 	const source = createReadStream(file);
 	const destination = createWriteStream(`${file}.${format}`);
 
 	await pipe(source, compress, destination);
+}
+
+/**
+ * Given a list of exports, generate a facade that:
+ * - Imports the instrumentation file
+ * - Imports `exports` from the entrypoint (dynamically, if `tla` is true)
+ * - Re-exports `exports` from the entrypoint
+ *
+ * `default` receives special treatment: It will be imported as `default` and exported with `export default`.
+ *
+ * @param {{ instrumentation: string; start: string; exports: string[] }} opts
+ * @returns {string}
+ */
+function create_instrumentation_facade({ instrumentation, start, exports }) {
+	const import_instrumentation = `import './${instrumentation}';`;
+
+	let alias_index = 0;
+	const aliases = new Map();
+
+	for (const name of exports.filter((name) => reserved.has(name))) {
+		/*
+		 * you can do evil things like `export { c as class }`.
+		 * in order to import these, you need to alias them, and then un-alias them when re-exporting
+		 * this map will allow us to generate the following:
+		 * import { class as _1 } from 'entrypoint';
+		 * export { _1 as class };
+		 */
+		let alias = `_${alias_index++}`;
+		while (exports.includes(alias)) {
+			alias = `_${alias_index++}`;
+		}
+
+		aliases.set(name, alias);
+	}
+
+	const import_statements = [];
+	const export_statements = [];
+
+	for (const name of exports) {
+		const alias = aliases.get(name);
+		if (alias) {
+			import_statements.push(`${name}: ${alias}`);
+			export_statements.push(`${alias} as ${name}`);
+		} else {
+			import_statements.push(`${name}`);
+			export_statements.push(`${name}`);
+		}
+	}
+
+	const entrypoint_facade = [
+		`const { ${import_statements.join(', ')} } = await import('./${start}');`,
+		export_statements.length > 0 ? `export { ${export_statements.join(', ')} };` : ''
+	]
+		.filter(Boolean)
+		.join('\n');
+
+	return `${import_instrumentation}\n${entrypoint_facade}`;
 }

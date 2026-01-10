@@ -5,7 +5,6 @@ test-results/
 package-lock.json
 yarn.lock
 vite.config.js.timestamp-*
-/packages/create-svelte/template/CHANGELOG.md
 /packages/package/test/**/package
 /documentation/types.js
 .env
@@ -18,3 +17,5 @@ vite.config.js.timestamp-*
 .vercel
 .test-tmp
 symlink-from
+.idea/
+_tmp_flaky_test_output.txt

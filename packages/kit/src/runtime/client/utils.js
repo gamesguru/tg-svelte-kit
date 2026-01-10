@@ -1,21 +1,25 @@
 import { BROWSER, DEV } from 'esm-env';
 import { writable } from 'svelte/store';
-import { assets } from '__sveltekit/paths';
+import { assets } from '$app/paths';
 import { version } from '__sveltekit/environment';
 import { PRELOAD_PRIORITIES } from './constants.js';
 
 /* global __SVELTEKIT_APP_VERSION_FILE__, __SVELTEKIT_APP_VERSION_POLL_INTERVAL__ */
 
-/** @param {HTMLDocument} doc */
-export function get_base_uri(doc) {
-	let baseURI = doc.baseURI;
+export const origin = BROWSER ? location.origin : '';
+
+/** @param {string | URL} url */
+export function resolve_url(url) {
+	if (url instanceof URL) return url;
+
+	let baseURI = document.baseURI;
 
 	if (!baseURI) {
-		const baseTags = doc.getElementsByTagName('base');
-		baseURI = baseTags.length ? baseTags[0].href : doc.URL;
+		const baseTags = document.getElementsByTagName('base');
+		baseURI = baseTags.length ? baseTags[0].href : document.URL;
 	}
 
-	return baseURI;
+	return new URL(url, baseURI);
 }
 
 export function scroll_state() {
@@ -30,12 +34,12 @@ const warned = new WeakSet();
 /** @typedef {keyof typeof valid_link_options} LinkOptionName */
 
 const valid_link_options = /** @type {const} */ ({
-	'preload-code': ['', 'off', 'tap', 'hover', 'viewport', 'eager'],
-	'preload-data': ['', 'off', 'tap', 'hover'],
-	keepfocus: ['', 'off'],
-	noscroll: ['', 'off'],
-	reload: ['', 'off'],
-	replacestate: ['', 'off']
+	'preload-code': ['', 'off', 'false', 'tap', 'hover', 'viewport', 'eager'],
+	'preload-data': ['', 'off', 'false', 'tap', 'hover'],
+	keepfocus: ['', 'true', 'off', 'false'],
+	noscroll: ['', 'true', 'off', 'false'],
+	reload: ['', 'true', 'off', 'false'],
+	replacestate: ['', 'true', 'off', 'false']
 });
 
 /**
@@ -118,13 +122,20 @@ export function find_anchor(element, target) {
 /**
  * @param {HTMLAnchorElement | SVGAElement} a
  * @param {string} base
+ * @param {boolean} uses_hash_router
  */
-export function get_link_info(a, base) {
+export function get_link_info(a, base, uses_hash_router) {
 	/** @type {URL | undefined} */
 	let url;
 
 	try {
 		url = new URL(a instanceof SVGAElement ? a.href.baseVal : a.href, document.baseURI);
+
+		// if the hash doesn't start with `#/` then it's probably linking to an id on the current page
+		if (uses_hash_router && url.hash.match(/^#[^/]/)) {
+			const route = location.hash.split('#')[1] || '/';
+			url.hash = `#${route}${url.hash}`;
+		}
 	} catch {}
 
 	const target = a instanceof SVGAElement ? a.target.baseVal : a.target;
@@ -132,11 +143,12 @@ export function get_link_info(a, base) {
 	const external =
 		!url ||
 		!!target ||
-		is_external_url(url, base) ||
-		(a.getAttribute('rel') || '').split(/\s+/).includes('external') ||
-		a.hasAttribute('download');
+		is_external_url(url, base, uses_hash_router) ||
+		(a.getAttribute('rel') || '').split(/\s+/).includes('external');
 
-	return { url, external, target };
+	const download = url?.origin === origin && a.hasAttribute('download');
+
+	return { url, external, target, download };
 }
 
 /**
@@ -144,7 +156,7 @@ export function get_link_info(a, base) {
  */
 export function get_router_options(element) {
 	/** @type {ValidLinkOptions<'keepfocus'> | null} */
-	let keep_focus = null;
+	let keepfocus = null;
 
 	/** @type {ValidLinkOptions<'noscroll'> | null} */
 	let noscroll = null;
@@ -167,7 +179,7 @@ export function get_router_options(element) {
 	while (el && el !== document.documentElement) {
 		if (preload_code === null) preload_code = link_option(el, 'preload-code');
 		if (preload_data === null) preload_data = link_option(el, 'preload-data');
-		if (keep_focus === null) keep_focus = link_option(el, 'keepfocus');
+		if (keepfocus === null) keepfocus = link_option(el, 'keepfocus');
 		if (noscroll === null) noscroll = link_option(el, 'noscroll');
 		if (reload === null) reload = link_option(el, 'reload');
 		if (replace_state === null) replace_state = link_option(el, 'replacestate');
@@ -175,13 +187,27 @@ export function get_router_options(element) {
 		el = /** @type {Element} */ (parent_element(el));
 	}
 
+	/** @param {string | null} value */
+	function get_option_state(value) {
+		switch (value) {
+			case '':
+			case 'true':
+				return true;
+			case 'off':
+			case 'false':
+				return false;
+			default:
+				return undefined;
+		}
+	}
+
 	return {
 		preload_code: levels[preload_code ?? 'off'],
 		preload_data: levels[preload_data ?? 'off'],
-		keep_focus: keep_focus === 'off' ? false : keep_focus === '' ? true : null,
-		noscroll: noscroll === 'off' ? false : noscroll === '' ? true : null,
-		reload: reload === 'off' ? false : reload === '' ? true : null,
-		replace_state: replace_state === 'off' ? false : replace_state === '' ? true : null
+		keepfocus: get_option_state(keepfocus),
+		noscroll: get_option_state(noscroll),
+		reload: get_option_state(reload),
+		replace_state: get_option_state(replace_state)
 	};
 }
 
@@ -215,8 +241,20 @@ export function notifiable_store(value) {
 	return { notify, set, subscribe };
 }
 
+export const updated_listener = {
+	v: () => {}
+};
+
 export function create_updated_store() {
 	const { set, subscribe } = writable(false);
+
+	if (DEV || !BROWSER) {
+		return {
+			subscribe,
+			// eslint-disable-next-line @typescript-eslint/require-await
+			check: async () => false
+		};
+	}
 
 	const interval = __SVELTEKIT_APP_VERSION_POLL_INTERVAL__;
 
@@ -225,31 +263,34 @@ export function create_updated_store() {
 
 	/** @type {() => Promise<boolean>} */
 	async function check() {
-		if (DEV || !BROWSER) return false;
-
 		clearTimeout(timeout);
 
 		if (interval) timeout = setTimeout(check, interval);
 
-		const res = await fetch(`${assets}/${__SVELTEKIT_APP_VERSION_FILE__}`, {
-			headers: {
-				pragma: 'no-cache',
-				'cache-control': 'no-cache'
-			}
-		});
+		try {
+			const res = await fetch(`${assets}/${__SVELTEKIT_APP_VERSION_FILE__}`, {
+				headers: {
+					pragma: 'no-cache',
+					'cache-control': 'no-cache'
+				}
+			});
 
-		if (res.ok) {
+			if (!res.ok) {
+				return false;
+			}
+
 			const data = await res.json();
 			const updated = data.version !== version;
 
 			if (updated) {
 				set(true);
+				updated_listener.v();
 				clearTimeout(timeout);
 			}
 
 			return updated;
-		} else {
-			throw new Error(`Version check failed: ${res.status}`);
+		} catch {
+			return false;
 		}
 	}
 
@@ -262,9 +303,63 @@ export function create_updated_store() {
 }
 
 /**
+ * Is external if
+ * - origin different
+ * - path doesn't start with base
+ * - uses hash router and pathname is more than base
  * @param {URL} url
  * @param {string} base
+ * @param {boolean} hash_routing
  */
-export function is_external_url(url, base) {
-	return url.origin !== location.origin || !url.pathname.startsWith(base);
+export function is_external_url(url, base, hash_routing) {
+	if (url.origin !== origin || !url.pathname.startsWith(base)) {
+		return true;
+	}
+
+	if (hash_routing) {
+		return url.pathname !== location.pathname;
+	}
+
+	return false;
+}
+
+/** @type {Set<string> | null} */
+let seen = null;
+
+/**
+ * Used for server-side resolution, to replicate Vite's CSS loading behaviour in production.
+ *
+ * Closely modelled after https://github.com/vitejs/vite/blob/3dd12f4724130fdf8ba44c6d3252ebdff407fd47/packages/vite/src/node/plugins/importAnalysisBuild.ts#L214
+ * (which ideally we could just use directly, but it's not exported)
+ * @param {string[]} deps
+ */
+export function load_css(deps) {
+	if (__SVELTEKIT_CLIENT_ROUTING__) return;
+
+	const csp_nonce_meta = /** @type {HTMLMetaElement} */ (
+		document.querySelector('meta[property=csp-nonce]')
+	);
+	const csp_nonce = csp_nonce_meta?.nonce || csp_nonce_meta?.getAttribute('nonce');
+
+	seen ??= new Set(
+		Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map((link) => {
+			return /** @type {HTMLLinkElement} */ (link).href;
+		})
+	);
+
+	for (const dep of deps) {
+		const href = new URL(dep, document.baseURI).href;
+
+		if (seen.has(href)) continue;
+		seen.add(href);
+
+		const link = document.createElement('link');
+		link.rel = 'stylesheet';
+		link.crossOrigin = '';
+		link.href = dep;
+		if (csp_nonce) {
+			link.setAttribute('nonce', csp_nonce);
+		}
+		document.head.appendChild(link);
+	}
 }

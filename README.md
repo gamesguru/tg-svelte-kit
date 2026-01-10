@@ -2,7 +2,7 @@
 
 # SvelteKit
 
-Web development, streamlined. Read the [documentation](https://kit.svelte.dev/docs) to get started.
+Web development, streamlined. Read the [documentation](https://svelte.dev/docs/kit) to get started.
 
 ### Packages
 
@@ -11,17 +11,15 @@ Web development, streamlined. Read the [documentation](https://kit.svelte.dev/do
 | [@sveltejs/kit](packages/kit)                                               | [Changelog](packages/kit/CHANGELOG.md)                        |
 | [@sveltejs/adapter-auto](packages/adapter-auto)                             | [Changelog](packages/adapter-auto/CHANGELOG.md)               |
 | [@sveltejs/adapter-cloudflare](packages/adapter-cloudflare)                 | [Changelog](packages/adapter-cloudflare/CHANGELOG.md)         |
-| [@sveltejs/adapter-cloudflare-workers](packages/adapter-cloudflare-workers) | [Changelog](packages/adapter-cloudflare-workers/CHANGELOG.md) |
 | [@sveltejs/adapter-netlify](packages/adapter-netlify)                       | [Changelog](packages/adapter-netlify/CHANGELOG.md)            |
 | [@sveltejs/adapter-node](packages/adapter-node)                             | [Changelog](packages/adapter-node/CHANGELOG.md)               |
 | [@sveltejs/adapter-static](packages/adapter-static)                         | [Changelog](packages/adapter-static/CHANGELOG.md)             |
 | [@sveltejs/adapter-vercel](packages/adapter-vercel)                         | [Changelog](packages/adapter-vercel/CHANGELOG.md)             |
 | [@sveltejs/amp](packages/amp)                                               | [Changelog](packages/amp/CHANGELOG.md)                        |
+| [@sveltejs/enhanced-img](packages/enhanced-img)                             | [Changelog](packages/enhanced-img/CHANGELOG.md)               |
 | [@sveltejs/package](packages/package)                                       | [Changelog](packages/package/CHANGELOG.md)                    |
-| [create-svelte](packages/create-svelte)                                     | [Changelog](packages/create-svelte/CHANGELOG.md)              |
-| [svelte-migrate](packages/migrate)                                          | [Changelog](packages/migrate/CHANGELOG.md)                    |
 
-[Additional adapters](<(https://sveltesociety.dev/components#adapters)>) are maintained by the community.
+[Additional adapters](https://sveltesociety.dev/packages?category=sveltekit-adapters) are maintained by the community.
 
 ## Bug reporting
 
@@ -43,4 +41,4 @@ Funds donated via Open Collective will be used for compensating expenses related
 
 ## License
 
-[MIT](https://github.com/sveltejs/kit/blob/master/LICENSE)
+[MIT](https://github.com/sveltejs/kit/blob/main/LICENSE)

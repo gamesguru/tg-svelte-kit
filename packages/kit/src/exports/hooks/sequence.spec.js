@@ -1,7 +1,33 @@
-import { test } from 'uvu';
-import * as assert from 'uvu/assert';
+/** @import { RequestEvent } from '@sveltejs/kit' */
+/** @import { RequestState } from 'types' */
+import { assert, expect, test, vi } from 'vitest';
 import { sequence } from './sequence.js';
 import { installPolyfills } from '../node/polyfills.js';
+import { noop_span } from '../../runtime/telemetry/noop.js';
+
+const dummy_event = vi.hoisted(
+	() =>
+		/** @type {RequestEvent} */ ({
+			tracing: {
+				root: {}
+			}
+		})
+);
+
+vi.mock(import('@sveltejs/kit/internal/server'), async (actualPromise) => {
+	const actual = await actualPromise();
+	return {
+		...actual,
+		get_request_store: () => ({
+			event: dummy_event,
+			state: /** @type {RequestState} */ ({
+				tracing: {
+					record_span: ({ fn }) => fn(noop_span)
+				}
+			})
+		})
+	};
+});
 
 installPolyfills();
 
@@ -30,11 +56,10 @@ test('applies handlers in sequence', async () => {
 		}
 	);
 
-	const event = /** @type {import('types').RequestEvent} */ ({});
 	const response = new Response();
 
-	assert.equal(await handler({ event, resolve: () => response }), response);
-	assert.equal(order, ['1a', '2a', '3a', '3b', '2b', '1b']);
+	assert.equal(await handler({ event: dummy_event, resolve: () => response }), response);
+	expect(order).toEqual(['1a', '2a', '3a', '3b', '2b', '1b']);
 });
 
 test('uses transformPageChunk option passed to non-terminal handle function', async () => {
@@ -48,9 +73,8 @@ test('uses transformPageChunk option passed to non-terminal handle function', as
 		async ({ event, resolve }) => resolve(event)
 	);
 
-	const event = /** @type {import('types').RequestEvent} */ ({});
 	const response = await handler({
-		event,
+		event: dummy_event,
 		resolve: async (_event, opts = {}) => {
 			let html = '';
 
@@ -85,9 +109,8 @@ test('merges transformPageChunk option', async () => {
 		}
 	);
 
-	const event = /** @type {import('types').RequestEvent} */ ({});
 	const response = await handler({
-		event,
+		event: dummy_event,
 		resolve: async (_event, opts = {}) => {
 			let html = '';
 
@@ -103,4 +126,66 @@ test('merges transformPageChunk option', async () => {
 	assert.equal(await response.text(), '0-3-2-1 0-3-done-2-done-1-done');
 });
 
-test.run();
+test('uses first defined preload option', async () => {
+	const handler = sequence(
+		async ({ event, resolve }) => resolve(event),
+		async ({ event, resolve }) => {
+			return resolve(event, {
+				preload: ({ type }) => type === 'js'
+			});
+		},
+		async ({ event, resolve }) => {
+			return resolve(event, {
+				preload: () => true
+			});
+		}
+	);
+
+	const response = await handler({
+		event: dummy_event,
+		resolve: (_event, opts = {}) => {
+			let html = '';
+
+			const { preload = () => false } = opts;
+
+			html += preload({ path: '', type: 'js' });
+			html += preload({ path: '', type: 'css' });
+
+			return new Response(html);
+		}
+	});
+
+	assert.equal(await response.text(), 'truefalse');
+});
+
+test('uses first defined filterSerializedResponseHeaders option', async () => {
+	const handler = sequence(
+		async ({ event, resolve }) => resolve(event),
+		async ({ event, resolve }) => {
+			return resolve(event, {
+				filterSerializedResponseHeaders: (name) => name === 'a'
+			});
+		},
+		async ({ event, resolve }) => {
+			return resolve(event, {
+				filterSerializedResponseHeaders: () => true
+			});
+		}
+	);
+
+	const response = await handler({
+		event: dummy_event,
+		resolve: (_event, opts = {}) => {
+			let html = '';
+
+			const { filterSerializedResponseHeaders = () => false } = opts;
+
+			html += filterSerializedResponseHeaders('a', '');
+			html += filterSerializedResponseHeaders('b', '');
+
+			return new Response(html);
+		}
+	});
+
+	assert.equal(await response.text(), 'truefalse');
+});

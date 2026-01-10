@@ -1,48 +1,67 @@
 import 'SHIMS';
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import sirv from 'sirv';
 import { fileURLToPath } from 'node:url';
 import { parse as polka_url_parser } from '@polka/url';
-import { getRequest, setResponse } from '@sveltejs/kit/node';
+import { getRequest, setResponse, createReadableStream } from '@sveltejs/kit/node';
 import { Server } from 'SERVER';
-import { manifest, prerendered } from 'MANIFEST';
+import { manifest, prerendered, base } from 'MANIFEST';
 import { env } from 'ENV';
+import { parse_as_bytes } from '../utils.js';
 
 /* global ENV_PREFIX */
 
 const server = new Server(manifest);
-await server.init({ env: process.env });
+
 const origin = env('ORIGIN', undefined);
 const xff_depth = parseInt(env('XFF_DEPTH', '1'));
 const address_header = env('ADDRESS_HEADER', '').toLowerCase();
 const protocol_header = env('PROTOCOL_HEADER', '').toLowerCase();
-const host_header = env('HOST_HEADER', 'host').toLowerCase();
-const body_size_limit = parseInt(env('BODY_SIZE_LIMIT', '524288'));
+const host_header = env('HOST_HEADER', '').toLowerCase();
+const port_header = env('PORT_HEADER', '').toLowerCase();
+
+const body_size_limit = parse_as_bytes(env('BODY_SIZE_LIMIT', '512K'));
+
+if (isNaN(body_size_limit)) {
+	throw new Error(
+		`Invalid BODY_SIZE_LIMIT: '${env('BODY_SIZE_LIMIT')}'. Please provide a numeric value.`
+	);
+}
 
 const dir = path.dirname(fileURLToPath(import.meta.url));
+
+const asset_dir = `${dir}/client${base}`;
+
+await server.init({
+	env: /** @type {Record<string, string>} */ (process.env),
+	read: (file) => createReadableStream(`${asset_dir}/${file}`)
+});
 
 /**
  * @param {string} path
  * @param {boolean} client
  */
 function serve(path, client = false) {
-	return (
-		fs.existsSync(path) &&
-		sirv(path, {
-			etag: true,
-			gzip: true,
-			brotli: true,
-			setHeaders:
-				client &&
-				((res, pathname) => {
-					// only apply to build directory, not e.g. version.json
-					if (pathname.startsWith(`/${manifest.appPath}/immutable/`) && res.statusCode === 200) {
-						res.setHeader('cache-control', 'public,max-age=31536000,immutable');
-					}
-				})
-		})
-	);
+	return fs.existsSync(path)
+		? sirv(path, {
+				etag: true,
+				gzip: true,
+				brotli: true,
+				setHeaders: client
+					? (res, pathname) => {
+							// only apply to build directory, not e.g. version.json
+							if (
+								pathname.startsWith(`/${manifest.appPath}/immutable/`) &&
+								res.statusCode === 200
+							) {
+								res.setHeader('cache-control', 'public,max-age=31536000,immutable');
+							}
+						}
+					: undefined
+			})
+		: undefined;
 }
 
 // required because the static file server ignores trailing slashes
@@ -60,7 +79,7 @@ function serve_prerendered() {
 		}
 
 		if (prerendered.has(pathname)) {
-			return handler(req, res, next);
+			return handler?.(req, res, next);
 		}
 
 		// remove or add trailing slash as appropriate
@@ -69,14 +88,14 @@ function serve_prerendered() {
 			if (query) location += search;
 			res.writeHead(308, { location }).end();
 		} else {
-			next();
+			void next();
 		}
 	};
 }
 
 /** @type {import('polka').Middleware} */
 const ssr = async (req, res) => {
-	/** @type {Request | undefined} */
+	/** @type {Request} */
 	let request;
 
 	try {
@@ -85,26 +104,26 @@ const ssr = async (req, res) => {
 			request: req,
 			bodySizeLimit: body_size_limit
 		});
-	} catch (err) {
-		res.statusCode = err.status || 400;
-		res.end('Invalid request body');
+	} catch {
+		res.statusCode = 400;
+		res.end('Bad Request');
 		return;
 	}
 
-	if (address_header && !(address_header in req.headers)) {
-		throw new Error(
-			`Address header was specified with ${
-				ENV_PREFIX + 'ADDRESS_HEADER'
-			}=${address_header} but is absent from request`
-		);
-	}
-
-	setResponse(
+	await setResponse(
 		res,
 		await server.respond(request, {
 			platform: { req },
 			getClientAddress: () => {
 				if (address_header) {
+					if (!(address_header in req.headers)) {
+						throw new Error(
+							`Address header was specified with ${
+								ENV_PREFIX + 'ADDRESS_HEADER'
+							}=${address_header} but is absent from request`
+						);
+					}
+
 					const value = /** @type {string} */ (req.headers[address_header]) || '';
 
 					if (address_header === 'x-forwarded-for') {
@@ -144,15 +163,19 @@ const ssr = async (req, res) => {
 function sequence(handlers) {
 	/** @type {import('polka').Middleware} */
 	return (req, res, next) => {
-		/** @param {number} i */
+		/**
+		 * @param {number} i
+		 * @returns {ReturnType<import('polka').Middleware>}
+		 */
 		function handle(i) {
-			handlers[i](req, res, () => {
-				if (i < handlers.length) handle(i + 1);
-				else next();
-			});
+			if (i < handlers.length) {
+				return handlers[i](req, res, () => handle(i + 1));
+			} else {
+				return next();
+			}
 		}
 
-		handle(0);
+		return handle(0);
 	};
 }
 
@@ -162,15 +185,13 @@ function sequence(handlers) {
  */
 function get_origin(headers) {
 	const protocol = (protocol_header && headers[protocol_header]) || 'https';
-	const host = headers[host_header];
-	return `${protocol}://${host}`;
+	const host = (host_header && headers[host_header]) || headers['host'];
+	const port = port_header && headers[port_header];
+
+	return port ? `${protocol}://${host}:${port}` : `${protocol}://${host}`;
 }
 
 export const handler = sequence(
-	[
-		serve(path.join(dir, 'client'), true),
-		serve(path.join(dir, 'static')),
-		serve_prerendered(),
-		ssr
-	].filter(Boolean)
+	/** @type {(import('sirv').RequestHandler | import('polka').Middleware)[]} */
+	([serve(path.join(dir, 'client'), true), serve_prerendered(), ssr].filter(Boolean))
 );

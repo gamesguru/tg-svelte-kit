@@ -4,7 +4,9 @@ export interface Options {
 	cwd: string;
 	input: string;
 	output: string;
+	preserve_output: boolean;
 	types: boolean;
+	tsconfig?: string;
 	config: {
 		extensions?: string[];
 		kit?: {
@@ -12,6 +14,7 @@ export interface Options {
 			files?: {
 				lib?: string;
 			};
+			outDir?: string;
 		};
 		preprocess?: PreprocessorGroup;
 	};

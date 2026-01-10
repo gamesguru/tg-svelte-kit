@@ -1,9 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import MagicString from 'magic-string';
 import { posixify, rimraf, walk } from '../../../utils/filesystem.js';
 import { compact } from '../../../utils/array.js';
 import { ts } from '../ts.js';
+const remove_relative_parent_traversals = (/** @type {string} */ path) =>
+	path.replace(/\.\.\//g, '');
+const is_whitespace = (/** @type {string} */ char) => /\s/.test(char);
 
 /**
  *  @typedef {{
@@ -28,13 +32,15 @@ const cwd = process.cwd();
  * @param {import('types').ValidatedConfig} config
  * @param {import('types').ManifestData} manifest_data
  */
-export async function write_all_types(config, manifest_data) {
+export function write_all_types(config, manifest_data) {
 	if (!ts) return;
 
 	const types_dir = `${config.kit.outDir}/types`;
 
 	// empty out files that no longer need to exist
-	const routes_dir = posixify(path.relative('.', config.kit.files.routes)).replace(/\.\.\//g, '');
+	const routes_dir = remove_relative_parent_traversals(
+		posixify(path.relative('.', config.kit.files.routes))
+	);
 	const expected_directories = new Set(
 		manifest_data.routes.map((route) => path.join(routes_dir, route.id))
 	);
@@ -52,7 +58,7 @@ export async function write_all_types(config, manifest_data) {
 	// it could be invoked by another process in the meantime.
 	const meta_data_file = `${types_dir}/route_meta_data.json`;
 	const has_meta_data = fs.existsSync(meta_data_file);
-	let meta_data = has_meta_data
+	const meta_data = has_meta_data
 		? /** @type {Record<string, string[]>} */ (JSON.parse(fs.readFileSync(meta_data_file, 'utf-8')))
 		: {};
 	const routes_map = create_routes_map(manifest_data);
@@ -133,7 +139,7 @@ export async function write_all_types(config, manifest_data) {
  * @param {import('types').ManifestData} manifest_data
  * @param {string} file
  */
-export async function write_types(config, manifest_data, file) {
+export function write_types(config, manifest_data, file) {
 	if (!ts) return;
 
 	if (!path.basename(file).startsWith('+')) {
@@ -173,11 +179,13 @@ function create_routes_map(manifest_data) {
  * @param {Set<string>} [to_delete]
  */
 function update_types(config, routes, route, to_delete = new Set()) {
-	const routes_dir = posixify(path.relative('.', config.kit.files.routes)).replace(/\.\.\//g, '');
+	const routes_dir = remove_relative_parent_traversals(
+		posixify(path.relative('.', config.kit.files.routes))
+	);
 	const outdir = path.join(config.kit.outDir, 'types', routes_dir, route.id);
 
 	// now generate new types
-	const imports = [`import type * as Kit from '@sveltejs/kit';`];
+	const imports = ["import type * as Kit from '@sveltejs/kit';"];
 
 	/** @type {string[]} */
 	const declarations = [];
@@ -188,11 +196,25 @@ function update_types(config, routes, route, to_delete = new Set()) {
 	// add 'Expand' helper
 	// Makes sure a type is "repackaged" and therefore more readable
 	declarations.push('type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;');
+
+	// returns the predicate of a matcher's type guard - or string if there is no type guard
 	declarations.push(
-		`type RouteParams = { ${route.params
-			.map((param) => `${param.name}${param.optional ? '?' : ''}: string`)
-			.join('; ')} }`
+		// TS complains on infer U, which seems weird, therefore ts-ignore it
+		[
+			'// @ts-ignore',
+			'type MatcherParam<M> = M extends (param : string) => param is infer U ? U extends string ? U : string : string;'
+		].join('\n')
 	);
+
+	declarations.push(
+		'type RouteParams = ' + generate_params_type(route.params, outdir, config) + ';'
+	);
+
+	if (route.params.length > 0) {
+		exports.push(
+			'export type EntryGenerator = () => Promise<Array<RouteParams>> | Array<RouteParams>;'
+		);
+	}
 
 	declarations.push(`type RouteId = '${route.id}';`);
 
@@ -200,24 +222,24 @@ function update_types(config, routes, route, to_delete = new Set()) {
 	if (route.layout || route.leaf) {
 		declarations.push(
 			// If T extends the empty object, void is also allowed as a return type
-			`type MaybeWithVoid<T> = {} extends T ? T | void : T;`,
+			'type MaybeWithVoid<T> = {} extends T ? T | void : T;',
 
 			// Returns the key of the object whose values are required.
-			`export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];`,
+			'export type RequiredKeys<T> = { [K in keyof T]-?: {} extends { [P in K]: T[K] } ? never : K; }[keyof T];',
 
 			// Helper type to get the correct output type for load functions. It should be passed the parent type to check what types from App.PageData are still required.
 			// If none, void is also allowed as a return type.
-			`type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>`,
+			'type OutputDataShape<T> = MaybeWithVoid<Omit<App.PageData, RequiredKeys<T>> & Partial<Pick<App.PageData, keyof T & keyof App.PageData>> & Record<string, any>>',
 
 			// null & {} == null, we need to prevent that in some situations
-			`type EnsureDefined<T> = T extends null | undefined ? {} : T;`,
+			'type EnsureDefined<T> = T extends null | undefined ? {} : T;',
 
 			// Takes a union type and returns a union type where each type also has all properties
 			// of all possible types (typed as undefined), making accessing them more ergonomic
-			`type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;`,
+			'type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;',
 
 			// Re-export `Snapshot` from @sveltejs/kit — in future we could use this to infer <T> from the return type of `snapshot.capture`
-			`export type Snapshot<T = any> = Kit.Snapshot<T>;`
+			'export type Snapshot<T = any> = Kit.Snapshot<T>;'
 		);
 	}
 
@@ -249,17 +271,26 @@ function update_types(config, routes, route, to_delete = new Set()) {
 
 		if (route.leaf.server) {
 			exports.push(
-				`export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>`
+				'export type Action<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Action<RouteParams, OutputData, RouteId>'
 			);
 			exports.push(
-				`export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>`
+				'export type Actions<OutputData extends Record<string, any> | void = Record<string, any> | void> = Kit.Actions<RouteParams, OutputData, RouteId>'
 			);
+		}
+
+		if (route.leaf.server) {
+			exports.push(
+				'export type PageProps = { params: RouteParams; data: PageData; form: ActionData }'
+			);
+		} else {
+			exports.push('export type PageProps = { params: RouteParams; data: PageData }');
 		}
 	}
 
 	if (route.layout) {
 		let all_pages_have_load = true;
-		const layout_params = new Set();
+		/** @type {import('types').RouteParam[]} */
+		const layout_params = [];
 		const ids = ['RouteId'];
 
 		route.layout.child_pages?.forEach((page) => {
@@ -268,7 +299,9 @@ function update_types(config, routes, route, to_delete = new Set()) {
 				if (leaf.route.page) ids.push(`"${leaf.route.id}"`);
 
 				for (const param of leaf.route.params) {
-					layout_params.add(param.name);
+					// skip if already added
+					if (layout_params.some((p) => p.name === param.name)) continue;
+					layout_params.push({ ...param, optional: true });
 				}
 
 				ensureProxies(page, leaf.proxies);
@@ -295,9 +328,7 @@ function update_types(config, routes, route, to_delete = new Set()) {
 		declarations.push(`type LayoutRouteId = ${ids.join(' | ')}`);
 
 		declarations.push(
-			`type LayoutParams = RouteParams & { ${Array.from(layout_params).map(
-				(param) => `${param}?: string`
-			)} }`
+			'type LayoutParams = RouteParams & ' + generate_params_type(layout_params, outdir, config)
 		);
 
 		const {
@@ -317,14 +348,18 @@ function update_types(config, routes, route, to_delete = new Set()) {
 
 		if (proxies.server?.modified) to_delete.delete(proxies.server.file_name);
 		if (proxies.universal?.modified) to_delete.delete(proxies.universal.file_name);
+
+		exports.push(
+			'export type LayoutProps = { params: LayoutParams; data: LayoutData; children: import("svelte").Snippet }'
+		);
 	}
 
 	if (route.endpoint) {
-		exports.push(`export type RequestHandler = Kit.RequestHandler<RouteParams, RouteId>;`);
+		exports.push('export type RequestHandler = Kit.RequestHandler<RouteParams, RouteId>;');
 	}
 
 	if (route.leaf?.server || route.layout?.server || route.endpoint) {
-		exports.push(`export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;`);
+		exports.push('export type RequestEvent = Kit.RequestEvent<RouteParams, RouteId>;');
 	}
 
 	const output = [imports.join('\n'), declarations.join('\n'), exports.join('\n')]
@@ -380,7 +415,7 @@ function process_node(node, outdir, is_page, proxies, all_pages_have_load = true
 		// +page.js load present -> server can return all-optional data
 		const output_data_shape =
 			node.universal || (!is_page && all_pages_have_load)
-				? `Partial<App.PageData> & Record<string, any> | void`
+				? 'Partial<App.PageData> & Record<string, any> | void'
 				: `OutputDataShape<${parent_type}>`;
 		exports.push(
 			`export type ${prefix}ServerLoad<OutputData extends ${output_data_shape} = ${output_data_shape}> = Kit.ServerLoad<${params}, ${parent_type}, OutputData, ${route_id}>;`
@@ -398,15 +433,15 @@ function process_node(node, outdir, is_page, proxies, all_pages_have_load = true
 					: path_to_original(outdir, node.server);
 
 				exports.push(
-					`type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;`,
-					`type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];`,
-					`type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;`,
-					`type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];`,
+					'type ExcludeActionFailure<T> = T extends Kit.ActionFailure<any> ? never : T extends void ? never : T;',
+					'type ActionsSuccess<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: ExcludeActionFailure<Awaited<ReturnType<T[Key]>>>; }[keyof T];',
+					'type ExtractActionFailure<T> = T extends Kit.ActionFailure<infer X>	? X extends void ? never : X : never;',
+					'type ActionsFailure<T extends Record<string, (...args: any) => any>> = { [Key in keyof T]: Exclude<ExtractActionFailure<Awaited<ReturnType<T[Key]>>>, void>; }[keyof T];',
 					`type ActionsExport = typeof import('${from}').actions`,
-					`export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>`
+					'export type SubmitFunction = Kit.SubmitFunction<Expand<ActionsSuccess<ActionsExport>>, Expand<ActionsFailure<ActionsExport>>>'
 				);
 
-				type = `Expand<Kit.AwaitedActions<ActionsExport>> | null`;
+				type = 'Expand<Kit.AwaitedActions<ActionsExport>> | null';
 			}
 			exports.push(`export type ActionData = ${type};`);
 		}
@@ -434,7 +469,7 @@ function process_node(node, outdir, is_page, proxies, all_pages_have_load = true
 
 		const output_data_shape =
 			!is_page && all_pages_have_load
-				? `Partial<App.PageData> & Record<string, any> | void`
+				? 'Partial<App.PageData> & Record<string, any> | void'
 				: `OutputDataShape<${parent_type}>`;
 		exports.push(
 			`export type ${prefix}Load<OutputData extends ${output_data_shape} = ${output_data_shape}> = Kit.Load<${params}, ${prefix}ServerData, ${parent_type}, OutputData, ${route_id}>;`
@@ -465,7 +500,7 @@ function process_node(node, outdir, is_page, proxies, all_pages_have_load = true
 				const from = proxy.modified
 					? `./proxy${replace_ext_with_js(path.basename(file_path))}`
 					: path_to_original(outdir, file_path);
-				const type = `Kit.AwaitedProperties<Awaited<ReturnType<typeof import('${from}').load>>>`;
+				const type = `Kit.LoadProperties<Awaited<ReturnType<typeof import('${from}').load>>>`;
 				return expand ? `Expand<OptionalUnion<EnsureDefined<${type}>>>` : type;
 			} else {
 				return fallback;
@@ -559,6 +594,28 @@ function replace_ext_with_js(file_path) {
 	// will result in TS failing to lookup the file
 	const ext = path.extname(file_path);
 	return file_path.slice(0, -ext.length) + '.js';
+}
+
+/**
+ * @param {import('types').RouteParam[]} params
+ * @param {string} outdir
+ * @param {import('types').ValidatedConfig} config
+ */
+function generate_params_type(params, outdir, config) {
+	/** @param {string} matcher */
+	const path_to_matcher = (matcher) =>
+		posixify(path.relative(outdir, path.join(config.kit.files.params, matcher + '.js')));
+
+	return `{ ${params
+		.map(
+			(param) =>
+				`${param.name}${param.optional ? '?' : ''}: ${
+					param.matcher
+						? `MatcherParam<typeof import('${path_to_matcher(param.matcher)}').match>`
+						: 'string'
+				}`
+		)
+		.join('; ')} }`;
 }
 
 /**
@@ -682,8 +739,8 @@ export function tweak_types(content, is_server) {
 						// remove type from `export const load: Load ...`
 						if (declaration.type) {
 							let a = declaration.type.pos;
-							let b = declaration.type.end;
-							while (/\s/.test(content[a])) a += 1;
+							const b = declaration.type.end;
+							while (is_whitespace(content[a])) a += 1;
 
 							const type = content.slice(a, b);
 							code.remove(declaration.name.end, declaration.type.end);
@@ -754,8 +811,8 @@ export function tweak_types(content, is_server) {
 						// remove type from `export const actions: Actions ...`
 						if (declaration.type) {
 							let a = declaration.type.pos;
-							let b = declaration.type.end;
-							while (/\s/.test(content[a])) a += 1;
+							const b = declaration.type.end;
+							while (is_whitespace(content[a])) a += 1;
 
 							const type = content.slice(a, b);
 							code.remove(declaration.name.end, declaration.type.end);
@@ -782,7 +839,7 @@ export function tweak_types(content, is_server) {
 											if (arg && !arg.type) {
 												code.appendLeft(
 													arg.name.end,
-													`: import('./$types').RequestEvent` + (add_parens ? ')' : '')
+													": import('./$types').RequestEvent" + (add_parens ? ')' : '')
 												);
 											}
 										}

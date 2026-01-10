@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	extensions: ['.jesuslivesineveryone', '.whokilledthemuffinman', '.svelte.md', '.svelte'],
@@ -33,7 +35,16 @@ const config = {
 		},
 		env: {
 			dir: './env-dir',
-			publicPrefix: 'GO_AWAY_'
+			publicPrefix: 'GO_AWAY_',
+			privatePrefix: 'TOP_SECRET_SHH'
+		},
+		router: {
+			resolution: /** @type {'client' | 'server'} */ (process.env.ROUTER_RESOLUTION) || 'client'
+		}
+	},
+	compilerOptions: {
+		experimental: {
+			async: true
 		}
 	}
 };

@@ -1,19 +1,22 @@
+import { Redirect } from '@sveltejs/kit/internal';
+import { with_request_store } from '@sveltejs/kit/internal/server';
+import { ENDPOINT_METHODS, PAGE_METHODS } from '../../constants.js';
 import { negotiate } from '../../utils/http.js';
-import { Redirect } from '../control.js';
 import { method_not_allowed } from './utils.js';
 
 /**
- * @param {import('types').RequestEvent} event
+ * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('types').RequestState} event_state
  * @param {import('types').SSREndpoint} mod
  * @param {import('types').SSRState} state
  * @returns {Promise<Response>}
  */
-export async function render_endpoint(event, mod, state) {
+export async function render_endpoint(event, event_state, mod, state) {
 	const method = /** @type {import('types').HttpMethod} */ (event.request.method);
 
-	let handler = mod[method];
+	let handler = mod[method] || mod.fallback;
 
-	if (!handler && method === 'HEAD') {
+	if (method === 'HEAD' && !mod.HEAD && mod.GET) {
 		handler = mod.GET;
 	}
 
@@ -27,7 +30,7 @@ export async function render_endpoint(event, mod, state) {
 		throw new Error('Cannot prerender endpoints that have mutative methods');
 	}
 
-	if (state.prerendering && !prerender) {
+	if (state.prerendering && !state.prerendering.inside_reroute && !prerender) {
 		if (state.depth > 0) {
 			// if request came from a prerendered page, bail
 			throw new Error(`${event.route.id} is not prerenderable`);
@@ -38,9 +41,11 @@ export async function render_endpoint(event, mod, state) {
 		}
 	}
 
+	event_state.is_endpoint_request = true;
+
 	try {
-		const response = await handler(
-			/** @type {import('types').RequestEvent<Record<string, any>>} */ (event)
+		const response = await with_request_store({ event, state: event_state }, () =>
+			handler(/** @type {import('@sveltejs/kit').RequestEvent<Record<string, any>>} */ (event))
 		);
 
 		if (!(response instanceof Response)) {
@@ -49,8 +54,28 @@ export async function render_endpoint(event, mod, state) {
 			);
 		}
 
-		if (state.prerendering) {
-			response.headers.set('x-sveltekit-prerender', String(prerender));
+		if (state.prerendering && (!state.prerendering.inside_reroute || prerender)) {
+			// The returned Response might have immutable Headers
+			// so we should clone them before trying to mutate them.
+			// We also need to clone the response body since it may be read twice during prerendering
+			const cloned = new Response(response.clone().body, {
+				status: response.status,
+				statusText: response.statusText,
+				headers: new Headers(response.headers)
+			});
+			cloned.headers.set('x-sveltekit-prerender', String(prerender));
+
+			if (state.prerendering.inside_reroute && prerender) {
+				// Without this, the route wouldn't be recorded as prerendered,
+				// because there's nothing after reroute that would do that.
+				cloned.headers.set(
+					'x-sveltekit-routeid',
+					encodeURI(/** @type {string} */ (event.route.id))
+				);
+				state.prerendering.dependencies.set(event.url.pathname, { response: cloned, body: null });
+			} else {
+				return cloned;
+			}
 		}
 
 		return response;
@@ -67,13 +92,13 @@ export async function render_endpoint(event, mod, state) {
 }
 
 /**
- * @param {import('types').RequestEvent} event
+ * @param {import('@sveltejs/kit').RequestEvent} event
  */
 export function is_endpoint_request(event) {
 	const { method, headers } = event.request;
 
-	if (method === 'PUT' || method === 'PATCH' || method === 'DELETE' || method === 'OPTIONS') {
-		// These methods exist exclusively for endpoints
+	// These methods exist exclusively for endpoints
+	if (ENDPOINT_METHODS.includes(method) && !PAGE_METHODS.includes(method)) {
 		return true;
 	}
 

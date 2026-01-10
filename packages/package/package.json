@@ -1,51 +1,60 @@
 {
 	"name": "@sveltejs/package",
-	"version": "2.0.2",
+	"version": "2.5.7",
+	"description": "The fastest way to build Svelte packages",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/sveltejs/kit",
+		"url": "git+https://github.com/sveltejs/kit.git",
 		"directory": "packages/package"
 	},
+	"keywords": [
+		"build",
+		"bundle",
+		"component",
+		"library",
+		"packaging",
+		"svelte",
+		"tool"
+	],
 	"license": "MIT",
-	"homepage": "https://kit.svelte.dev",
+	"homepage": "https://svelte.dev",
 	"type": "module",
 	"dependencies": {
-		"chokidar": "^3.5.3",
+		"chokidar": "^5.0.0",
 		"kleur": "^4.1.5",
 		"sade": "^1.8.1",
-		"svelte2tsx": "~0.6.0"
+		"semver": "^7.5.4",
+		"svelte2tsx": "~0.7.33"
 	},
 	"devDependencies": {
-		"@types/node": "^16.18.6",
-		"svelte": "^3.56.0",
-		"svelte-preprocess": "^5.0.0",
-		"typescript": "^4.9.4",
-		"uvu": "^0.5.6"
+		"@sveltejs/vite-plugin-svelte": "catalog:",
+		"@types/node": "catalog:",
+		"@types/semver": "catalog:",
+		"prettier": "^3.1.1",
+		"svelte": "catalog:",
+		"svelte-preprocess": "catalog:",
+		"typescript": "^5.3.3",
+		"vitest": "catalog:"
 	},
 	"peerDependencies": {
-		"svelte": "^3.44.0"
+		"svelte": "^3.44.0 || ^4.0.0 || ^5.0.0-next.1"
 	},
 	"bin": {
 		"svelte-package": "svelte-package.js"
 	},
 	"files": [
-		"src",
-		"types"
+		"src"
 	],
 	"scripts": {
-		"lint": "prettier --check . --config ../../.prettierrc --ignore-path .gitignore",
+		"lint": "prettier --check .",
 		"check": "tsc",
 		"check:all": "tsc && pnpm -r --filter=\"./**\" check",
 		"format": "pnpm lint --write",
-		"test": "uvu test \"^index.js$\""
+		"test": "vitest run"
 	},
 	"exports": {
-		"./package.json": "./package.json",
-		".": {
-			"types": "./types/index.d.ts"
-		}
+		"./package.json": "./package.json"
 	},
-	"types": "types/index.d.ts",
 	"engines": {
 		"node": "^16.14 || >=18"
 	}

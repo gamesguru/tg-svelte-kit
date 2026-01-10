@@ -1,22 +1,33 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { installPolyfills } from '../../exports/node/polyfills.js';
 import { mkdirp, posixify, walk } from '../../utils/filesystem.js';
-import { should_polyfill } from '../../utils/platform.js';
 import { decode_uri, is_root_relative, resolve } from '../../utils/url.js';
-import { escape_html_attr } from '../../utils/escape.js';
+import { escape_html } from '../../utils/escape.js';
 import { logger } from '../utils.js';
 import { load_config } from '../config/index.js';
 import { get_route_segments } from '../../utils/routing.js';
 import { queue } from './queue.js';
 import { crawl } from './crawl.js';
 import { forked } from '../../utils/fork.js';
+import * as devalue from 'devalue';
+import { createReadableStream } from '@sveltejs/kit/node';
+import generate_fallback from './fallback.js';
+import { stringify_remote_arg } from '../../runtime/shared.js';
+import { filter_env } from '../../utils/env.js';
 
 export default forked(import.meta.url, prerender);
 
+// https://html.spec.whatwg.org/multipage/browsing-the-web.html#scrolling-to-a-fragment
+// "If fragment is the empty string, then return the special value top of the document."
+// ...and
+// "If decodedFragment is an ASCII case-insensitive match for the string 'top', then return the top of the document."
+const SPECIAL_HASHLINKS = new Set(['', 'top']);
+
 /**
  * @param {{
+ *   hash: boolean;
  *   out: string;
  *   manifest_path: string;
  *   metadata: import('types').ServerMetadata;
@@ -24,8 +35,8 @@ export default forked(import.meta.url, prerender);
  *   env: Record<string, string>
  * }} opts
  */
-async function prerender({ out, manifest_path, metadata, verbose, env }) {
-	/** @type {import('types').SSRManifest} */
+async function prerender({ hash, out, manifest_path, metadata, verbose, env }) {
+	/** @type {import('@sveltejs/kit').SSRManifest} */
 	const manifest = (await import(pathToFileURL(manifest_path).href)).manifest;
 
 	/** @type {import('types').ServerInternalModule} */
@@ -36,7 +47,8 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 
 	// configure `import { building } from '$app/environment'` —
 	// essential we do this before analysing the code
-	internal.set_building(true);
+	internal.set_building();
+	internal.set_prerendering();
 
 	/**
 	 * @template {{message: string}} T
@@ -90,18 +102,32 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 	/** @type {import('types').ValidatedKitConfig} */
 	const config = (await load_config()).kit;
 
+	if (hash) {
+		const fallback = await generate_fallback({
+			manifest_path,
+			env
+		});
+
+		const file = output_filename('/', true);
+		const dest = `${config.outDir}/output/prerendered/pages/${file}`;
+
+		mkdirp(dirname(dest));
+		writeFileSync(dest, fallback);
+
+		prerendered.pages.set('/', { file });
+
+		return { prerendered, prerender_map };
+	}
+
+	const emulator = await config.adapter?.emulate?.();
+
 	/** @type {import('types').Logger} */
 	const log = logger({ verbose });
 
-	if (should_polyfill) {
-		installPolyfills();
-	}
+	installPolyfills();
 
 	/** @type {Map<string, string>} */
 	const saved = new Map();
-
-	const server = new Server(manifest);
-	await server.init({ env });
 
 	const handle_http_error = normalise_error_handler(
 		log,
@@ -109,7 +135,7 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 		({ status, path, referrer, referenceType }) => {
 			const message =
 				status === 404 && !path.startsWith(config.paths.base)
-					? `${path} does not begin with \`base\`, which is configured in \`paths.base\` and can be imported from \`$app/paths\` - see https://kit.svelte.dev/docs/configuration#paths for more info`
+					? `${path} does not begin with \`base\`, which is configured in \`paths.base\` and can be imported from \`$app/paths\` - see https://svelte.dev/docs/kit/configuration#paths for more info`
 					: path;
 
 			return `${status} ${message}${referrer ? ` (${referenceType} from ${referrer})` : ''}`;
@@ -121,9 +147,26 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 		config.prerender.handleMissingId,
 		({ path, id, referrers }) => {
 			return (
-				`The following pages contain links to ${path}#${id}, but no element with id="${id}" exists on ${path} - see the \`handleMissingId\` option in https://kit.svelte.dev/docs/configuration#prerender for more info:` +
+				`The following pages contain links to ${path}#${id}, but no element with id="${id}" exists on ${path} - see the \`handleMissingId\` option in https://svelte.dev/docs/kit/configuration#prerender for more info:` +
 				referrers.map((l) => `\n  - ${l}`).join('')
 			);
+		}
+	);
+
+	const handle_entry_generator_mismatch = normalise_error_handler(
+		log,
+		config.prerender.handleEntryGeneratorMismatch,
+		({ generatedFromId, entry, matchedId }) => {
+			return `The entries export from ${generatedFromId} generated entry ${entry}, which was matched by ${matchedId} - see the \`handleEntryGeneratorMismatch\` option in https://svelte.dev/docs/kit/configuration#prerender for more info.`;
+		}
+	);
+
+	const handle_not_prerendered_route = normalise_error_handler(
+		log,
+		config.prerender.handleUnseenRoutes,
+		({ routes }) => {
+			const list = routes.map((id) => `  - ${id}`).join('\n');
+			return `The following routes were marked as prerenderable, but were not prerendered because they were not found while crawling your app:\n${list}\n\nSee the \`handleUnseenRoutes\` option in https://svelte.dev/docs/kit/configuration#prerender for more info.`;
 		}
 	);
 
@@ -144,6 +187,7 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 	}
 
 	const files = new Set(walk(`${out}/client`).map(posixify));
+	files.add(`${config.appDir}/env.js`);
 
 	const immutable = `${config.appDir}/immutable`;
 	if (existsSync(`${out}/server/${immutable}`)) {
@@ -151,8 +195,12 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 			files.add(posixify(`${config.appDir}/immutable/${file}`));
 		}
 	}
+
+	const remote_prefix = `${config.paths.base}/${config.appDir}/remote/`;
+
 	const seen = new Set();
 	const written = new Set();
+	const remote_responses = new Map();
 
 	/** @type {Map<string, Set<string>>} */
 	const expected_hashlinks = new Map();
@@ -164,23 +212,25 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 	 * @param {string | null} referrer
 	 * @param {string} decoded
 	 * @param {string} [encoded]
+	 * @param {string} [generated_from_id]
 	 */
-	function enqueue(referrer, decoded, encoded) {
+	function enqueue(referrer, decoded, encoded, generated_from_id) {
 		if (seen.has(decoded)) return;
 		seen.add(decoded);
 
 		const file = decoded.slice(config.paths.base.length + 1);
 		if (files.has(file)) return;
 
-		return q.add(() => visit(decoded, encoded || encodeURI(decoded), referrer));
+		return q.add(() => visit(decoded, encoded || encodeURI(decoded), referrer, generated_from_id));
 	}
 
 	/**
 	 * @param {string} decoded
 	 * @param {string} encoded
 	 * @param {string?} referrer
+	 * @param {string} [generated_from_id]
 	 */
-	async function visit(decoded, encoded, referrer) {
+	async function visit(decoded, encoded, referrer, generated_from_id) {
 		if (!decoded.startsWith(config.paths.base)) {
 			handle_http_error({ status: 404, path: decoded, referrer, referenceType: 'linked' });
 			return;
@@ -194,21 +244,43 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 				throw new Error('Cannot read clientAddress during prerendering');
 			},
 			prerendering: {
-				dependencies
+				dependencies,
+				remote_responses
 			},
 			read: (file) => {
 				// stuff we just wrote
 				const filepath = saved.get(file);
 				if (filepath) return readFileSync(filepath);
 
+				// Static assets emitted during build
+				if (file.startsWith(config.appDir)) {
+					return readFileSync(`${out}/server/${file}`);
+				}
+
 				// stuff in `static`
 				return readFileSync(join(config.files.assets, file));
-			}
+			},
+			emulator
 		});
+
+		const encoded_id = response.headers.get('x-sveltekit-routeid');
+		const decoded_id = encoded_id && decode_uri(encoded_id);
+		if (
+			decoded_id !== null &&
+			generated_from_id !== undefined &&
+			decoded_id !== generated_from_id
+		) {
+			handle_entry_generator_mismatch({
+				generatedFromId: generated_from_id,
+				entry: decoded,
+				matchedId: decoded_id
+			});
+		}
 
 		const body = Buffer.from(await response.arrayBuffer());
 
-		save('pages', response, body, decoded, encoded, referrer, 'linked');
+		const category = decoded.startsWith(remote_prefix) ? 'data' : 'pages';
+		save(category, response, body, decoded, encoded, referrer, 'linked');
 
 		for (const [dependency_path, result] of dependencies) {
 			// this seems circuitous, but using new URL allows us to not care
@@ -232,8 +304,10 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 
 			const body = result.body ?? new Uint8Array(await result.response.arrayBuffer());
 
+			const category = decoded_dependency_path.startsWith(remote_prefix) ? 'data' : 'dependencies';
+
 			save(
-				'dependencies',
+				category,
 				result.response,
 				body,
 				decoded_dependency_path,
@@ -246,12 +320,23 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 		// avoid triggering `filterSerializeResponseHeaders` guard
 		const headers = Object.fromEntries(response.headers);
 
-		if (config.prerender.crawl && headers['content-type'] === 'text/html') {
+		// if it's a 200 HTML response, crawl it. Skip error responses, as we don't save those
+		if (response.ok && config.prerender.crawl && headers['content-type'] === 'text/html') {
 			const { ids, hrefs } = crawl(body.toString(), decoded);
 
 			actual_hashlinks.set(decoded, ids);
 
-			for (const href of hrefs) {
+			/** @param {string} href */
+			const removePrerenderOrigin = (href) => {
+				if (href.startsWith(config.prerender.origin)) {
+					if (href === config.prerender.origin) return '/';
+					if (href.at(config.prerender.origin.length) !== '/') return href;
+					return href.slice(config.prerender.origin.length);
+				}
+				return href;
+			};
+
+			for (const href of hrefs.map(removePrerenderOrigin)) {
 				if (!is_root_relative(href)) continue;
 
 				const { pathname, search, hash } = new URL(href, 'http://localhost');
@@ -270,13 +355,13 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 					/** @type {Set<string>} */ (expected_hashlinks.get(key)).add(decoded);
 				}
 
-				enqueue(decoded, decode_uri(pathname), pathname);
+				void enqueue(decoded, decode_uri(pathname), pathname);
 			}
 		}
 	}
 
 	/**
-	 * @param {'pages' | 'dependencies'} category
+	 * @param {'pages' | 'dependencies' | 'data'} category
 	 * @param {Response} response
 	 * @param {string | Uint8Array} body
 	 * @param {string} decoded
@@ -306,7 +391,7 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 			if (location) {
 				const resolved = resolve(encoded, location);
 				if (is_root_relative(resolved)) {
-					enqueue(decoded, decode_uri(resolved), resolved);
+					void enqueue(decoded, decode_uri(resolved), resolved);
 				}
 
 				if (!headers['x-sveltekit-normalize']) {
@@ -316,7 +401,12 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 
 					writeFileSync(
 						dest,
-						`<meta http-equiv="refresh" content=${escape_html_attr(`0;url=${location}`)}>`
+						`<script>location.href=${devalue.uneval(
+							location
+						)};</script><meta http-equiv="refresh" content="${escape_html(
+							`0;url=${location}`,
+							true
+						)}">`
 					);
 
 					written.add(file);
@@ -338,7 +428,22 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 		}
 
 		if (response.status === 200) {
-			mkdirp(dirname(dest));
+			if (existsSync(dest) && statSync(dest).isDirectory()) {
+				throw new Error(
+					`Cannot save ${decoded} as it is already a directory. See https://svelte.dev/docs/kit/page-options#prerender-route-conflicts for more information`
+				);
+			}
+
+			const dir = dirname(dest);
+
+			if (existsSync(dir) && !statSync(dir).isDirectory()) {
+				const parent = decoded.split('/').slice(0, -1).join('/');
+				throw new Error(
+					`Cannot save ${decoded} as ${parent} is already a file. See https://svelte.dev/docs/kit/page-options#prerender-route-conflicts for more information`
+				);
+			}
+
+			mkdirp(dir);
 
 			log.info(`${response.status} ${decoded}`);
 			writeFileSync(dest, body);
@@ -363,26 +468,94 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 		saved.set(file, dest);
 	}
 
-	if (
-		config.prerender.entries.length > 1 ||
-		config.prerender.entries[0] !== '*' ||
-		prerender_map.size > 0
-	) {
-		// Only log if we're actually going to do something to not confuse users
-		log.info('Prerendering');
+	/** @type {Array<{ id: string, entries: Array<string>}>} */
+	const route_level_entries = [];
+	for (const [id, { entries }] of metadata.routes.entries()) {
+		if (entries) {
+			route_level_entries.push({ id, entries });
+		}
 	}
+
+	let should_prerender = false;
+
+	for (const value of prerender_map.values()) {
+		if (value) {
+			should_prerender = true;
+			break;
+		}
+	}
+
+	// the user's remote function modules may reference environment variables,
+	// `read` or the `manifest` at the top-level so we need to set them before
+	// evaluating those modules to avoid potential runtime errors
+	const { publicPrefix: public_prefix, privatePrefix: private_prefix } = config.env;
+	const private_env = filter_env(env, private_prefix, public_prefix);
+	const public_env = filter_env(env, public_prefix, private_prefix);
+	internal.set_private_env(private_env);
+	internal.set_public_env(public_env);
+	internal.set_manifest(manifest);
+	internal.set_read_implementation((file) => createReadableStream(`${out}/server/${file}`));
+
+	/** @type {Array<import('types').RemoteInfo & { type: 'prerender'}>} */
+	const prerender_functions = [];
+
+	for (const loader of Object.values(manifest._.remotes)) {
+		const module = await loader();
+
+		for (const fn of Object.values(module.default)) {
+			if (fn?.__?.type === 'prerender') {
+				prerender_functions.push(fn.__);
+				should_prerender = true;
+			}
+		}
+	}
+
+	if (!should_prerender) {
+		return { prerendered, prerender_map };
+	}
+
+	// only run the server after the `should_prerender` check so that we
+	// don't run the user's init hook unnecessarily
+	const server = new Server(manifest);
+	await server.init({
+		env,
+		read: (file) => createReadableStream(`${config.outDir}/output/server/${file}`)
+	});
+
+	log.info('Prerendering');
 
 	for (const entry of config.prerender.entries) {
 		if (entry === '*') {
 			for (const [id, prerender] of prerender_map) {
 				if (prerender) {
-					if (id.includes('[')) continue;
-					const path = `/${get_route_segments(id).join('/')}`;
-					enqueue(null, config.paths.base + path);
+					// remove optional parameters from the route
+					const segments = get_route_segments(id).filter((segment) => !segment.startsWith('[['));
+					const processed_id = '/' + segments.join('/');
+
+					if (processed_id.includes('[')) continue;
+					const path = `/${get_route_segments(processed_id).join('/')}`;
+					void enqueue(null, config.paths.base + path);
 				}
 			}
 		} else {
-			enqueue(null, config.paths.base + entry);
+			void enqueue(null, config.paths.base + entry);
+		}
+	}
+
+	for (const { id, entries } of route_level_entries) {
+		for (const entry of entries) {
+			void enqueue(null, config.paths.base + entry, undefined, id);
+		}
+	}
+
+	const transport = (await internal.get_hooks()).transport ?? {};
+	for (const info of prerender_functions) {
+		if (info.has_arg) {
+			for (const arg of (await info.inputs?.()) ?? []) {
+				void enqueue(null, remote_prefix + info.id + '/' + stringify_remote_arg(arg, transport));
+			}
+		} else {
+			void enqueue(null, remote_prefix + info.id);
 		}
 	}
 
@@ -398,7 +571,7 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 		// ignore fragment links to pages that were not prerendered
 		if (!hashlinks) continue;
 
-		if (!hashlinks.includes(id)) {
+		if (!hashlinks.includes(id) && !SPECIAL_HASHLINKS.has(id)) {
 			handle_missing_id({ id, path, referrers: Array.from(referrers) });
 		}
 	}
@@ -413,11 +586,7 @@ async function prerender({ out, manifest_path, metadata, verbose, env }) {
 	}
 
 	if (not_prerendered.length > 0) {
-		throw new Error(
-			`The following routes were marked as prerenderable, but were not prerendered because they were not found while crawling your app:\n${not_prerendered.map(
-				(id) => `  - ${id}`
-			)}\n\nSee https://kit.svelte.dev/docs/page-options#prerender-troubleshooting for info on how to solve this`
-		);
+		handle_not_prerendered_route({ routes: not_prerendered });
 	}
 
 	return { prerendered, prerender_map };

@@ -1,6 +1,9 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
+import { VERSION } from 'svelte/compiler';
 import { posixify, mkdirp, walk } from './filesystem.js';
+
+const is_svelte_5_plus = Number(VERSION.split('.')[0]) >= 5;
 
 /**
  * Resolves aliases
@@ -12,26 +15,94 @@ import { posixify, mkdirp, walk } from './filesystem.js';
  * @returns {string}
  */
 export function resolve_aliases(input, file, content, aliases) {
-	/**
-	 * @param {string} match
-	 * @param {string} _
-	 * @param {string} import_path
-	 */
-	const replace_import_path = (match, _, import_path) => {
+	return adjust_imports(content, (import_path) => {
 		for (const [alias, value] of Object.entries(aliases)) {
-			if (!import_path.startsWith(alias)) continue;
+			if (
+				import_path !== alias &&
+				!import_path.startsWith(alias + (alias.endsWith('/') ? '' : '/'))
+			) {
+				continue;
+			}
 
 			const full_path = path.join(input, file);
 			const full_import_path = path.join(value, import_path.slice(alias.length));
 			let resolved = posixify(path.relative(path.dirname(full_path), full_import_path));
 			resolved = resolved.startsWith('.') ? resolved : './' + resolved;
-			return match.replace(import_path, resolved);
+			return resolved;
+		}
+		return import_path;
+	});
+}
+
+/**
+ * Replace .ts extensions with .js in relative import/export statements
+ *
+ * @param {string} content
+ * @returns {string}
+ */
+export function resolve_ts_endings(content) {
+	return adjust_imports(content, (import_path) => {
+		if (
+			import_path[0] === '.' &&
+			((import_path[1] === '.' && import_path[2] === '/') || import_path[1] === '/') &&
+			import_path.endsWith('.ts')
+		) {
+			return import_path.slice(0, -3) + '.js';
+		}
+		return import_path;
+	});
+}
+
+/**
+ * Adjust import paths
+ *
+ * @param {string} content
+ * @param {(import_path: string) => string} adjust
+ * @returns {string}
+ */
+export function adjust_imports(content, adjust) {
+	/**
+	 * @param {string} match
+	 * @param {string} quote
+	 * @param {string} import_path
+	 */
+	const replace_import_path = (match, quote, import_path) => {
+		const adjusted = adjust(import_path);
+		if (adjusted !== import_path) {
+			return match.replace(quote + import_path + quote, quote + adjusted + quote);
 		}
 		return match;
 	};
 
-	content = content.replace(/from\s+('|")([^"';,]+?)\1/g, replace_import_path);
-	content = content.replace(/import\s*\(\s*('|")([^"';,]+?)\1\s*\)/g, replace_import_path);
+	// import/export (type) (xxx | xxx,) { ... } from ...
+	content = content.replace(
+		/\b(?:import|export)(?:\s+type)?(?:(?:\s+\p{L}[\p{L}0-9]*\s+)|(?:(?:\s+\p{L}[\p{L}0-9]*\s*,\s*)?\s*\{[^}]*\}\s*))from\s*(['"])([^'";]+)\1/gmu,
+		(match, quote, import_path) => replace_import_path(match, quote, import_path)
+	);
+
+	// import/export (type) * as xxx from ...
+	content = content.replace(
+		/\b(?:import|export)(?:\s+type)?\s*\*\s*as\s+\p{L}[\p{L}0-9]*\s+from\s*(['"])([^'";]+)\1/gmu,
+		(match, quote, import_path) => replace_import_path(match, quote, import_path)
+	);
+
+	// export (type) * from ...
+	content = content.replace(
+		/\b(?:export)(?:\s+type)?\s*\*\s*from\s*(['"])([^'";]+)\1/gmu,
+		(match, quote, import_path) => replace_import_path(match, quote, import_path)
+	);
+
+	// import(...)
+	content = content.replace(
+		/\bimport\s*\(\s*(['"])([^'";]+)\1\s*\)/g,
+		(match, quote, import_path) => replace_import_path(match, quote, import_path)
+	);
+
+	// import '...'
+	content = content.replace(/\bimport\s+(['"])([^'";]+)\1/g, (match, quote, import_path) =>
+		replace_import_path(match, quote, import_path)
+	);
+
 	return content;
 }
 
@@ -45,8 +116,13 @@ export function strip_lang_tags(content) {
 	return content
 		.replace(
 			/(<!--[^]*?-->)|(<script[^>]*?)\s(?:type|lang)=(["'])(.*?)\3/g,
-			// things like application/ld+json should be kept as-is. Preprocessed languages are "ts" etc
-			(match, s1, s2, _, s4) => (s4?.startsWith('application/') ? match : (s1 ?? '') + (s2 ?? ''))
+			// Things like application/ld+json should be kept as-is. Preprocessed languages are "ts" etc.
+			// Svelte 5 deals with TypeScript natively, and in the template, too, therefore keep it in.
+			// Not removing it would mean Svelte parses without its TS plugin and then runs into errors.
+			(match, comment, tag_open, _, type) =>
+				type?.startsWith('application/') || (is_svelte_5_plus && type === 'ts')
+					? match
+					: (comment ?? '') + (tag_open ?? '')
 		)
 		.replace(/(<!--[^]*?-->)|(<style[^>]*?)\s(?:type|lang)=(["']).*?\3/g, '$1$2');
 }
@@ -63,7 +139,7 @@ export function write(file, contents) {
 /**
  * @param {string} input
  * @param {string[]} extensions
- * @returns {import('./types').File[]}
+ * @returns {import('./types.js').File[]}
  */
 export function scan(input, extensions) {
 	return walk(input).map((file) => analyze(file, extensions));
@@ -72,7 +148,7 @@ export function scan(input, extensions) {
 /**
  * @param {string} file
  * @param {string[]} extensions
- * @returns {import('./types').File}
+ * @returns {import('./types.js').File}
  */
 export function analyze(file, extensions) {
 	const name = posixify(file);
@@ -84,10 +160,10 @@ export function analyze(file, extensions) {
 	const dest = svelte_extension
 		? name.slice(0, -svelte_extension.length) + '.svelte'
 		: name.endsWith('.d.ts')
-		? name
-		: name.endsWith('.ts')
-		? name.slice(0, -3) + '.js'
-		: name;
+			? name
+			: name.endsWith('.ts')
+				? name.slice(0, -3) + '.js'
+				: name;
 
 	return {
 		name,

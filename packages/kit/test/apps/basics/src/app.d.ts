@@ -5,9 +5,14 @@ declare global {
 			name?: string;
 			key: string;
 			params: Record<string, string>;
+			url?: URL;
+			message?: string;
 		}
 
-		interface Platform {}
+		interface PageState {
+			active?: boolean;
+			count?: number;
+		}
 	}
 }
 
