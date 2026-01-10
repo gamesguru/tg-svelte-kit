@@ -1,7 +1,7 @@
 {
-	"name": "kit-monorepo",
+	"name": "svelte-kit-legacy",
 	"version": "0.0.1",
-	"description": "monorepo for @sveltejs/kit and friends",
+	"description": "SvelteJS Kit fork with support for static legacy builds",
 	"private": true,
 	"type": "module",
 	"scripts": {
