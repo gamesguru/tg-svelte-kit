@@ -1,5 +1,5 @@
-import { text } from '@sveltejs/kit';
-import { HttpError, SvelteKitError, Redirect } from '@sveltejs/kit/internal';
+import { text } from '@tg-svelte/kit';
+import { HttpError, SvelteKitError, Redirect } from '@tg-svelte/kit/internal';
 import { normalize_error } from '../../../utils/error.js';
 import { once } from '../../../utils/functions.js';
 import { server_data_serializer_json } from '../page/data_serializer.js';
@@ -9,11 +9,11 @@ import { normalize_path } from '../../../utils/url.js';
 import { text_encoder } from '../../utils.js';
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} event_state
  * @param {import('types').SSRRoute} route
  * @param {import('types').SSROptions} options
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @param {import('types').SSRState} state
  * @param {boolean[] | undefined} invalidated_data_nodes
  * @param {import('types').TrailingSlash} trailing_slash

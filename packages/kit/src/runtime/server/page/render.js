@@ -1,7 +1,7 @@
 import * as devalue from 'devalue';
 import { readable, writable } from 'svelte/store';
 import { DEV } from 'esm-env';
-import { text } from '@sveltejs/kit';
+import { text } from '@tg-svelte/kit';
 import * as paths from '$app/paths/internal/server';
 import { hash } from '../../../utils/hash.js';
 import { serialize_data } from './serialize_data.js';
@@ -13,7 +13,7 @@ import { SVELTE_KIT_ASSETS } from '../../../constants.js';
 import { SCHEME } from '../../../utils/url.js';
 import { create_server_routing_response, generate_route_object } from './server_routing.js';
 import { add_resolution_suffix } from '../../pathname.js';
-import { try_get_request_store, with_request_store } from '@sveltejs/kit/internal/server';
+import { try_get_request_store, with_request_store } from '@tg-svelte/kit/internal/server';
 import { text_encoder } from '../../utils.js';
 import { get_global_name } from '../utils.js';
 import { create_remote_key } from '../../shared.js';
@@ -31,15 +31,15 @@ const updated = {
  *   branch: Array<import('./types.js').Loaded>;
  *   fetched: Array<import('./types.js').Fetched>;
  *   options: import('types').SSROptions;
- *   manifest: import('@sveltejs/kit').SSRManifest;
+ *   manifest: import('@tg-svelte/kit').SSRManifest;
  *   state: import('types').SSRState;
  *   page_config: { ssr: boolean; csr: boolean };
  *   status: number;
  *   error: App.Error | null;
- *   event: import('@sveltejs/kit').RequestEvent;
+ *   event: import('@tg-svelte/kit').RequestEvent;
  *   event_state: import('types').RequestState;
  *   resolve_opts: import('types').RequiredResolveOptions;
- *   action_result?: import('@sveltejs/kit').ActionResult;
+ *   action_result?: import('@tg-svelte/kit').ActionResult;
  *   data_serializer: import('./types.js').ServerDataSerializer
  * }} opts
  */

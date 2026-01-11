@@ -64,11 +64,11 @@ export function get_cookies(request, url) {
 		secure: url.hostname === 'localhost' && url.protocol === 'http:' ? false : true
 	};
 
-	/** @type {import('@sveltejs/kit').Cookies} */
+	/** @type {import('@tg-svelte/kit').Cookies} */
 	const cookies = {
 		// The JSDoc param annotations appearing below for get, set and delete
 		// are necessary to expose the `cookie` library types to
-		// typescript users. `@type {import('@sveltejs/kit').Cookies}` above is not
+		// typescript users. `@type {import('@tg-svelte/kit').Cookies}` above is not
 		// sufficient to do so.
 
 		/**

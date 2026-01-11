@@ -1,7 +1,7 @@
-/** @import { RemoteCommand } from '@sveltejs/kit' */
+/** @import { RemoteCommand } from '@tg-svelte/kit' */
 /** @import { RemoteInfo, MaybePromise } from 'types' */
 /** @import { StandardSchemaV1 } from '@standard-schema/spec' */
-import { get_request_store } from '@sveltejs/kit/internal/server';
+import { get_request_store } from '@tg-svelte/kit/internal/server';
 import { create_validator, run_remote_function } from './shared.js';
 
 /**

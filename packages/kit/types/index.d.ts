@@ -1,7 +1,7 @@
 /// <reference types="svelte" />
 /// <reference types="vite/client" />
 
-declare module '@sveltejs/kit' {
+declare module '@tg-svelte/kit' {
 	import type { SvelteConfig } from '@sveltejs/vite-plugin-svelte';
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
 	import type { RouteId as AppRouteId, LayoutParams as AppLayoutParams, ResolvedPathname } from '$app/types';
@@ -313,7 +313,7 @@ declare module '@sveltejs/kit' {
 		 *
 		 * ```js
 		 * /// file: svelte.config.js
-		 * /// type: import('@sveltejs/kit').Config
+		 * /// type: import('@tg-svelte/kit').Config
 		 * const config = {
 		 *   kit: {
 		 *     alias: {
@@ -348,7 +348,7 @@ declare module '@sveltejs/kit' {
 		 *
 		 * ```js
 		 * /// file: svelte.config.js
-		 * /// type: import('@sveltejs/kit').Config
+		 * /// type: import('@tg-svelte/kit').Config
 		 * const config = {
 		 *   kit: {
 		 *     csp: {
@@ -607,7 +607,7 @@ declare module '@sveltejs/kit' {
 			 *
 			 * ```js
 			 * /// file: vite.config.js
-			 * import { sveltekit } from '@sveltejs/kit/vite';
+			 * import { sveltekit } from '@tg-svelte/kit/vite';
 			 * import { defineConfig } from 'vite';
 			 *
 			 * export default defineConfig({
@@ -693,7 +693,7 @@ declare module '@sveltejs/kit' {
 			 *
 			 * ```js
 			 * /// file: svelte.config.js
-			 * /// type: import('@sveltejs/kit').Config
+			 * /// type: import('@tg-svelte/kit').Config
 			 * const config = {
 			 *   kit: {
 			 *     prerender: {
@@ -961,7 +961,7 @@ declare module '@sveltejs/kit' {
 	 * In the browser, `decode` turns the encoding back into an instance of the custom type.
 	 *
 	 * ```ts
-	 * import type { Transport } from '@sveltejs/kit';
+	 * import type { Transport } from '@tg-svelte/kit';
 	 *
 	 * declare class MyCustomType {
 	 * 	data: any
@@ -2714,7 +2714,7 @@ declare module '@sveltejs/kit' {
 	 *
 	 * @example
 	 * ```ts
-	 * import { invalid } from '@sveltejs/kit';
+	 * import { invalid } from '@tg-svelte/kit';
 	 * import { form } from '$app/server';
 	 * import { tryLogin } from '$lib/server/auth';
 	 * import * as v from 'valibot';
@@ -2745,7 +2745,7 @@ declare module '@sveltejs/kit' {
 	 * Returns the normalized URL as well as a method for adding the potential suffix back
 	 * based on a new pathname (possibly including search) or URL.
 	 * ```js
-	 * import { normalizeUrl } from '@sveltejs/kit';
+	 * import { normalizeUrl } from '@tg-svelte/kit';
 	 *
 	 * const { url, denormalize } = normalizeUrl('/blog/post/__data.json');
 	 * console.log(url.pathname); // /blog/post
@@ -2780,8 +2780,8 @@ declare module '@sveltejs/kit' {
 	export {};
 }
 
-declare module '@sveltejs/kit/hooks' {
-	import type { Handle } from '@sveltejs/kit';
+declare module '@tg-svelte/kit/hooks' {
+	import type { Handle } from '@tg-svelte/kit';
 	/**
 	 * A helper function for sequencing multiple `handle` calls in a middleware-like manner.
 	 * The behavior for the `handle` options is as follows:
@@ -2791,9 +2791,9 @@ declare module '@sveltejs/kit/hooks' {
 	 *
 	 * ```js
 	 * /// file: src/hooks.server.js
-	 * import { sequence } from '@sveltejs/kit/hooks';
+	 * import { sequence } from '@tg-svelte/kit/hooks';
 	 *
-	 * /// type: import('@sveltejs/kit').Handle
+	 * /// type: import('@tg-svelte/kit').Handle
 	 * async function first({ event, resolve }) {
 	 * 	console.log('first pre-processing');
 	 * 	const result = await resolve(event, {
@@ -2812,7 +2812,7 @@ declare module '@sveltejs/kit/hooks' {
 	 * 	return result;
 	 * }
 	 *
-	 * /// type: import('@sveltejs/kit').Handle
+	 * /// type: import('@tg-svelte/kit').Handle
 	 * async function second({ event, resolve }) {
 	 * 	console.log('second pre-processing');
 	 * 	const result = await resolve(event, {
@@ -2857,7 +2857,7 @@ declare module '@sveltejs/kit/hooks' {
 	export {};
 }
 
-declare module '@sveltejs/kit/node' {
+declare module '@tg-svelte/kit/node' {
 	export function getRequest({ request, base, bodySizeLimit }: {
 		request: import("http").IncomingMessage;
 		base: string;
@@ -2874,7 +2874,7 @@ declare module '@sveltejs/kit/node' {
 	export {};
 }
 
-declare module '@sveltejs/kit/node/polyfills' {
+declare module '@tg-svelte/kit/node/polyfills' {
 	/**
 	 * Make various web APIs available as globals:
 	 * - `crypto`
@@ -2885,7 +2885,7 @@ declare module '@sveltejs/kit/node/polyfills' {
 	export {};
 }
 
-declare module '@sveltejs/kit/vite' {
+declare module '@tg-svelte/kit/vite' {
 	/**
 	 * Returns the SvelteKit Vite plugins.
 	 * */
@@ -2937,7 +2937,7 @@ declare module '$app/forms' {
 	 * }
 	 * ```
 	 * */
-	export function deserialize<Success extends Record<string, unknown> | undefined, Failure extends Record<string, unknown> | undefined>(result: string): import("@sveltejs/kit").ActionResult<Success, Failure>;
+	export function deserialize<Success extends Record<string, unknown> | undefined, Failure extends Record<string, unknown> | undefined>(result: string): import("@tg-svelte/kit").ActionResult<Success, Failure>;
 	/**
 	 * This action enhances a `<form>` element that otherwise would work without JavaScript.
 	 *
@@ -2961,14 +2961,14 @@ declare module '$app/forms' {
 	 * @param form_element The form element
 	 * @param submit Submit callback
 	 */
-	export function enhance<Success extends Record<string, unknown> | undefined, Failure extends Record<string, unknown> | undefined>(form_element: HTMLFormElement, submit?: import("@sveltejs/kit").SubmitFunction<Success, Failure>): {
+	export function enhance<Success extends Record<string, unknown> | undefined, Failure extends Record<string, unknown> | undefined>(form_element: HTMLFormElement, submit?: import("@tg-svelte/kit").SubmitFunction<Success, Failure>): {
 		destroy(): void;
 	};
 	/**
 	 * This action updates the `form` property of the current page with the given data and updates `page.status`.
 	 * In case of an error, it redirects to the nearest error page.
 	 * */
-	export function applyAction<Success extends Record<string, unknown> | undefined, Failure extends Record<string, unknown> | undefined>(result: import("@sveltejs/kit").ActionResult<Success, Failure>): Promise<void>;
+	export function applyAction<Success extends Record<string, unknown> | undefined, Failure extends Record<string, unknown> | undefined>(result: import("@tg-svelte/kit").ActionResult<Success, Failure>): Promise<void>;
 
 	export {};
 }
@@ -2979,7 +2979,7 @@ declare module '$app/navigation' {
 	 *
 	 * `afterNavigate` must be called during a component initialization. It remains active as long as the component is mounted.
 	 * */
-	export function afterNavigate(callback: (navigation: import("@sveltejs/kit").AfterNavigate) => void): void;
+	export function afterNavigate(callback: (navigation: import("@tg-svelte/kit").AfterNavigate) => void): void;
 	/**
 	 * A navigation interceptor that triggers before we navigate to a URL, whether by clicking a link, calling `goto(...)`, or using the browser back/forward controls.
 	 *
@@ -2991,7 +2991,7 @@ declare module '$app/navigation' {
 	 *
 	 * `beforeNavigate` must be called during a component initialization. It remains active as long as the component is mounted.
 	 * */
-	export function beforeNavigate(callback: (navigation: import("@sveltejs/kit").BeforeNavigate) => void): void;
+	export function beforeNavigate(callback: (navigation: import("@tg-svelte/kit").BeforeNavigate) => void): void;
 	/**
 	 * A lifecycle function that runs the supplied `callback` immediately before we navigate to a new URL except during full-page navigations.
 	 *
@@ -3001,7 +3001,7 @@ declare module '$app/navigation' {
 	 *
 	 * `onNavigate` must be called during a component initialization. It remains active as long as the component is mounted.
 	 * */
-	export function onNavigate(callback: (navigation: import("@sveltejs/kit").OnNavigate) => MaybePromise<(() => void) | void>): void;
+	export function onNavigate(callback: (navigation: import("@tg-svelte/kit").OnNavigate) => MaybePromise<(() => void) | void>): void;
 	/**
 	 * If called when the page is being updated following a navigation (in `onMount` or `afterNavigate` or an action, for example), this disables SvelteKit's built-in scroll handling.
 	 * This is generally discouraged, since it breaks user expectations.
@@ -3172,7 +3172,7 @@ declare module '$app/paths' {
 }
 
 declare module '$app/server' {
-	import type { RequestEvent, RemoteCommand, RemoteForm, RemoteFormInput, InvalidField, RemotePrerenderFunction, RemoteQueryFunction } from '@sveltejs/kit';
+	import type { RequestEvent, RemoteCommand, RemoteForm, RemoteFormInput, InvalidField, RemotePrerenderFunction, RemoteQueryFunction } from '@tg-svelte/kit';
 	import type { StandardSchemaV1 } from '@standard-schema/spec';
 	/**
 	 * Read the contents of an imported asset from the filesystem
@@ -3361,12 +3361,12 @@ declare module '$app/state' {
 	 * On the server, values can only be read during rendering (in other words _not_ in e.g. `load` functions). In the browser, the values can be read at any time.
 	 *
 	 * */
-	export const page: import("@sveltejs/kit").Page;
+	export const page: import("@tg-svelte/kit").Page;
 	/**
 	 * A read-only object representing an in-progress navigation, with `from`, `to`, `type` and (if `type === 'popstate'`) `delta` properties.
 	 * Values are `null` when no navigation is occurring, or during server rendering.
 	 * */
-	export const navigating: import("@sveltejs/kit").Navigation | {
+	export const navigating: import("@tg-svelte/kit").Navigation | {
 		from: null;
 		to: null;
 		type: null;
@@ -3401,7 +3401,7 @@ declare module '$app/stores' {
 	 *
 	 * @deprecated Use `page` from `$app/state` instead (requires Svelte 5, [see docs for more info](https://svelte.dev/docs/kit/migrating-to-sveltekit-2#SvelteKit-2.12:-$app-stores-deprecated))
 	 * */
-	export const page: import("svelte/store").Readable<import("@sveltejs/kit").Page>;
+	export const page: import("svelte/store").Readable<import("@tg-svelte/kit").Page>;
 	/**
 	 * A readable store.
 	 * When navigating starts, its value is a `Navigation` object with `from`, `to`, `type` and (if `type === 'popstate'`) `delta` properties.
@@ -3411,7 +3411,7 @@ declare module '$app/stores' {
 	 *
 	 * @deprecated Use `navigating` from `$app/state` instead (requires Svelte 5, [see docs for more info](https://svelte.dev/docs/kit/migrating-to-sveltekit-2#SvelteKit-2.12:-$app-stores-deprecated))
 	 * */
-	export const navigating: import("svelte/store").Readable<import("@sveltejs/kit").Navigation | null>;
+	export const navigating: import("svelte/store").Readable<import("@tg-svelte/kit").Navigation | null>;
 	/**
 	 * A readable store whose initial value is `false`. If [`version.pollInterval`](https://svelte.dev/docs/kit/configuration#version) is a non-zero value, SvelteKit will poll for new versions of the app and update the store value to `true` when it detects one. `updated.check()` will force an immediate check, regardless of polling.
 	 *

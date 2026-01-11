@@ -30,7 +30,7 @@ function read_description(filename) {
 const template = (env, prefixes) => `
 ${GENERATED_COMMENT}
 
-/// <reference types="@sveltejs/kit" />
+/// <reference types="@tg-svelte/kit" />
 
 ${read_description('$env+static+private.md')}
 ${create_static_types('private', env)}
@@ -46,7 +46,7 @@ ${create_dynamic_types('public', env, prefixes)}
 `;
 
 /**
- * Writes ambient declarations including types reference to @sveltejs/kit,
+ * Writes ambient declarations including types reference to @tg-svelte/kit,
  * and the existing environment variables in process.env to
  * $env/static/private and $env/static/public
  * @param {import('types').ValidatedKitConfig} config

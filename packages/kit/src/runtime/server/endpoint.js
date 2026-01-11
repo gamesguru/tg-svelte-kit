@@ -1,11 +1,11 @@
-import { Redirect } from '@sveltejs/kit/internal';
-import { with_request_store } from '@sveltejs/kit/internal/server';
+import { Redirect } from '@tg-svelte/kit/internal';
+import { with_request_store } from '@tg-svelte/kit/internal/server';
 import { ENDPOINT_METHODS, PAGE_METHODS } from '../../constants.js';
 import { negotiate } from '../../utils/http.js';
 import { method_not_allowed } from './utils.js';
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} event_state
  * @param {import('types').SSREndpoint} mod
  * @param {import('types').SSRState} state
@@ -45,7 +45,7 @@ export async function render_endpoint(event, event_state, mod, state) {
 
 	try {
 		const response = await with_request_store({ event, state: event_state }, () =>
-			handler(/** @type {import('@sveltejs/kit').RequestEvent<Record<string, any>>} */ (event))
+			handler(/** @type {import('@tg-svelte/kit').RequestEvent<Record<string, any>>} */ (event))
 		);
 
 		if (!(response instanceof Response)) {
@@ -92,7 +92,7 @@ export async function render_endpoint(event, event_state, mod, state) {
 }
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  */
 export function is_endpoint_request(event) {
 	const { method, headers } = event.request;

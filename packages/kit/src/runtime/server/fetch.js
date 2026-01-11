@@ -6,9 +6,9 @@ import { has_prerendered_path } from './utils.js';
 
 /**
  * @param {{
- *   event: import('@sveltejs/kit').RequestEvent;
+ *   event: import('@tg-svelte/kit').RequestEvent;
  *   options: import('types').SSROptions;
- *   manifest: import('@sveltejs/kit').SSRManifest;
+ *   manifest: import('@tg-svelte/kit').SSRManifest;
  *   state: import('types').SSRState;
  *   get_cookie_header: (url: URL, header: string | null) => string;
  *   set_internal: (name: string, value: string, opts: import('./page/types.js').Cookie['options']) => void;
@@ -196,7 +196,7 @@ function normalize_fetch_input(info, init, url) {
 /**
  * @param {Request} request
  * @param {import('types').SSROptions} options
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @param {import('types').SSRState} state
  * @returns {Promise<Response>}
  */

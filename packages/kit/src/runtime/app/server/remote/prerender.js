@@ -1,9 +1,9 @@
-/** @import { RemoteResource, RemotePrerenderFunction } from '@sveltejs/kit' */
+/** @import { RemoteResource, RemotePrerenderFunction } from '@tg-svelte/kit' */
 /** @import { RemotePrerenderInputsGenerator, RemoteInfo, MaybePromise } from 'types' */
 /** @import { StandardSchemaV1 } from '@standard-schema/spec' */
-import { error, json } from '@sveltejs/kit';
+import { error, json } from '@tg-svelte/kit';
 import { DEV } from 'esm-env';
-import { get_request_store } from '@sveltejs/kit/internal/server';
+import { get_request_store } from '@tg-svelte/kit/internal/server';
 import { stringify, stringify_remote_arg } from '../../../shared.js';
 import { app_dir, base } from '$app/paths/internal/server';
 import {

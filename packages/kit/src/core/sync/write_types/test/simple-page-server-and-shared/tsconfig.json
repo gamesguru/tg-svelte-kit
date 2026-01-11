@@ -10,7 +10,7 @@
 		"allowSyntheticDefaultImports": true,
 		"baseUrl": ".",
 		"paths": {
-			"@sveltejs/kit": ["../../../../../exports/public"],
+			"@tg-svelte/kit": ["../../../../../exports/public"],
 			"types": ["../../../../../types/internal"],
 			"$app/types": ["../../../../../types/ambient.d.ts"]
 		}

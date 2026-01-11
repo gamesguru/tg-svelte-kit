@@ -1,9 +1,9 @@
-/** @import { RemoteQueryOverride } from '@sveltejs/kit' */
+/** @import { RemoteQueryOverride } from '@tg-svelte/kit' */
 /** @import { RemoteFunctionResponse } from 'types' */
 /** @import { Query } from './query.svelte.js' */
 import * as devalue from 'devalue';
 import { app, goto, query_map, remote_responses } from '../client.js';
-import { HttpError, Redirect } from '@sveltejs/kit/internal';
+import { HttpError, Redirect } from '@tg-svelte/kit/internal';
 import { tick } from 'svelte';
 import { create_remote_key, stringify_remote_arg } from '../../shared.js';
 

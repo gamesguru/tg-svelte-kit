@@ -134,7 +134,7 @@ export function get_route_segments(route) {
 /**
  * @param {RegExpMatchArray} match
  * @param {import('types').RouteParam[]} params
- * @param {Record<string, import('@sveltejs/kit').ParamMatcher>} matchers
+ * @param {Record<string, import('@tg-svelte/kit').ParamMatcher>} matchers
  */
 export function exec(match, params, matchers) {
 	/** @type {Record<string, string>} */

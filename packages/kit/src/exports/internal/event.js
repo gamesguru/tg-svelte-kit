@@ -1,4 +1,4 @@
-/** @import { RequestEvent } from '@sveltejs/kit' */
+/** @import { RequestEvent } from '@tg-svelte/kit' */
 /** @import { RequestStore } from 'types' */
 /** @import { AsyncLocalStorage } from 'node:async_hooks' */
 

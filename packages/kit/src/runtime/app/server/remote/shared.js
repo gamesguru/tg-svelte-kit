@@ -1,8 +1,8 @@
-/** @import { RequestEvent } from '@sveltejs/kit' */
+/** @import { RequestEvent } from '@tg-svelte/kit' */
 /** @import { ServerHooks, MaybePromise, RequestState, RemoteInfo, RequestStore } from 'types' */
 import { parse } from 'devalue';
-import { error } from '@sveltejs/kit';
-import { with_request_store, get_request_store } from '@sveltejs/kit/internal/server';
+import { error } from '@tg-svelte/kit';
+import { with_request_store, get_request_store } from '@tg-svelte/kit/internal/server';
 import { stringify_remote_arg } from '../../../shared.js';
 
 /**

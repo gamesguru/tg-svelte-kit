@@ -1,7 +1,7 @@
 import { DEV } from 'esm-env';
-import { json, text } from '@sveltejs/kit';
-import { HttpError } from '@sveltejs/kit/internal';
-import { with_request_store } from '@sveltejs/kit/internal/server';
+import { json, text } from '@tg-svelte/kit';
+import { HttpError } from '@tg-svelte/kit/internal';
+import { with_request_store } from '@tg-svelte/kit/internal/server';
 import { coalesce_to_error, get_message, get_status } from '../../utils/error.js';
 import { negotiate } from '../../utils/http.js';
 import { fix_stack_trace } from '../shared-server.js';
@@ -77,7 +77,7 @@ export function static_error_page(options, status, message) {
 }
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} state
  * @param {import('types').SSROptions} options
  * @param {unknown} error
@@ -103,7 +103,7 @@ export async function handle_fatal_error(event, state, options, error) {
 }
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} state
  * @param {import('types').SSROptions} options
  * @param {any} error
@@ -142,7 +142,7 @@ export function redirect_response(status, location) {
 }
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {Error & { path: string }} error
  */
 export function clarify_devalue_error(event, error) {
@@ -188,7 +188,7 @@ export function serialize_uses(node) {
 
 /**
  * Returns `true` if the given path was prerendered
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @param {string} pathname Should include the base and be decoded
  */
 export function has_prerendered_path(manifest, pathname) {
@@ -202,7 +202,7 @@ export function has_prerendered_path(manifest, pathname) {
  * Formats the error into a nice message with sanitized stack trace
  * @param {number} status
  * @param {Error} error
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  */
 export function format_server_error(status, error, event) {
 	const formatted_text = `\n\x1b[1;31m[${status}] ${event.request.method} ${event.url.pathname}\x1b[0m`;

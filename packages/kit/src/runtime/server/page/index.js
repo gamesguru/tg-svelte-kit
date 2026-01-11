@@ -1,5 +1,5 @@
-import { text } from '@sveltejs/kit';
-import { Redirect } from '@sveltejs/kit/internal';
+import { text } from '@tg-svelte/kit';
+import { Redirect } from '@tg-svelte/kit/internal';
 import { compact } from '../../../utils/array.js';
 import { get_status, normalize_error } from '../../../utils/error.js';
 import { add_data_suffix } from '../../pathname.js';
@@ -24,11 +24,11 @@ import { PageNodes } from '../../../utils/page_nodes.js';
 const MAX_DEPTH = 10;
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} event_state
  * @param {import('types').PageNodeIndexes} page
  * @param {import('types').SSROptions} options
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @param {import('types').SSRState} state
  * @param {import('../../../utils/page_nodes.js').PageNodes} nodes
  * @param {import('types').RequiredResolveOptions} resolve_opts
@@ -61,7 +61,7 @@ export async function render_page(
 
 		let status = 200;
 
-		/** @type {import('@sveltejs/kit').ActionResult | undefined} */
+		/** @type {import('@tg-svelte/kit').ActionResult | undefined} */
 		let action_result = undefined;
 
 		if (is_action_request(event)) {

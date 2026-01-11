@@ -1,8 +1,8 @@
 /** @import { RequestState } from 'types' */
 import { DEV } from 'esm-env';
-import { json, text } from '@sveltejs/kit';
-import { Redirect, SvelteKitError } from '@sveltejs/kit/internal';
-import { merge_tracing, with_request_store } from '@sveltejs/kit/internal/server';
+import { json, text } from '@tg-svelte/kit';
+import { Redirect, SvelteKitError } from '@tg-svelte/kit/internal';
+import { merge_tracing, with_request_store } from '@tg-svelte/kit/internal/server';
 import { base, app_dir } from '$app/paths/internal/server';
 import { is_endpoint_request, render_endpoint } from './endpoint.js';
 import { render_page } from './page/index.js';
@@ -81,7 +81,7 @@ export function is_origin_match(request, origin) {
 /**
  * @param {Request} request
  * @param {import('types').SSROptions} options
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @param {import('types').SSRState} state
  * @returns {Promise<Response>}
  */
@@ -171,7 +171,7 @@ export async function internal_respond(request, options, manifest, state) {
 		is_in_remote_function: false
 	};
 
-	/** @type {import('@sveltejs/kit').RequestEvent} */
+	/** @type {import('@tg-svelte/kit').RequestEvent} */
 	const event = {
 		cookies,
 		// @ts-expect-error `fetch` needs to be created after the `event` itself
@@ -543,9 +543,9 @@ export async function internal_respond(request, options, manifest, state) {
 	}
 
 	/**
-	 * @param {import('@sveltejs/kit').RequestEvent} event
+	 * @param {import('@tg-svelte/kit').RequestEvent} event
 	 * @param {PageNodes | undefined} page_nodes
-	 * @param {import('@sveltejs/kit').ResolveOptions} [opts]
+	 * @param {import('@tg-svelte/kit').ResolveOptions} [opts]
 	 */
 	async function resolve(event, page_nodes, opts) {
 		try {
@@ -736,7 +736,7 @@ export async function internal_respond(request, options, manifest, state) {
 
 /**
  * @param {import('types').PageNodeIndexes} page
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  */
 export function load_page_nodes(page, manifest) {
 	return Promise.all([

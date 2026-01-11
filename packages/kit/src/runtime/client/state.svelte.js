@@ -1,10 +1,10 @@
 import { onMount } from 'svelte';
 import { updated_listener } from './utils.js';
 
-/** @type {import('@sveltejs/kit').Page} */
+/** @type {import('@tg-svelte/kit').Page} */
 export let page;
 
-/** @type {{ current: import('@sveltejs/kit').Navigation | null }} */
+/** @type {{ current: import('@tg-svelte/kit').Navigation | null }} */
 export let navigating;
 
 /** @type {{ current: boolean }} */
@@ -50,7 +50,7 @@ if (is_legacy) {
 }
 
 /**
- * @param {import('@sveltejs/kit').Page} new_page
+ * @param {import('@tg-svelte/kit').Page} new_page
  */
 export function update(new_page) {
 	Object.assign(page, new_page);

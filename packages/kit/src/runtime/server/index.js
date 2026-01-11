@@ -20,10 +20,10 @@ export class Server {
 	/** @type {import('types').SSROptions} */
 	#options;
 
-	/** @type {import('@sveltejs/kit').SSRManifest} */
+	/** @type {import('@tg-svelte/kit').SSRManifest} */
 	#manifest;
 
-	/** @param {import('@sveltejs/kit').SSRManifest} manifest */
+	/** @param {import('@tg-svelte/kit').SSRManifest} manifest */
 	constructor(manifest) {
 		/** @type {import('types').SSROptions} */
 		this.#options = options;
@@ -50,7 +50,7 @@ export class Server {
 	}
 
 	/**
-	 * @param {import('@sveltejs/kit').ServerInitOptions} opts
+	 * @param {import('@tg-svelte/kit').ServerInitOptions} opts
 	 */
 	async init({ env, read }) {
 		// Take care: Some adapters may have to call `Server.init` per-request to set env vars,

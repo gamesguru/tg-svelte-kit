@@ -1,7 +1,7 @@
 /** @import { Span, Tracer } from '@opentelemetry/api' */
 import { describe, test, expect, vi, beforeEach } from 'vitest';
 import { record_span } from './record_span.js';
-import { HttpError, Redirect } from '@sveltejs/kit/internal';
+import { HttpError, Redirect } from '@tg-svelte/kit/internal';
 
 vi.hoisted(() => {
 	vi.stubGlobal('__SVELTEKIT_SERVER_TRACING_ENABLED__', true);

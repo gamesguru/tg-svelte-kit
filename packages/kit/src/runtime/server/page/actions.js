@@ -1,10 +1,10 @@
-/** @import { RequestEvent, ActionResult, Actions } from '@sveltejs/kit' */
+/** @import { RequestEvent, ActionResult, Actions } from '@tg-svelte/kit' */
 /** @import { SSROptions, SSRNode, ServerNode, ServerHooks } from 'types' */
 import * as devalue from 'devalue';
 import { DEV } from 'esm-env';
-import { json } from '@sveltejs/kit';
-import { HttpError, Redirect, ActionFailure, SvelteKitError } from '@sveltejs/kit/internal';
-import { with_request_store, merge_tracing } from '@sveltejs/kit/internal/server';
+import { json } from '@tg-svelte/kit';
+import { HttpError, Redirect, ActionFailure, SvelteKitError } from '@tg-svelte/kit/internal';
+import { with_request_store, merge_tracing } from '@tg-svelte/kit/internal/server';
 import { get_status, normalize_error } from '../../../utils/error.js';
 import { is_form_content_type, negotiate } from '../../../utils/http.js';
 import { handle_error_and_jsonify } from '../utils.js';

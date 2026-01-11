@@ -1,4 +1,4 @@
-import { Redirect } from '@sveltejs/kit/internal';
+import { Redirect } from '@tg-svelte/kit/internal';
 import { render_response } from './render.js';
 import { load_data, load_server_data } from './load_data.js';
 import { handle_error_and_jsonify, static_error_page, redirect_response } from '../utils.js';
@@ -12,10 +12,10 @@ import { server_data_serializer } from './data_serializer.js';
 
 /**
  * @param {{
- *   event: import('@sveltejs/kit').RequestEvent;
+ *   event: import('@tg-svelte/kit').RequestEvent;
  *   event_state: import('types').RequestState;
  *   options: import('types').SSROptions;
- *   manifest: import('@sveltejs/kit').SSRManifest;
+ *   manifest: import('@tg-svelte/kit').SSRManifest;
  *   state: import('types').SSRState;
  *   status: number;
  *   error: unknown;

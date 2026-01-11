@@ -337,7 +337,7 @@ export interface KitConfig {
 	 *
 	 * ```js
 	 * /// file: svelte.config.js
-	 * /// type: import('@sveltejs/kit').Config
+	 * /// type: import('@tg-svelte/kit').Config
 	 * const config = {
 	 *   kit: {
 	 *     alias: {
@@ -372,7 +372,7 @@ export interface KitConfig {
 	 *
 	 * ```js
 	 * /// file: svelte.config.js
-	 * /// type: import('@sveltejs/kit').Config
+	 * /// type: import('@tg-svelte/kit').Config
 	 * const config = {
 	 *   kit: {
 	 *     csp: {
@@ -631,7 +631,7 @@ export interface KitConfig {
 		 *
 		 * ```js
 		 * /// file: vite.config.js
-		 * import { sveltekit } from '@sveltejs/kit/vite';
+		 * import { sveltekit } from '@tg-svelte/kit/vite';
 		 * import { defineConfig } from 'vite';
 		 *
 		 * export default defineConfig({
@@ -717,7 +717,7 @@ export interface KitConfig {
 		 *
 		 * ```js
 		 * /// file: svelte.config.js
-		 * /// type: import('@sveltejs/kit').Config
+		 * /// type: import('@tg-svelte/kit').Config
 		 * const config = {
 		 *   kit: {
 		 *     prerender: {
@@ -985,7 +985,7 @@ export type Reroute = (event: { url: URL; fetch: typeof fetch }) => MaybePromise
  * In the browser, `decode` turns the encoding back into an instance of the custom type.
  *
  * ```ts
- * import type { Transport } from '@sveltejs/kit';
+ * import type { Transport } from '@tg-svelte/kit';
  *
  * declare class MyCustomType {
  * 	data: any

@@ -23,7 +23,7 @@ import {
 	Transport,
 	HandleValidationError,
 	RemoteFormIssue
-} from '@sveltejs/kit';
+} from '@tg-svelte/kit';
 import {
 	HttpMethod,
 	MaybePromise,

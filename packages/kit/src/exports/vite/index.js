@@ -320,7 +320,7 @@ async function kit({ svelte_config }) {
 					exclude: [
 						// Without this SvelteKit will be prebundled on the client, which means we end up with two versions of Redirect etc.
 						// Also see https://github.com/sveltejs/kit/issues/5952#issuecomment-1218844057
-						'@sveltejs/kit',
+						'@tg-svelte/kit',
 						// exclude kit features so that libraries using them work even when they are prebundled
 						// this does not affect app code, just handling of imported libraries that use $app or $env
 						'$app',
@@ -339,7 +339,7 @@ async function kit({ svelte_config }) {
 						// virtual modules like `__sveltekit/environment` (this isn't a valid bare
 						// import, but it works with vite-node's externalization logic, which
 						// uses basic concatenation)
-						'@sveltejs/kit/src/runtime'
+						'@tg-svelte/kit/src/runtime'
 					]
 				}
 			};
@@ -401,7 +401,7 @@ async function kit({ svelte_config }) {
 				globalThis.__sveltekit_dev = {};
 
 				// These Kit dependencies are packaged as CommonJS, which means they must always be externalized.
-				// Without this, the tests will still pass but `pnpm dev` will fail in projects that link `@sveltejs/kit`.
+				// Without this, the tests will still pass but `pnpm dev` will fail in projects that link `@tg-svelte/kit`.
 				/** @type {NonNullable<import('vite').UserConfig['ssr']>} */ (new_config.ssr).external = [
 					'cookie',
 					'set-cookie-parser'
@@ -715,7 +715,7 @@ async function kit({ svelte_config }) {
 					'\n\n' +
 					dedent`
 					import * as $$_self_$$ from './${path.basename(id)}';
-					import { init_remote_functions as $$_init_$$ } from '@sveltejs/kit/internal';
+					import { init_remote_functions as $$_init_$$ } from '@tg-svelte/kit/internal';
 
 					${dev_server ? 'await Promise.resolve()' : ''}
 

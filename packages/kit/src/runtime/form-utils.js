@@ -1,4 +1,4 @@
-/** @import { RemoteForm } from '@sveltejs/kit' */
+/** @import { RemoteForm } from '@tg-svelte/kit' */
 /** @import { BinaryFormMeta, InternalRemoteFormIssue } from 'types' */
 /** @import { StandardSchemaV1 } from '@standard-schema/spec' */
 

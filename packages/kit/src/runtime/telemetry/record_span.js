@@ -1,5 +1,5 @@
 /** @import { RecordSpan } from 'types' */
-import { HttpError, Redirect } from '@sveltejs/kit/internal';
+import { HttpError, Redirect } from '@tg-svelte/kit/internal';
 import { noop_span } from './noop.js';
 import { otel } from './otel.js';
 
