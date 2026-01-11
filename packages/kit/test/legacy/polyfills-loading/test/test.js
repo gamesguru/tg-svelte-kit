@@ -50,9 +50,17 @@ legacyStates.forEach((legacyState) =>
 
 				await verifyIndicators(page, legacyState);
 
-				await checkGlobalIndicator(page, detectModernBrowserVarName, !dev && legacyState === undefined);
+				await checkGlobalIndicator(
+					page,
+					detectModernBrowserVarName,
+					!dev && legacyState === undefined
+				);
 
-				await checkGlobalIndicator(page, 'legacy_polyfill_indicator', legacy_polyfill && !!legacyState);
+				await checkGlobalIndicator(
+					page,
+					'legacy_polyfill_indicator',
+					legacy_polyfill && !!legacyState
+				);
 
 				await checkGlobalIndicator(
 					page,

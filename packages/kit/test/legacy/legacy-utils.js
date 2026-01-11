@@ -25,7 +25,7 @@ export const routeLegacy = (page, path, options = {}) =>
 
 		if (options.partialESModule ?? false) {
 			body = body.replace(
-				new RegExp(`window.${detectModernBrowserVarName}=true.*<\/script>`),
+				new RegExp(`window.${detectModernBrowserVarName}=true.*</script>`),
 				'</script>'
 			);
 		}
@@ -38,7 +38,7 @@ export const routeLegacy = (page, path, options = {}) =>
 			body = body.replace(scriptStart, `${scriptLoadSystemJS}\n${scriptStart}`);
 		}
 
-		route.fulfill({ response, body, headers: response.headers() });
+		await route.fulfill({ response, body, headers: response.headers() });
 	});
 
 /**
