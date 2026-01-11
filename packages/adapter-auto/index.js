@@ -12,7 +12,7 @@ import process from 'node:process';
 
 /**
  * We use a custom `Builder` type here to support the minimum version of SvelteKit.
- * @typedef {PartialExcept<import('@sveltejs/kit').Builder, 'log' | 'rimraf' | 'mkdirp' | 'config' | 'prerendered' | 'routes' | 'createEntries' | 'generateFallback' | 'generateEnvModule' | 'generateManifest' | 'getBuildDirectory' | 'getClientDirectory' | 'getServerDirectory' | 'getAppPath' | 'writeClient' | 'writePrerendered' | 'writePrerendered' | 'writeServer' | 'copy' | 'compress'>} Builder2_0_0
+ * @typedef {PartialExcept<import('@tg-svelte/kit').Builder, 'log' | 'rimraf' | 'mkdirp' | 'config' | 'prerendered' | 'routes' | 'createEntries' | 'generateFallback' | 'generateEnvModule' | 'generateManifest' | 'getBuildDirectory' | 'getClientDirectory' | 'getServerDirectory' | 'getAppPath' | 'writeClient' | 'writePrerendered' | 'writePrerendered' | 'writeServer' | 'copy' | 'compress'>} Builder2_0_0
  */
 
 /** @type {Record<string, (name: string, version: string) => string>} */
@@ -88,7 +88,7 @@ function resolve_peer(dependency) {
 	return path.resolve(pkg_dir, exported);
 }
 
-/** @typedef {import('@sveltejs/kit').Adapter} Adapter */
+/** @typedef {import('@tg-svelte/kit').Adapter} Adapter */
 
 /**
  * @returns {Promise<Adapter | undefined>} The corresponding adapter for the current environment if found otherwise undefined
@@ -153,7 +153,7 @@ export default () => ({
 	adapt: async (builder) => {
 		const adapter = await get_adapter();
 
-		if (adapter) return adapter.adapt(/** @type {import('@sveltejs/kit').Builder} */ (builder));
+		if (adapter) return adapter.adapt(/** @type {import('@tg-svelte/kit').Builder} */ (builder));
 
 		builder.log.warn(
 			'Could not detect a supported production environment. See https://svelte.dev/docs/kit/adapters to learn how to configure your app to run on the platform of your choosing'

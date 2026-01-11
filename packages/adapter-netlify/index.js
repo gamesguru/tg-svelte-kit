@@ -6,7 +6,7 @@ import { builtinModules } from 'node:module';
 import process from 'node:process';
 import esbuild from 'esbuild';
 import toml from '@iarna/toml';
-import { VERSION } from '@sveltejs/kit';
+import { VERSION } from '@tg-svelte/kit';
 
 const [kit_major, kit_minor] = VERSION.split('.');
 
@@ -25,7 +25,7 @@ const [kit_major, kit_minor] = VERSION.split('.');
 
 /**
  * We use a custom `Builder` type here to support the minimum version of SvelteKit.
- * @typedef {PartialExcept<import('@sveltejs/kit').Builder, 'log' | 'rimraf' | 'mkdirp' | 'config' | 'prerendered' | 'routes' | 'createEntries' | 'findServerAssets' | 'generateFallback' | 'generateEnvModule' | 'generateManifest' | 'getBuildDirectory' | 'getClientDirectory' | 'getServerDirectory' | 'getAppPath' | 'writeClient' | 'writePrerendered' | 'writePrerendered' | 'writeServer' | 'copy' | 'compress'>} Builder2_4_0
+ * @typedef {PartialExcept<import('@tg-svelte/kit').Builder, 'log' | 'rimraf' | 'mkdirp' | 'config' | 'prerendered' | 'routes' | 'createEntries' | 'findServerAssets' | 'generateFallback' | 'generateEnvModule' | 'generateManifest' | 'getBuildDirectory' | 'getClientDirectory' | 'getServerDirectory' | 'getAppPath' | 'writeClient' | 'writePrerendered' | 'writePrerendered' | 'writeServer' | 'copy' | 'compress'>} Builder2_4_0
  */
 
 const name = '@sveltejs/adapter-netlify';
@@ -45,8 +45,8 @@ export default function ({ split = false, edge = edge_set_in_env_var } = {}) {
 		async adapt(builder) {
 			if (!builder.routes) {
 				throw new Error(
-					'@sveltejs/adapter-netlify >=2.x (possibly installed through @sveltejs/adapter-auto) requires @sveltejs/kit version 1.5 or higher. ' +
-						'Either downgrade the adapter or upgrade @sveltejs/kit'
+					'@sveltejs/adapter-netlify >=2.x (possibly installed through @sveltejs/adapter-auto) requires @tg-svelte/kit version 1.5 or higher. ' +
+						'Either downgrade the adapter or upgrade @tg-svelte/kit'
 				);
 			}
 

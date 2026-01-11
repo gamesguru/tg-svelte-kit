@@ -7,7 +7,7 @@ export type PartialExcept<T, K extends keyof T> = Partial<Omit<T, K>> & Required
  * We use a custom `Builder` type here to support the minimum version of SvelteKit.
  */
 export type Builder2_0_0 = PartialExcept<
-	import('@sveltejs/kit').Builder,
+	import('@tg-svelte/kit').Builder,
 	| 'log'
 	| 'rimraf'
 	| 'mkdirp'

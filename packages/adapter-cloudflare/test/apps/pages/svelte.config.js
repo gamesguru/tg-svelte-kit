@@ -1,6 +1,6 @@
 import adapter from '../../../index.js';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter()

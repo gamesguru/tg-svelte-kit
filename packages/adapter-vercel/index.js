@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import { nodeFileTrace } from '@vercel/nft';
 import esbuild from 'esbuild';
 import { get_pathname, parse_isr_expiration, pattern_to_src, resolve_runtime } from './utils.js';
-import { VERSION } from '@sveltejs/kit';
+import { VERSION } from '@tg-svelte/kit';
 
 /**
  * @template T
@@ -16,7 +16,7 @@ import { VERSION } from '@sveltejs/kit';
 
 /**
  * We use a custom `Builder` type here to support the minimum version of SvelteKit.
- * @typedef {PartialExcept<import('@sveltejs/kit').Builder, 'log' | 'rimraf' | 'mkdirp' | 'config' | 'prerendered' | 'routes' | 'createEntries' | 'findServerAssets' | 'generateFallback' | 'generateEnvModule' | 'generateManifest' | 'getBuildDirectory' | 'getClientDirectory' | 'getServerDirectory' | 'getAppPath' | 'writeClient' | 'writePrerendered' | 'writePrerendered' | 'writeServer' | 'copy' | 'compress'>} Builder2_4_0
+ * @typedef {PartialExcept<import('@tg-svelte/kit').Builder, 'log' | 'rimraf' | 'mkdirp' | 'config' | 'prerendered' | 'routes' | 'createEntries' | 'findServerAssets' | 'generateFallback' | 'generateEnvModule' | 'generateManifest' | 'getBuildDirectory' | 'getClientDirectory' | 'getServerDirectory' | 'getAppPath' | 'writeClient' | 'writePrerendered' | 'writePrerendered' | 'writeServer' | 'copy' | 'compress'>} Builder2_4_0
  */
 
 const name = '@sveltejs/adapter-vercel';
@@ -39,8 +39,8 @@ const plugin = function (defaults = {}) {
 		async adapt(builder) {
 			if (!builder.routes) {
 				throw new Error(
-					'@sveltejs/adapter-vercel >=2.x (possibly installed through @sveltejs/adapter-auto) requires @sveltejs/kit version 1.5 or higher. ' +
-						'Either downgrade the adapter or upgrade @sveltejs/kit'
+					'@sveltejs/adapter-vercel >=2.x (possibly installed through @sveltejs/adapter-auto) requires @tg-svelte/kit version 1.5 or higher. ' +
+						'Either downgrade the adapter or upgrade @tg-svelte/kit'
 				);
 			}
 
@@ -75,7 +75,7 @@ const plugin = function (defaults = {}) {
 			/**
 			 * @param {string} name
 			 * @param {import('./index.js').ServerlessConfig} config
-			 * @param {import('@sveltejs/kit').RouteDefinition<import('./index.js').Config>[]} routes
+			 * @param {import('@tg-svelte/kit').RouteDefinition<import('./index.js').Config>[]} routes
 			 */
 			async function generate_serverless_function(name, config, routes) {
 				const dir = `${dirs.functions}/${name}.func`;
@@ -112,7 +112,7 @@ const plugin = function (defaults = {}) {
 			/**
 			 * @param {string} name
 			 * @param {import('./index.js').EdgeConfig} config
-			 * @param {import('@sveltejs/kit').RouteDefinition<import('./index.js').EdgeConfig>[]} routes
+			 * @param {import('@tg-svelte/kit').RouteDefinition<import('./index.js').EdgeConfig>[]} routes
 			 */
 			async function generate_edge_function(name, config, routes) {
 				if (!warned) {
@@ -253,7 +253,7 @@ const plugin = function (defaults = {}) {
 				);
 			}
 
-			/** @type {Map<string, { i: number, config: import('./index.js').Config, routes: import('@sveltejs/kit').RouteDefinition<import('./index.js').Config>[] }>} */
+			/** @type {Map<string, { i: number, config: import('./index.js').Config, routes: import('@tg-svelte/kit').RouteDefinition<import('./index.js').Config>[] }>} */
 			const groups = new Map();
 
 			/** @type {Map<string, { hash: string, route_id: string }>} */
@@ -262,7 +262,7 @@ const plugin = function (defaults = {}) {
 			/** @type {Map<string, string>} */
 			const functions = new Map();
 
-			/** @type {Map<import('@sveltejs/kit').RouteDefinition<import('./index.js').Config>, { expiration: number | false, bypassToken: string | undefined, allowQuery: string[], group: number, passQuery: true }>} */
+			/** @type {Map<import('@tg-svelte/kit').RouteDefinition<import('./index.js').Config>, { expiration: number | false, bypassToken: string | undefined, allowQuery: string[], group: number, passQuery: true }>} */
 			const isr_config = new Map();
 
 			/** @type {Set<string>} */
@@ -356,7 +356,7 @@ const plugin = function (defaults = {}) {
 				await generate_function(
 					name,
 					/** @type {any} */ (group.config),
-					/** @type {import('@sveltejs/kit').RouteDefinition<any>[]} */ (group.routes)
+					/** @type {import('@tg-svelte/kit').RouteDefinition<any>[]} */ (group.routes)
 				);
 
 				for (const route of group.routes) {
@@ -821,7 +821,7 @@ function validate_vercel_json(builder, vercel_config) {
 	}
 }
 
-/** @param {import('@sveltejs/kit').RouteDefinition} route */
+/** @param {import('@tg-svelte/kit').RouteDefinition} route */
 function is_prerendered(route) {
 	return (
 		route.prerender === true ||

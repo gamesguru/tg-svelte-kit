@@ -98,11 +98,11 @@ export function _create_validator(options) {
 		}
 
 		if (
-			!(pkg.dependencies?.['@sveltejs/kit'] || pkg.peerDependencies?.['@sveltejs/kit']) &&
-			([...imports].some((i) => i.startsWith('$app/')) || imports.has('@sveltejs/kit'))
+			!(pkg.dependencies?.['@tg-svelte/kit'] || pkg.peerDependencies?.['@tg-svelte/kit']) &&
+			([...imports].some((i) => i.startsWith('$app/')) || imports.has('@tg-svelte/kit'))
 		) {
 			warnings.push(
-				'You are using SvelteKit-specific imports in your code, but you have not declared a dependency on `@sveltejs/kit` in your `package.json`. ' +
+				'You are using SvelteKit-specific imports in your code, but you have not declared a dependency on `@tg-svelte/kit` in your `package.json`. ' +
 					'Add it to your `dependencies` or `peerDependencies`.'
 			);
 		}

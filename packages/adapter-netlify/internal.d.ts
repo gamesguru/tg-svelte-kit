@@ -1,9 +1,9 @@
 declare module '0SERVER' {
-	export { Server } from '@sveltejs/kit';
+	export { Server } from '@tg-svelte/kit';
 }
 
 declare module 'MANIFEST' {
-	import { SSRManifest } from '@sveltejs/kit';
+	import { SSRManifest } from '@tg-svelte/kit';
 
 	export const manifest: SSRManifest;
 }

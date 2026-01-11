@@ -1,4 +1,4 @@
-import { createReadableStream } from '@sveltejs/kit/node';
+import { createReadableStream } from '@tg-svelte/kit/node';
 import { Server } from 'SERVER';
 import { manifest } from 'MANIFEST';
 import process from 'node:process';

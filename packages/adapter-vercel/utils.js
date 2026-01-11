@@ -1,6 +1,6 @@
 import process from 'node:process';
 
-/** @param {import("@sveltejs/kit").RouteDefinition<any>} route */
+/** @param {import("@tg-svelte/kit").RouteDefinition<any>} route */
 export function get_pathname(route) {
 	let i = 1;
 

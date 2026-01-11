@@ -7,11 +7,11 @@ const { parse_route_id } = await import(
 );
 
 /**
- * @param {import('@sveltejs/kit').RouteDefinition<any>['segments']} segments
+ * @param {import('@tg-svelte/kit').RouteDefinition<any>['segments']} segments
  * @param {string} expected
  */
 function run_get_pathname_test(segments, expected) {
-	const route = /** @type {import('@sveltejs/kit').RouteDefinition<any>} */ ({ segments });
+	const route = /** @type {import('@tg-svelte/kit').RouteDefinition<any>} */ ({ segments });
 	assert.equal(get_pathname(route), expected);
 }
 

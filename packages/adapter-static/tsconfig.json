@@ -11,7 +11,7 @@
 		"allowSyntheticDefaultImports": true,
 		"baseUrl": ".",
 		"paths": {
-			"@sveltejs/kit": ["../kit/types/index"]
+			"@tg-svelte/kit": ["../kit/types/index"]
 		}
 	},
 	"include": ["index.js", "internal.d.ts", "test/utils.js"]

@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 // no export const prerender here, it should be prerendered by virtue
 // of being fetched from a prerendered page

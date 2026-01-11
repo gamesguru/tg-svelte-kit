@@ -1,4 +1,4 @@
-import { Adapter } from '@sveltejs/kit';
+import { Adapter } from '@tg-svelte/kit';
 
 export interface AdapterOptions {
 	pages?: string;
