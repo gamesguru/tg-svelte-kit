@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 export function GET({ setHeaders, cookies }) {
 	setHeaders({ 'cache-control': 'public, max-age=4', age: '2' });

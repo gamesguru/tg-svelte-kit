@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch }) {
 	const url = '/fetch-endpoint/not-buffered.json';
 	const res = await fetch(url);

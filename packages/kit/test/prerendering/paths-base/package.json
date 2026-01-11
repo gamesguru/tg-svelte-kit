@@ -10,7 +10,7 @@
 		"test": "svelte-kit sync && pnpm build && vitest run"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "workspace:^",
+		"@tg-svelte/kit": "workspace:^",
 		"@sveltejs/vite-plugin-svelte": "catalog:",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",

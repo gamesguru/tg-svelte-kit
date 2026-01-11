@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export const GET = ({ cookies }) => {
 	const response = new Response('success', {
 		status: 200

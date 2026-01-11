@@ -1,6 +1,6 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export const GET = (event) => {
 	const needsEncoding = 'teapot, jane austen';
 	event.cookies.set('encoding', needsEncoding, { path: '/cookies/encoding' });

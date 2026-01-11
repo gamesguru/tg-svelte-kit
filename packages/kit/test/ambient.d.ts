@@ -1,4 +1,4 @@
-import { AfterNavigate, BeforeNavigate } from '@sveltejs/kit';
+import { AfterNavigate, BeforeNavigate } from '@tg-svelte/kit';
 
 declare global {
 	interface Window {

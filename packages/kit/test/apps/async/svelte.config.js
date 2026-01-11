@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	compilerOptions: {
 		experimental: {

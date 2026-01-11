@@ -1,6 +1,6 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export function GET({ params }) {
 	return json({
 		name: params.dynamic

@@ -1,6 +1,6 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export function GET({ setHeaders }) {
 	setHeaders({
 		'x-test': '\u001f'

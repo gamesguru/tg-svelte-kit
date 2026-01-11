@@ -1,4 +1,4 @@
-/** @type {import("@sveltejs/kit").HandleServerError} */
+/** @type {import("@tg-svelte/kit").HandleServerError} */
 export function handleError({ error }) {
 	return { message: /**@type{any}*/ (error).message };
 }

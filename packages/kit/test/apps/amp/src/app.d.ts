@@ -1,4 +1,4 @@
-/// <reference types="@sveltejs/kit" />
+/// <reference types="@tg-svelte/kit" />
 
 declare module 'dropcss' {
 	interface Options {

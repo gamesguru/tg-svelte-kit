@@ -2,7 +2,7 @@ import { env } from '$env/dynamic/public';
 
 window.PUBLIC_DYNAMIC = env.PUBLIC_DYNAMIC;
 
-/** @type{import("@sveltejs/kit").HandleClientError} */
+/** @type{import("@tg-svelte/kit").HandleClientError} */
 export function handleError({ error, event, status, message }) {
 	return event.url.pathname.endsWith('404-fallback')
 		? undefined

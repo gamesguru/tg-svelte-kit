@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export function load(pageContext) {
 	if (browser) {
 		window.pageContext = pageContext;

@@ -1,4 +1,4 @@
-/** @type {import("@sveltejs/kit").RequestHandler} */
+/** @type {import("@tg-svelte/kit").RequestHandler} */
 export function GET({ setHeaders }) {
 	setHeaders({
 		'cache-control': 'totally-invalid',

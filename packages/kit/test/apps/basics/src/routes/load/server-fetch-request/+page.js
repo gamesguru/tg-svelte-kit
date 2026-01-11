@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ url, fetch }) {
 	const href = `http://localhost:${url.searchParams.get('port')}/server-fetch-request.json`;
 

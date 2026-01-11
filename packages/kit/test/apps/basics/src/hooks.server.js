@@ -1,6 +1,6 @@
 import { building, dev } from '$app/environment';
-import { error, isHttpError, redirect } from '@sveltejs/kit';
-import { sequence } from '@sveltejs/kit/hooks';
+import { error, isHttpError, redirect } from '@tg-svelte/kit';
+import { sequence } from '@tg-svelte/kit/hooks';
 import fs from 'node:fs';
 import { COOKIE_NAME } from './routes/cookies/shared';
 import { _set_from_init } from './routes/init-hooks/+page.server';
@@ -39,7 +39,7 @@ export function error_to_pojo(error) {
 	return { name, message, stack, ...custom };
 }
 
-/** @type {import('@sveltejs/kit').HandleServerError} */
+/** @type {import('@tg-svelte/kit').HandleServerError} */
 export const handleError = ({ event, error: e, status, message }) => {
 	const error = /** @type {Error} */ (e);
 	// TODO we do this because there's no other way (that i'm aware of)
@@ -198,7 +198,7 @@ export const handle = sequence(
 	}
 );
 
-/** @type {import('@sveltejs/kit').HandleFetch} */
+/** @type {import('@tg-svelte/kit').HandleFetch} */
 export async function handleFetch({ request, fetch }) {
 	if (request.url.endsWith('/server-fetch-request.json')) {
 		request = new Request(

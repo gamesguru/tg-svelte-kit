@@ -1,6 +1,6 @@
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export function load() {
 	error(555, undefined);
 }

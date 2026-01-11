@@ -1,6 +1,6 @@
 let errorName = 'null';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export function GET({ url }) {
 	if (url.searchParams.has('what')) {
 		const body = errorName;

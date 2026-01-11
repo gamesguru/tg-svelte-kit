@@ -1,6 +1,6 @@
 import { base, assets } from '$app/paths';
 
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load() {
 	return {
 		paths: {

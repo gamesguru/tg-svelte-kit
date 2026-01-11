@@ -1,5 +1,5 @@
 import { query } from '$app/server';
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
 export const layoutRedirect = query('unchecked', (path) => {
 	if (path !== '/remote/query-redirect/from-common-layout/redirected') {

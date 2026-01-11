@@ -1,5 +1,5 @@
 <script>
-	import { isHttpError } from '@sveltejs/kit';
+	import { isHttpError } from '@tg-svelte/kit';
 	import {
 		validated_query_no_args,
 		validated_query_with_arg,

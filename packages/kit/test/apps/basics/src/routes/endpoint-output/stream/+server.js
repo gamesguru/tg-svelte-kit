@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from 'node:crypto';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export function GET() {
 	const data = randomBytes(1024 * 256);
 	const digest = createHash('sha256').update(data).digest('base64url');

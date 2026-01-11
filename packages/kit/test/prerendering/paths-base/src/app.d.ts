@@ -1,1 +1,1 @@
-/// <reference types="@sveltejs/kit" />;
+/// <reference types="@tg-svelte/kit" />;

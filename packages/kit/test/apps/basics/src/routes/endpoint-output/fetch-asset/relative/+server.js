@@ -1,6 +1,6 @@
 import file_path from '../test.txt?url';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export async function GET({ fetch }) {
 	const response = await fetch(file_path);
 

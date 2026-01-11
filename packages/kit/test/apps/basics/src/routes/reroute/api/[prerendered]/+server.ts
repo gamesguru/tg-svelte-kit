@@ -1,4 +1,4 @@
-import { text } from '@sveltejs/kit';
+import { text } from '@tg-svelte/kit';
 
 // This is inside a route with a route segment to ensure that the route is marked as prerendered
 // as part of reroute resolution even when no `entries` is given.

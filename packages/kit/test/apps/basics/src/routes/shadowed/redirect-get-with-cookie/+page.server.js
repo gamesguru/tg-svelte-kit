@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ cookies }) {

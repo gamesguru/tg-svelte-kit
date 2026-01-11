@@ -1,5 +1,5 @@
 import { command, query } from '$app/server';
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {Array<[string, { id: string; title: string }]>} **/
 const INITIAL_TODOS = [

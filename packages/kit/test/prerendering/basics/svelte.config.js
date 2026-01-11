@@ -1,7 +1,7 @@
 import adapter from '../../../../adapter-static/index.js';
 import { writeFileSync } from 'node:fs';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter(),

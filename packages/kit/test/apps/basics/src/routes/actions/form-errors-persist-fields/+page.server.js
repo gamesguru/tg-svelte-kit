@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail } from '@tg-svelte/kit';
 
 /**
  * @type {import('./$types').Actions}
