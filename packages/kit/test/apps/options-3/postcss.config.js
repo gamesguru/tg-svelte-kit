@@ -1,5 +1,5 @@
-import { readdirSync } from 'fs';
-import { extname } from 'path';
+import { readdirSync } from 'node:fs';
+import { extname } from 'node:path';
 import postcssPresetEnv from 'postcss-preset-env';
 
 const baseCSSDir = './node_modules/@sveltejs/site-kit/styles/';
