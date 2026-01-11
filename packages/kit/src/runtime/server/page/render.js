@@ -98,6 +98,8 @@ export async function render_response({
 			? (action_result.data ?? null)
 			: null;
 
+	let serialized_remote_data = '';
+
 	/** @type {string} */
 	let base = paths.base;
 
@@ -485,10 +487,10 @@ export async function render_response({
 			blocks.push(
 				legacy_support_and_export_init
 					? `Promise.all(${import_arr_combined}).then(function (modules) {
-						(function (kit, app) { kit.start(${args.join(', ')}) })(modules[0], modules[1]);
+						(function (kit, app) { ${serialized_remote_data}kit.start(${args.join(', ')}) })(modules[0], modules[1]);
 					});`
 					: `Promise.all(${import_arr_combined}).then(([kit, app]) => {
-						kit.start(${args.join(', ')});
+						${serialized_remote_data}kit.start(${args.join(', ')});
 					});`
 			);
 
@@ -738,8 +740,6 @@ export async function render_response({
 		}
 
 		const { remote_data: remote_cache } = event_state;
-
-		let serialized_remote_data = '';
 
 		if (remote_cache) {
 			/** @type {Record<string, any>} */

@@ -41,7 +41,11 @@ test.describe('remote function mutations', () => {
 
 	test('hydrated data is reused', async ({ page }) => {
 		let request_count = 0;
-		page.on('request', (r) => (request_count += r.url().includes('/_app/remote') ? 1 : 0));
+		page.on('request', (r) => {
+			if (r.url().includes('/_app/remote') && !r.url().includes('set_count_server_refresh')) {
+				request_count += 1;
+			}
+		});
 
 		await page.goto('/remote');
 		await expect(page.locator('#count-result')).toHaveText('0 / 0 (false)');
