@@ -1,6 +1,6 @@
 {
 	"name": "@tg-svelte/kit",
-	"version": "2.49.4",
+	"version": "2.49.4-rc.0",
 	"description": "SvelteKit fork with legacy browser support (IE11) and static builds",
 	"keywords": [
 		"framework",

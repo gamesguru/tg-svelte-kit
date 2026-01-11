@@ -31,6 +31,7 @@ jobs:
       - name: Build/Check Kit
         run: |
           cd packages/kit
+          pnpm build
           pnpm check
 
       - name: Install Template Dependencies
