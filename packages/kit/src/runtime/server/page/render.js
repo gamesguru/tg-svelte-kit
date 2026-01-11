@@ -351,6 +351,7 @@ export async function render_response({
 		const generate_init_script = (legacy_support_and_export_init) => {
 			/** @type {string[]} */
 			const blocks = [];
+			const data_declaration = page_config.ssr ? `const data = ${data};\n` : '';
 
 			/** @type {Record<string, string>} */
 			const pre_init_input = {};
@@ -405,18 +406,49 @@ export async function render_response({
 							deferred.set(id, { fulfil: fulfil, reject: reject });
 						}) }`);
 
-				properties.push(`resolve: function (result) {
-							${render_code_with_input(
-								[
-									`deferred.delete(result.id);
+				let app_import;
+				if (client.inline) {
+					app_import = `Promise.resolve(__sveltekit_${options.version_hash}.app.app)`;
+				} else if (client.app) {
+					app_import = `${import_func}(${s(prefixed(client.app))})`;
+				} else {
+					app_import = `${import_func}(${s(prefixed(client.start))}).then(function(m) { return m.app })`;
+				}
 
-							if (result.error) deferred_result.reject(result.error);
-							else deferred_result.fulfil(result.data);
-							`
-								],
-								{ deferred_result: 'deferred.get(result.id)' },
-								'\n\t\t\t\t\t\t\t'
-							)}
+				properties.push(`resolve: function (id, fn) {
+							var try_to_resolve = function () {
+								if (!deferred.has(id)) {
+									setTimeout(try_to_resolve, 0);
+									return;
+								}
+								var deferred_result = deferred.get(id);
+								deferred.delete(id);
+
+								${
+									Object.keys(options.hooks.transport).length > 0
+										? `${app_import}.then(function(app) {
+										try {
+											var result = fn(app);
+											var data = result[0];
+											var error = result[1];
+											if (error) deferred_result.reject(error);
+											else deferred_result.fulfil(data);
+										} catch (e) {
+											deferred_result.reject(e);
+										}
+									});`
+										: `try {
+										var result = fn();
+										var data = result[0];
+										var error = result[1];
+										if (error) deferred_result.reject(error);
+										else deferred_result.fulfil(data);
+									} catch (e) {
+										deferred_result.reject(e);
+									}`
+								}
+							};
+							try_to_resolve();
 						}`);
 			}
 
@@ -428,8 +460,6 @@ export async function render_response({
 
 			if (page_config.ssr) {
 				const serialized = { form: 'null', error: 'null' };
-
-				init_input['data'] = data;
 
 				if (form_value) {
 					serialized.form = uneval_action_response(
@@ -487,15 +517,22 @@ export async function render_response({
 			blocks.push(
 				legacy_support_and_export_init
 					? `Promise.all(${import_arr_combined}).then(function (modules) {
-						(function (kit, app) { ${serialized_remote_data}kit.start(${args.join(', ')}) })(modules[0], modules[1]);
+						(function (kit, app) { ${data_declaration}${serialized_remote_data}kit.start(${args.join(', ')}) })(modules[0], modules[1]);
 					});`
 					: `Promise.all(${import_arr_combined}).then(([kit, app]) => {
-						${serialized_remote_data}kit.start(${args.join(', ')});
+						${data_declaration}${serialized_remote_data}kit.start(${args.join(', ')});
 					});`
 			);
 
 			if (options.service_worker) {
-				const opts = DEV ? `, { type: 'module' }` : '';
+				let opts = DEV ? ", { type: 'module' }" : '';
+				if (options.service_worker_options != null) {
+					const service_worker_options = { ...options.service_worker_options };
+					if (DEV) {
+						service_worker_options.type = 'module';
+					}
+					opts = `, ${s(service_worker_options)}`;
+				}
 
 				// we use an anonymous function instead of an arrow function to support
 				// older browsers (https://github.com/sveltejs/kit/pull/5417)
