@@ -146,12 +146,12 @@ importers:
 
   packages/adapter-auto:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../kit
       '@types/node':
         specifier: 'catalog:'
         version: 18.19.119
@@ -177,7 +177,7 @@ importers:
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.56.0
-      '@sveltejs/kit':
+      '@tg-svelte/kit':
         specifier: workspace:^
         version: link:../kit
       '@types/node':
@@ -195,12 +195,12 @@ importers:
 
   packages/adapter-cloudflare/test/apps/pages:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       server-side-dep:
         specifier: file:server-side-dep
         version: file:packages/adapter-cloudflare/test/apps/pages/server-side-dep
@@ -216,12 +216,12 @@ importers:
 
   packages/adapter-cloudflare/test/apps/workers:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       server-side-dep:
         specifier: file:server-side-dep
         version: file:packages/adapter-cloudflare/test/apps/workers/server-side-dep
@@ -268,12 +268,12 @@ importers:
       '@rollup/plugin-node-resolve':
         specifier: 'catalog:'
         version: 16.0.0(rollup@4.50.1)
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../kit
       '@types/node':
         specifier: 'catalog:'
         version: 18.19.119
@@ -292,12 +292,12 @@ importers:
 
   packages/adapter-netlify/test/apps/basic:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       netlify-cli:
         specifier: 'catalog:'
         version: 23.5.1(@types/node@18.19.119)(picomatch@4.0.3)(rollup@4.50.1)
@@ -310,12 +310,12 @@ importers:
 
   packages/adapter-netlify/test/apps/edge:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       netlify-cli:
         specifier: 'catalog:'
         version: 23.5.1(@types/node@18.19.119)(picomatch@4.0.3)(rollup@4.50.1)
@@ -344,12 +344,12 @@ importers:
       '@polka/url':
         specifier: 'catalog:'
         version: 1.0.0-next.28
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../kit
       '@types/node':
         specifier: 'catalog:'
         version: 18.19.119
@@ -371,12 +371,12 @@ importers:
       '@playwright/test':
         specifier: 'catalog:'
         version: 1.56.0
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../kit
       '@types/node':
         specifier: 'catalog:'
         version: 18.19.119
@@ -395,12 +395,12 @@ importers:
 
   packages/adapter-static/test/apps/prerendered:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       sirv-cli:
         specifier: 'catalog:'
         version: 3.0.0
@@ -413,12 +413,12 @@ importers:
 
   packages/adapter-static/test/apps/spa:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       sirv-cli:
         specifier: 'catalog:'
         version: 3.0.0
@@ -438,12 +438,12 @@ importers:
         specifier: ^0.25.4
         version: 0.25.9
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../kit
       '@types/node':
         specifier: 'catalog:'
         version: 18.19.119
@@ -456,7 +456,7 @@ importers:
 
   packages/amp:
     devDependencies:
-      '@sveltejs/kit':
+      '@tg-svelte/kit':
         specifier: workspace:^
         version: link:../kit
       typescript:
@@ -511,12 +511,12 @@ importers:
       '@sveltejs/enhanced-img':
         specifier: workspace:^
         version: link:../../..
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../../kit
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../../kit
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -611,12 +611,12 @@ importers:
       '@sveltejs/amp':
         specifier: workspace:^
         version: link:../../../../amp
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       dropcss:
         specifier: 'catalog:'
         version: 1.0.16
@@ -635,12 +635,12 @@ importers:
 
   packages/kit/test/apps/async:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -668,12 +668,12 @@ importers:
       '@opentelemetry/sdk-trace-node':
         specifier: 'catalog:'
         version: 2.2.0(@opentelemetry/api@1.9.0)
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       '@vitest/browser-playwright':
         specifier: 'catalog:'
         version: 4.0.16(playwright@1.56.0)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))(vitest@4.0.16)
@@ -701,12 +701,12 @@ importers:
 
   packages/kit/test/apps/dev-only:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       e2e-test-dep-error:
         specifier: file:./_test_dependencies/cjs-only
         version: e2e-test-dep-cjs-only@file:packages/kit/test/apps/dev-only/_test_dependencies/cjs-only
@@ -752,12 +752,12 @@ importers:
 
   packages/kit/test/apps/embed:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -773,12 +773,12 @@ importers:
 
   packages/kit/test/apps/hash-based-routing:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -794,12 +794,12 @@ importers:
 
   packages/kit/test/apps/no-ssr:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -818,12 +818,12 @@ importers:
       '@fontsource/libre-barcode-128-text':
         specifier: 'catalog:'
         version: 5.1.0
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -842,12 +842,12 @@ importers:
       '@sveltejs/adapter-node':
         specifier: workspace:^
         version: link:../../../../adapter-node
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -869,12 +869,12 @@ importers:
       '@sveltejs/adapter-node':
         specifier: workspace:^
         version: link:../../../../adapter-node
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -890,12 +890,12 @@ importers:
 
   packages/kit/test/apps/prerendered-app-error-pages:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -911,12 +911,12 @@ importers:
 
   packages/kit/test/apps/writes:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -941,12 +941,12 @@ importers:
       '@sveltejs/adapter-auto':
         specifier: workspace:^
         version: link:../../../../../adapter-auto
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -965,12 +965,12 @@ importers:
       '@sveltejs/adapter-auto':
         specifier: workspace:^
         version: link:../../../../../adapter-auto
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -989,12 +989,12 @@ importers:
       '@sveltejs/adapter-auto':
         specifier: workspace:^
         version: link:../../../../../adapter-auto
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1013,12 +1013,12 @@ importers:
       '@sveltejs/adapter-auto':
         specifier: workspace:^
         version: link:../../../../../adapter-auto
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1034,12 +1034,12 @@ importers:
 
   packages/kit/test/build-errors/apps/private-dynamic-env:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1055,12 +1055,12 @@ importers:
 
   packages/kit/test/build-errors/apps/private-dynamic-env-dynamic-import:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1076,12 +1076,12 @@ importers:
 
   packages/kit/test/build-errors/apps/private-static-env:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1097,12 +1097,12 @@ importers:
 
   packages/kit/test/build-errors/apps/private-static-env-dynamic-import:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1118,12 +1118,12 @@ importers:
 
   packages/kit/test/build-errors/apps/server-only-folder:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1139,12 +1139,12 @@ importers:
 
   packages/kit/test/build-errors/apps/server-only-folder-dynamic-import:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1160,12 +1160,12 @@ importers:
 
   packages/kit/test/build-errors/apps/server-only-module:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1181,12 +1181,12 @@ importers:
 
   packages/kit/test/build-errors/apps/server-only-module-dynamic-import:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1202,12 +1202,12 @@ importers:
 
   packages/kit/test/build-errors/apps/service-worker-dynamic-public-env:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1223,12 +1223,12 @@ importers:
 
   packages/kit/test/build-errors/apps/service-worker-private-env:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1244,12 +1244,12 @@ importers:
 
   packages/kit/test/build-errors/apps/syntax-error:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1265,7 +1265,7 @@ importers:
 
   packages/kit/test/legacy/basic:
     devDependencies:
-      '@sveltejs/kit':
+      '@tg-svelte/kit':
         specifier: workspace:*
         version: link:../../..
       '@vitejs/plugin-legacy':
@@ -1292,7 +1292,7 @@ importers:
 
   packages/kit/test/legacy/polyfills-loading:
     devDependencies:
-      '@sveltejs/kit':
+      '@tg-svelte/kit':
         specifier: workspace:*
         version: link:../../..
       '@vitejs/plugin-legacy':
@@ -1325,12 +1325,12 @@ importers:
 
   packages/kit/test/prerendering/basics:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1349,12 +1349,12 @@ importers:
 
   packages/kit/test/prerendering/options:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1373,12 +1373,12 @@ importers:
 
   packages/kit/test/prerendering/paths-base:
     devDependencies:
-      '@sveltejs/kit':
-        specifier: workspace:^
-        version: link:../../..
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:^
+        version: link:../../..
       svelte:
         specifier: 'catalog:'
         version: 5.42.2
@@ -1440,7 +1440,7 @@ importers:
 
   packages/test-redirect-importer:
     dependencies:
-      '@sveltejs/kit':
+      '@tg-svelte/kit':
         specifier: workspace:*
         version: link:../kit
 
@@ -1470,15 +1470,15 @@ importers:
       '@sveltejs/enhanced-img':
         specifier: workspace:*
         version: link:../../packages/enhanced-img
-      '@sveltejs/kit':
-        specifier: workspace:*
-        version: link:../../packages/kit
       '@sveltejs/package':
         specifier: workspace:*
         version: link:../../packages/package
       '@sveltejs/vite-plugin-svelte':
         specifier: 'catalog:'
         version: 6.0.0-next.3(svelte@5.42.2)(vite@6.3.6(@types/node@18.19.119)(jiti@2.4.2)(lightningcss@1.30.1)(sass@1.97.2)(terser@5.44.1)(yaml@2.8.0))
+      '@tg-svelte/kit':
+        specifier: workspace:*
+        version: link:../../packages/kit
       prettier:
         specifier: ^3.3.2
         version: 3.6.0
