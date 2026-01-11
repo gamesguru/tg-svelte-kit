@@ -26,7 +26,7 @@ const config = {
 						//  while this is usefull for testing, you should never do this in production
 						//  (see @vitejs/plugin-legacy docs for more info).
 						path.relative(core_js_modules_path, path.resolve(__dirname, 'polyfills/modern'))
-				  ]
+					]
 				: false
 		})
 	],

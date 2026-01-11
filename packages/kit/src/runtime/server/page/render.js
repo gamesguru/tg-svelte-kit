@@ -377,7 +377,7 @@ export async function render_response({
 							...input_list.map(([key, val]) => `const ${key} = ${val};`),
 							'',
 							...codeBlocks
-					  ].join(separator)}`;
+						].join(separator)}`;
 			};
 
 			const import_func = legacy_support_and_export_init ? 'import_func' : 'import';
@@ -705,12 +705,11 @@ export async function render_response({
 			}
 			// otherwise
 
-
-		/**
-		 *
-		 * @param {string} script
-		 * @param {string | undefined} additionalAttrs
-		 */
+			/**
+			 *
+			 * @param {string} script
+			 * @param {string | undefined} additionalAttrs
+			 */
 			const hydrate = [
 				`node_ids: [${branch.map(({ node }) => node.index).join(', ')}]`,
 				`data: ${data}`,
@@ -838,7 +837,7 @@ export async function render_response({
 				(client.legacy_polyfills_file
 					? `var n=document.createElement("script");n.src=${s(
 							prefixed(client.legacy_polyfills_file)
-					  )},n.onload=window.${startup_script_var_name},document.body.appendChild(n)`
+						)},n.onload=window.${startup_script_var_name},document.body.appendChild(n)`
 					: `window.${startup_script_var_name}()`) +
 				`}}();`;
 			body += `\n\t\t\t<script type="module"${

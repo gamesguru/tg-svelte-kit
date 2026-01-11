@@ -1192,7 +1192,10 @@ async function kit({ svelte_config }) {
 				});
 
 				const start_deps = find_deps_with_optional_legacy(`${runtime_directory}/client`, 'entry');
-				const app_deps = find_deps_with_optional_legacy(`${kit.outDir}/generated/client-optimized`, 'app');
+				const app_deps = find_deps_with_optional_legacy(
+					`${kit.outDir}/generated/client-optimized`,
+					'app'
+				);
 
 				build_data.client = {
 					start: start_deps.file,
@@ -1216,8 +1219,14 @@ async function kit({ svelte_config }) {
 
 				if (svelte_config.kit.output.bundleStrategy === 'split') {
 					// Legacy PR: Use the legacy-aware objects we created above, but ensure imports/stylesheets/fonts are merged
-					const start_legacy = find_deps_with_optional_legacy(`${runtime_directory}/client`, 'entry');
-					const app_legacy = find_deps_with_optional_legacy(`${kit.outDir}/generated/client-optimized`, 'app');
+					const start_legacy = find_deps_with_optional_legacy(
+						`${runtime_directory}/client`,
+						'entry'
+					);
+					const app_legacy = find_deps_with_optional_legacy(
+						`${kit.outDir}/generated/client-optimized`,
+						'app'
+					);
 
 					build_data.client = {
 						start: start_legacy.file,

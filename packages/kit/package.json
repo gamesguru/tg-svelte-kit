@@ -10,7 +10,9 @@
 		"vite"
 	],
 	"author": "Shane Jaroch <chown_tee@proton.me>",
-	"contributors": ["Tal Hadad <tal_hd@hotmail.com>"],
+	"contributors": [
+		"Tal Hadad <tal_hd@hotmail.com>"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/sveltejs/kit.git",
