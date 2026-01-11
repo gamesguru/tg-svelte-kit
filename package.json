@@ -4,6 +4,10 @@
 	"description": "SvelteJS Kit fork with support for static legacy builds",
 	"private": true,
 	"type": "module",
+	"author": "Shane Jaroch <chown_tee@proton.me>",
+	"contributors": [
+		"Tal Hadad <tal_hd@hotmail.com>"
+	],
 	"scripts": {
 		"test:kit": "pnpm run --dir packages/kit test",
 		"test:cross-platform:dev": "pnpm run --dir packages/kit test:cross-platform:dev",
