@@ -7,7 +7,7 @@ fix(kit): support @vitejs/plugin-legacy multi-output and correct entry name
 This PR addresses build failures when using `@vitejs/plugin-legacy` with SvelteKit.
 
 ### The Problem
-When `@vitejs/plugin-legacy` is used, Vite produces an array of output bundles (one for modern, one for legacy) instead of a single output object. SvelteKit's `writeBundle` hook previously assumed a single output, causing `TypeError`s when accessing properies like `bundle.output`.
+When `@vitejs/plugin-legacy` is used, Vite produces an array of output bundles (one for modern, one for legacy) instead of a single output object. SvelteKit's `writeBundle` hook previously assumed a single output, causing `TypeError`s when accessing properties like `bundle.output`.
 
 Additionally, the legacy plugin may rename/remap entry chunks. SvelteKit was strictly looking for `start.js` (or `entry.js`), resulting in "Entry not found" errors when the manifest contained `entry-legacy.js` or similar variations.
 

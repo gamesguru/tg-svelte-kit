@@ -13,7 +13,7 @@ To make this legacy-connected version of SvelteKit available for others to use v
     "name": "@tg-svelte/kit",
     ```
 
-    *Why `kit`?* Since this is a fork of the core framework, keeping the name `kit` (scoped to your org) makes it clear it replaces `@tg-svelte/kit`. Naming it `legacy-builder-plugin` might be confusing as users can't use it *alongside* the kit; they use it *instead* of the kit.
+    *Why `kit`?* Since this is a fork of the core framework, keeping the name `kit` (scoped to your org) makes it clear it replaces `@sveltejs/kit`. Naming it `legacy-builder-plugin` might be confusing as users can't use it *alongside* the kit; they use it *instead* of the kit.
 
 2.  **Update Version (Optional)**:
     You can manually bump the version or use the existing `changeset` workflow if you have it configured.
@@ -34,19 +34,19 @@ pnpm publish --access public --no-git-checks
 
 ## 3. How Users Install It
 
-Your users can install this package while aliasing it to `@tg-svelte/kit`. This allows their code to continue importing from `@tg-svelte/kit` normally, but using your legacy-enabled implementation.
+Your users can install this package while aliasing it to `@sveltejs/kit`. This allows their code to continue importing from `@sveltejs/kit` normally, but using your legacy-enabled implementation.
 
 ### npm / yarn / pnpm
 
 ```bash
-npm install -D @tg-svelte/kit@npm:@tg-svelte/kit
+npm install -D @sveltejs/kit@npm:@tg-svelte/kit
 ```
 
 ### package.json Example
 
 ```json
 "devDependencies": {
-  "@tg-svelte/kit": "npm:@tg-svelte/kit@^2.49.4",
+  "@sveltejs/kit": "npm:@tg-svelte/kit@^2.49.4",
   ...
 }
 ```
@@ -60,5 +60,5 @@ This is a **drop-in replacement** strategy. It is safe because your fork matches
 ### Fallback
 If users want to verify their app with standard SvelteKit, they simply remove the alias:
 ```bash
-npm install -D @tg-svelte/kit@latest
+npm install -D @sveltejs/kit@latest
 ```

@@ -15,7 +15,7 @@ If the number of route segments is unknown, you can use rest syntax — for exam
 ```js
 // @noErrors
 {
-	org: 'sveltejs',
+	org: 'tg-svelte',
 	repo: 'kit',
 	branch: 'main',
 	file: 'documentation/docs/04-advanced-routing.md'
