@@ -7,8 +7,6 @@ test.describe.configure({ mode: 'parallel' });
 
 test.describe('embed', () => {
 	test('serves embedded components in page', async ({ page, javaScriptEnabled }) => {
-		page.on('console', msg => console.log('BROWSER LOG:', msg.text()));
-		page.on('pageerror', err => console.log('BROWSER ERROR:', err));
 		await page.goto('/embed');
 
 		if (javaScriptEnabled) {
