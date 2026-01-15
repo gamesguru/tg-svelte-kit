@@ -1,7 +1,6 @@
-<script context="module">
-	document;
-</script>
+import { browser } from '$app/environment';
 
-{document}
-
-<p>You shouldn't see this</p>
+if (browser) {
+  // Now the server skips this line and stays alive
+  document;
+}
