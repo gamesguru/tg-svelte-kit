@@ -29,10 +29,10 @@ pnpm run check
 
 ```bash
 # Unit tests only (fastest - ~6 seconds)
-pnpm -F @sveltejs/kit test:unit
+pnpm -F @tg-svelte/kit test:unit
 
 # Run a single unit test file
-pnpm -F @sveltejs/kit test:unit:dev path/to/test.spec.js
+pnpm -F @tg-svelte/kit test:unit:dev path/to/test.spec.js
 
 # Integration tests (10-30 minutes, set 60+ min timeout)
 pnpm test:kit
@@ -145,7 +145,7 @@ const content_type = request.headers.get('content-type')?.split(';', 1)[0];
 
 ## Key Packages
 
-- `@sveltejs/kit` - Main framework (`packages/kit/`)
+- `@tg-svelte/kit` - Main framework (`packages/kit/`)
 - `adapter-*` - Platform adapters (node, cloudflare, netlify, vercel, static, auto)
 - `@sveltejs/package` - Package building utilities
 - `@sveltejs/enhanced-img` - Enhanced image component
