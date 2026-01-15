@@ -34,7 +34,7 @@ To simulate this behavior during client-side routing, SvelteKit focuses the `<bo
 If you want to customize SvelteKit's focus management, you can use the `afterNavigate` hook:
 
 ```js
-/// <reference types="@sveltejs/kit" />
+/// <reference types="@tg-svelte/kit" />
 // ---cut---
 import { afterNavigate } from '$app/navigation';
 
@@ -66,13 +66,13 @@ If your content is available in multiple languages, you should set the `lang` at
 ```js
 /// file: src/hooks.server.js
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  */
 function get_lang(event) {
 	return 'en';
 }
 // ---cut---
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export function handle({ event, resolve }) {
 	return resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('%lang%', get_lang(event))

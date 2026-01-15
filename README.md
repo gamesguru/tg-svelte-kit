@@ -6,9 +6,9 @@ Web development, streamlined. Read the [documentation](https://svelte.dev/docs/k
 
 ### Packages
 
-| Package                                                                     | Changelog                                                     |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| [@sveltejs/kit](packages/kit)                                               | [Changelog](packages/kit/CHANGELOG.md)                        |
+| Package                                                                     | Link                                                            |
+| --------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| [@tg-svelte/kit](packages/kit)                                               | [Changelog](packages/kit/CHANGELOG.md)                        |
 | [@sveltejs/adapter-auto](packages/adapter-auto)                             | [Changelog](packages/adapter-auto/CHANGELOG.md)               |
 | [@sveltejs/adapter-cloudflare](packages/adapter-cloudflare)                 | [Changelog](packages/adapter-cloudflare/CHANGELOG.md)         |
 | [@sveltejs/adapter-netlify](packages/adapter-netlify)                       | [Changelog](packages/adapter-netlify/CHANGELOG.md)            |

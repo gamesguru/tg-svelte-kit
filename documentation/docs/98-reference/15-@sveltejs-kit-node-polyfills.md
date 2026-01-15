@@ -1,5 +1,5 @@
 ---
-title: @sveltejs/kit/node/polyfills
+title: @tg-svelte/kit/node/polyfills
 ---
 
-> MODULE: @sveltejs/kit/node/polyfills
+> MODULE: @tg-svelte/kit/node/polyfills

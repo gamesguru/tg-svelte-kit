@@ -1,4 +1,4 @@
-# @sveltejs/kit
+# @tg-svelte/kit
 
 ## 2.49.4
 ### Patch Changes
@@ -55,7 +55,7 @@
 ### Patch Changes
 
 
-- breaking: `invalid` now must be imported from `@sveltejs/kit` ([#14768](https://github.com/sveltejs/kit/pull/14768))
+- breaking: `invalid` now must be imported from `@tg-svelte/kit` ([#14768](https://github.com/sveltejs/kit/pull/14768))
 
 
 - breaking: remove `submitter` option from experimental form `validate()` method, always provide default submitter ([#14762](https://github.com/sveltejs/kit/pull/14762))
@@ -854,7 +854,7 @@
 ### Patch Changes
 
 
-- fix: re-add `@sveltejs/kit` to `optimizeDeps.exclude` ([#13983](https://github.com/sveltejs/kit/pull/13983))
+- fix: re-add `@tg-svelte/kit` to `optimizeDeps.exclude` ([#13983](https://github.com/sveltejs/kit/pull/13983))
 
 ## 2.22.4
 ### Patch Changes
@@ -866,7 +866,7 @@
 ### Patch Changes
 
 
-- fix: don't bundle `@sveltejs/kit` ([#13971](https://github.com/sveltejs/kit/pull/13971))
+- fix: don't bundle `@tg-svelte/kit` ([#13971](https://github.com/sveltejs/kit/pull/13971))
 
 ## 2.22.2
 ### Patch Changes
@@ -920,7 +920,7 @@
 - fix: suppress console spam for chrome devtools requests ([#13830](https://github.com/sveltejs/kit/pull/13830))
 
 
-- fix: avoid externalising packages that depend on `@sveltejs/kit` so that libraries can also use `redirect` and `error` helpers ([#13843](https://github.com/sveltejs/kit/pull/13843))
+- fix: avoid externalising packages that depend on `@tg-svelte/kit` so that libraries can also use `redirect` and `error` helpers ([#13843](https://github.com/sveltejs/kit/pull/13843))
 
 
 - fix: correctly run `deserialize` on the server ([#13686](https://github.com/sveltejs/kit/pull/13686))
@@ -2275,7 +2275,7 @@
 
 - feat: add `privatePrefix` to `config.kit.env` ([#9996](https://github.com/sveltejs/kit/pull/9996))
 
-- feat: export `VERSION` from `@sveltejs/kit` ([#9969](https://github.com/sveltejs/kit/pull/9969))
+- feat: export `VERSION` from `@tg-svelte/kit` ([#9969](https://github.com/sveltejs/kit/pull/9969))
 
 ### Patch Changes
 
@@ -2659,7 +2659,7 @@
 
 ### Patch Changes
 
-- fix: always add `@sveltejs/kit` to `noExternal` for ssr build ([#9242](https://github.com/sveltejs/kit/pull/9242))
+- fix: always add `@tg-svelte/kit` to `noExternal` for ssr build ([#9242](https://github.com/sveltejs/kit/pull/9242))
 - feat: add `api.methods` and `page.methods` to `builder.routes` ([#9145](https://github.com/sveltejs/kit/pull/9145))
 
 ## 1.8.7
@@ -2752,7 +2752,7 @@
 
 ### Patch Changes
 
-- fix: solve `missing "./paths" specifier in "@sveltejs/kit" package` error occurring in all projects ([#9050](https://github.com/sveltejs/kit/pull/9050))
+- fix: solve `missing "./paths" specifier in "@tg-svelte/kit" package` error occurring in all projects ([#9050](https://github.com/sveltejs/kit/pull/9050))
 
 ## 1.5.7
 

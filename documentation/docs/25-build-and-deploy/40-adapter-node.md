@@ -13,7 +13,7 @@ Install with `npm i -D @sveltejs/adapter-node`, then add the adapter to your `sv
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-node';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter()
@@ -153,7 +153,7 @@ The adapter can be configured with various options:
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-node';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({

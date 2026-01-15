@@ -15,7 +15,7 @@ export default {
 		schema: [],
 		messages: {
 			noRuntimeToExportsImport:
-				'Relative imports from src/runtime to src/exports are not allowed because they can cause Vite to resolve the same module both via regular Node and internal Vite. Use internal import maps or `@sveltejs/kit/internal` instead.'
+				'Relative imports from src/runtime to src/exports are not allowed because they can cause Vite to resolve the same module both via regular Node and internal Vite. Use internal import maps or `@tg-svelte/kit/internal` instead.'
 		}
 	},
 

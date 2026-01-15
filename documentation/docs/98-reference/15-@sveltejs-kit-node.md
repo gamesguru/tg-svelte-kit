@@ -1,5 +1,5 @@
 ---
-title:  @sveltejs/kit/node
+title:  @tg-svelte/kit/node
 ---
 
-> MODULE: @sveltejs/kit/node
+> MODULE: @tg-svelte/kit/node

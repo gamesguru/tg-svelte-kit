@@ -39,7 +39,7 @@ npm i -D @sveltejs/enhanced-img
 Adjust `vite.config.js`:
 
 ```js
-import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekit } from '@tg-svelte/kit/vite';
 +++import { enhancedImages } from '@sveltejs/enhanced-img';+++
 import { defineConfig } from 'vite';
 

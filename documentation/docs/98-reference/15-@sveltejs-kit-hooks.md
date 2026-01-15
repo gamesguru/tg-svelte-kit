@@ -1,5 +1,5 @@
 ---
-title: @sveltejs/kit/hooks
+title: @tg-svelte/kit/hooks
 ---
 
-> MODULE: @sveltejs/kit/hooks
+> MODULE: @tg-svelte/kit/hooks

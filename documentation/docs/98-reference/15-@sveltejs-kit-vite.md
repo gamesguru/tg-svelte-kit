@@ -1,5 +1,5 @@
 ---
-title:  @sveltejs/kit/vite
+title:  @tg-svelte/kit/vite
 ---
 
-> MODULE: @sveltejs/kit/vite
+> MODULE: @tg-svelte/kit/vite

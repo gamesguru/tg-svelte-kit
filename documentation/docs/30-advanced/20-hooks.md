@@ -24,7 +24,7 @@ This function runs every time the SvelteKit server receives a [request](web-stan
 
 ```js
 /// file: src/hooks.server.js
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	if (event.url.pathname.startsWith('/custom')) {
 		return new Response('custom response');
@@ -62,7 +62,7 @@ const getUserInformation: (cookie: string | void) => Promise<User>;
 
 // @filename: index.js
 // ---cut---
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	event.locals.user = await getUserInformation(event.cookies.get('sessionid'));
 
@@ -90,7 +90,7 @@ You can define multiple `handle` functions and execute them with [the `sequence`
 
 ```js
 /// file: src/hooks.server.js
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	const response = await resolve(event, {
 		transformPageChunk: ({ html }) => html.replace('old', 'new'),
@@ -112,7 +112,7 @@ For example, your `load` function might make a request to a public URL like `htt
 
 ```js
 /// file: src/hooks.server.js
-/** @type {import('@sveltejs/kit').HandleFetch} */
+/** @type {import('@tg-svelte/kit').HandleFetch} */
 export async function handleFetch({ request, fetch }) {
 	if (request.url.startsWith('https://api.yourapp.com/')) {
 		// clone the original request, but change the URL
@@ -133,7 +133,7 @@ There is one caveat: if your app and your API are on sibling subdomains — `www
 ```js
 /// file: src/hooks.server.js
 // @errors: 2345
-/** @type {import('@sveltejs/kit').HandleFetch} */
+/** @type {import('@tg-svelte/kit').HandleFetch} */
 export async function handleFetch({ event, request, fetch }) {
 	if (request.url.startsWith('https://api.my-domain.com/')) {
 		request.headers.set('cookie', event.request.headers.get('cookie'));
@@ -165,7 +165,7 @@ To customise this message and add additional properties to the error object, imp
 
 ```js
 /// file: src/hooks.server.js
-/** @type {import('@sveltejs/kit').HandleValidationError} */
+/** @type {import('@tg-svelte/kit').HandleValidationError} */
 export function handleValidationError({ issues }) {
 	return {
 		message: 'No thank you'
@@ -219,7 +219,7 @@ import * as Sentry from '@sentry/sveltekit';
 
 Sentry.init({/*...*/})
 
-/** @type {import('@sveltejs/kit').HandleServerError} */
+/** @type {import('@tg-svelte/kit').HandleServerError} */
 export async function handleError({ error, event, status, message }) {
 	const errorId = crypto.randomUUID();
 
@@ -250,7 +250,7 @@ import * as Sentry from '@sentry/sveltekit';
 
 Sentry.init({/*...*/})
 
-/** @type {import('@sveltejs/kit').HandleClientError} */
+/** @type {import('@tg-svelte/kit').HandleClientError} */
 export async function handleError({ error, event, status, message }) {
 	const errorId = crypto.randomUUID();
 
@@ -268,7 +268,7 @@ export async function handleError({ error, event, status, message }) {
 
 > [!NOTE] In `src/hooks.client.js`, the type of `handleError` is `HandleClientError` instead of `HandleServerError`, and `event` is a `NavigationEvent` rather than a `RequestEvent`.
 
-This function is not called for _expected_ errors (those thrown with the [`error`](@sveltejs-kit#error) function imported from `@sveltejs/kit`).
+This function is not called for _expected_ errors (those thrown with the [`error`](@sveltejs-kit#error) function imported from `@tg-svelte/kit`).
 
 During development, if an error occurs because of a syntax error in your Svelte code, the passed in error has a `frame` property appended highlighting the location of the error.
 
@@ -285,7 +285,7 @@ This function runs once, when the server is created or the app starts in the bro
 /// file: src/hooks.server.js
 import * as db from '$lib/server/database';
 
-/** @type {import('@sveltejs/kit').ServerInit} */
+/** @type {import('@tg-svelte/kit').ServerInit} */
 export async function init() {
 	await db.connect();
 }
@@ -315,7 +315,7 @@ const translated = {
 	'/fr/a-propos': '/fr/about',
 };
 
-/** @type {import('@sveltejs/kit').Reroute} */
+/** @type {import('@tg-svelte/kit').Reroute} */
 export function reroute({ url }) {
 	if (url.pathname in translated) {
 		return translated[url.pathname];
@@ -333,7 +333,7 @@ Since version 2.18, the `reroute` hook can be asynchronous, allowing it to (for 
 // @errors: 2345 2304
 /// file: src/hooks.js
 
-/** @type {import('@sveltejs/kit').Reroute} */
+/** @type {import('@tg-svelte/kit').Reroute} */
 export async function reroute({ url, fetch }) {
 	// Ask a special endpoint within your app about the destination
 	if (url.pathname === '/api/reroute') return;
@@ -358,7 +358,7 @@ This is a collection of _transporters_, which allow you to pass custom types —
 /// file: src/hooks.js
 import { Vector } from '$lib/math';
 
-/** @type {import('@sveltejs/kit').Transport} */
+/** @type {import('@tg-svelte/kit').Transport} */
 export const transport = {
 	Vector: {
 		encode: (value) => value instanceof Vector && [value.x, value.y],

@@ -21,7 +21,7 @@ This guide explains how to enable support for legacy browsers (like IE11) in you
     Import the legacy plugin and add it to your `plugins` array. Configure the `targets` to specify which browsers you want to support (e.g., `ie 11`).
 
     ```javascript
-    import { sveltekit } from '@sveltejs/kit/vite';
+    import { sveltekit } from '@tg-svelte/kit/vite';
     import { defineConfig } from 'vite';
     import legacy from '@vitejs/plugin-legacy';
 
@@ -50,5 +50,5 @@ The HTML entry point will include script tags with `nomodule` or SystemJS loader
 
 ## Troubleshooting
 
--   **`client_chunks` error**: If you encounter errors related to `client_chunks` being undefined, ensure you are using the patched version of `@sveltejs/kit`.
+-   **`client_chunks` error**: If you encounter errors related to `client_chunks` being undefined, ensure you are using the patched version of `@tg-svelte/kit`.
 -   **Manifest mismatch**: If you see "Entry not in manifest" errors, ensure `packages/kit` is using the correct entry point names (`entry.js` vs `start.js`).

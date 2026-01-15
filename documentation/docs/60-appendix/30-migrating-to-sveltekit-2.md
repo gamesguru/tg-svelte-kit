@@ -11,7 +11,7 @@ We highly recommend upgrading to the most recent 1.x version before upgrading to
 Previously, you had to `throw` the values returned from `error(...)` and `redirect(...)` yourself. In SvelteKit 2 this is no longer the case — calling the functions is sufficient.
 
 ```js
-import { error } from '@sveltejs/kit'
+import { error } from '@tg-svelte/kit'
 
 // ...
 ---throw error(500, 'something went wrong');---
@@ -20,7 +20,7 @@ import { error } from '@sveltejs/kit'
 
 `svelte-migrate` will do these changes automatically for you.
 
-If the error or redirect is thrown inside a `try {...}` block (hint: don't do this!), you can distinguish them from unexpected errors using [`isHttpError`](@sveltejs-kit#isHttpError) and [`isRedirect`](@sveltejs-kit#isRedirect) imported from `@sveltejs/kit`.
+If the error or redirect is thrown inside a `try {...}` block (hint: don't do this!), you can distinguish them from unexpected errors using [`isHttpError`](@sveltejs-kit#isHttpError) and [`isRedirect`](@sveltejs-kit#isRedirect) imported from `@tg-svelte/kit`.
 
 ## path is required when setting cookies
 
@@ -107,7 +107,7 @@ SvelteKit 1 included a function called `resolvePath` which allows you to resolve
 For this reason, SvelteKit 2 replaces `resolvePath` with a (slightly better named) function called `resolveRoute`, which is imported from `$app/paths` and which takes `base` into account.
 
 ```js
----import { resolvePath } from '@sveltejs/kit';
+---import { resolvePath } from '@tg-svelte/kit';
 import { base } from '$app/paths';---
 +++import { resolveRoute } from '$app/paths';+++
 
@@ -147,11 +147,11 @@ Previously, the generated `tsconfig.json` was trying its best to still produce a
 
 ## `getRequest` no longer throws errors
 
-The `@sveltejs/kit/node` module exports helper functions for use in Node environments, including `getRequest` which turns a Node [`ClientRequest`](https://nodejs.org/api/http.html#class-httpclientrequest) into a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object.
+The `@tg-svelte/kit/node` module exports helper functions for use in Node environments, including `getRequest` which turns a Node [`ClientRequest`](https://nodejs.org/api/http.html#class-httpclientrequest) into a standard [`Request`](https://developer.mozilla.org/en-US/docs/Web/API/Request) object.
 
 In SvelteKit 1, `getRequest` could throw if the `Content-Length` header exceeded the specified size limit. In SvelteKit 2, the error will not be thrown until later, when the request body (if any) is being read. This enables better diagnostics and simpler code.
 
-## `vitePreprocess` is no longer exported from `@sveltejs/kit/vite`
+## `vitePreprocess` is no longer exported from `@tg-svelte/kit/vite`
 
 Since `@sveltejs/vite-plugin-svelte` is now a peer dependency, SvelteKit 2 no longer re-exports `vitePreprocess`. You should import it directly from `@sveltejs/vite-plugin-svelte`.
 

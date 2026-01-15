@@ -14,7 +14,7 @@ Install with `npm i -D @sveltejs/adapter-vercel`, then add the adapter to your `
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-vercel';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({
@@ -67,7 +67,7 @@ You may set the `images` config to control how Vercel builds your images. See th
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-vercel';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({

@@ -14,7 +14,7 @@ Install with `npm i -D @sveltejs/adapter-static`, then add the adapter to your `
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-static';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({
@@ -56,7 +56,7 @@ On these platforms, you should omit the adapter options so that `adapter-static`
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-static';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter(---{...}---)
@@ -103,7 +103,7 @@ A config for GitHub Pages might look like the following:
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-static';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({

@@ -14,7 +14,7 @@ Install with `npm i -D @sveltejs/adapter-netlify`, then add the adapter to your 
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-netlify';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		// default options are shown
@@ -56,7 +56,7 @@ SvelteKit supports [Netlify Edge Functions](https://docs.netlify.com/build/edge-
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-netlify';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({

@@ -8,7 +8,7 @@ Your project's configuration lives in a `svelte.config.js` file at the root of y
 /// file: svelte.config.js
 // @filename: ambient.d.ts
 declare module '@sveltejs/adapter-auto' {
-	const plugin: () => import('@sveltejs/kit').Adapter;
+	const plugin: () => import('@tg-svelte/kit').Adapter;
 	export default plugin;
 }
 
@@ -16,7 +16,7 @@ declare module '@sveltejs/adapter-auto' {
 // ---cut---
 import adapter from '@sveltejs/adapter-auto';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter()

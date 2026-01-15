@@ -1,8 +1,8 @@
 ---
-title: @sveltejs/kit
+title: @tg-svelte/kit
 ---
 
-> MODULE: @sveltejs/kit
+> MODULE: @tg-svelte/kit
 
 ## Private types
 

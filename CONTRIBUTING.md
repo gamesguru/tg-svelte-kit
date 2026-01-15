@@ -31,7 +31,7 @@ If you want to test against an existing project, you can use [pnpm `overrides`](
 	// ...
 	"pnpm": {
 		"overrides": {
-			"@sveltejs/kit": "link:../path/to/svelte-kit/packages/kit",
+			"@tg-svelte/kit": "link:../path/to/svelte-kit/packages/kit",
 			// additionally/optional the adapter you're using
 			"@sveltejs/adapter-auto": "link:../path/to/svelte-kit/packages/adapter-auto"
 		}
@@ -44,7 +44,7 @@ If you want to test against an existing project, you can use [pnpm `overrides`](
 Each pull request will be built and published via [pkg.pr.new/](https://pkg.pr.new/). You can test the change by installing the package with your PR number:
 
 ```
-npm add https://pkg.pr.new/sveltejs/kit/@sveltejs/kit@YOUR_PR_NUMBER_GOES_HERE
+npm add https://pkg.pr.new/sveltejs/kit/@tg-svelte/kit@YOUR_PR_NUMBER_GOES_HERE
 ```
 
 ## Code structure

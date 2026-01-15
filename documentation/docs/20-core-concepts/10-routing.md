@@ -63,7 +63,7 @@ Often, a page will need to load some data before it can be rendered. For this, w
 
 ```js
 /// file: src/routes/blog/[slug]/+page.js
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {import('./$types').PageLoad} */
 export function load({ params }) {
@@ -107,7 +107,7 @@ export {};
 
 // @filename: index.js
 // ---cut---
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
@@ -283,7 +283,7 @@ For example we could create an `/api/random-number` route with a `GET` handler:
 
 ```js
 /// file: src/routes/api/random-number/+server.js
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export function GET({ url }) {
@@ -304,7 +304,7 @@ export function GET({ url }) {
 
 The first argument to `Response` can be a [`ReadableStream`](https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream), making it possible to stream large amounts of data or create server-sent events (unless deploying to platforms that buffer responses, like AWS Lambda).
 
-You can use the [`error`](@sveltejs-kit#error), [`redirect`](@sveltejs-kit#redirect) and [`json`](@sveltejs-kit#json) methods from `@sveltejs/kit` for convenience (but you don't have to).
+You can use the [`error`](@sveltejs-kit#error), [`redirect`](@sveltejs-kit#redirect) and [`json`](@sveltejs-kit#json) methods from `@tg-svelte/kit` for convenience (but you don't have to).
 
 If an error is thrown (either `error(...)` or an unexpected error), the response will be a JSON representation of the error or a fallback error page — which can be customised via `src/error.html` — depending on the `Accept` header. The [`+error.svelte`](#error) component will _not_ be rendered in this case. You can read more about error handling [here](errors).
 
@@ -345,7 +345,7 @@ By exporting `POST`/`PUT`/`PATCH`/`DELETE`/`OPTIONS`/`HEAD` handlers, `+server.j
 
 ```js
 /// file: src/routes/api/add/+server.js
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {
@@ -364,7 +364,7 @@ Exporting the `fallback` handler will match any unhandled request methods, inclu
 
 ```js
 /// file: src/routes/api/add/+server.js
-import { json, text } from '@sveltejs/kit';
+import { json, text } from '@tg-svelte/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request }) {

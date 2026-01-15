@@ -20,7 +20,7 @@ Remove `polka` or `express`, if you're using one of those, and any middleware su
 
 ### devDependencies
 
-Remove `sapper` from your `devDependencies` and replace it with `@sveltejs/kit` and whichever [adapter](adapters) you plan to use (see [next section](migrating#Project-files-Configuration)).
+Remove `sapper` from your `devDependencies` and replace it with `@tg-svelte/kit` and whichever [adapter](adapters) you plan to use (see [next section](migrating#Project-files-Configuration)).
 
 ### scripts
 
@@ -154,7 +154,7 @@ Sapper includes `html-minifier` by default. SvelteKit does not include this, but
 
 ```js
 // @filename: ambient.d.ts
-/// <reference types="@sveltejs/kit" />
+/// <reference types="@tg-svelte/kit" />
 declare module 'html-minifier';
 
 // @filename: index.js
@@ -181,7 +181,7 @@ const minification_options = {
 	sortClassName: true
 };
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	let page = '';
 

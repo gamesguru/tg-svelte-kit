@@ -14,7 +14,7 @@ This feature is currently experimental, meaning it is likely to contain bugs and
 
 ```js
 /// file: svelte.config.js
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		experimental: {
@@ -141,7 +141,7 @@ declare module '$lib/server/database' {
 // @filename: index.js
 // ---cut---
 import * as v from 'valibot';
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 import { query } from '$app/server';
 import * as db from '$lib/server/database';
 
@@ -249,7 +249,7 @@ declare module '$lib/server/auth' {
 // @filename: index.js
 // ---cut---
 import * as v from 'valibot';
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@tg-svelte/kit';
 import { query, form } from '$app/server';
 import * as db from '$lib/server/database';
 import * as auth from '$lib/server/auth';
@@ -459,7 +459,7 @@ In addition to declarative schema validation, you can programmatically mark fiel
 ```js
 /// file: src/routes/shop/data.remote.js
 import * as v from 'valibot';
-import { invalid } from '@sveltejs/kit';
+import { invalid } from '@tg-svelte/kit';
 import { form } from '$app/server';
 import * as db from '$lib/server/database';
 
@@ -627,7 +627,7 @@ Instead, we can specify which queries should be refreshed in response to a parti
 
 ```js
 import * as v from 'valibot';
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@tg-svelte/kit';
 import { query, form } from '$app/server';
 const slug = '';
 const post = { id: '' };
@@ -690,7 +690,7 @@ declare module '$lib/server/auth' {
 }
 // @filename: index.js
 import * as v from 'valibot';
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@tg-svelte/kit';
 import { query, form } from '$app/server';
 import * as db from '$lib/server/database';
 import * as auth from '$lib/server/auth';
@@ -767,7 +767,7 @@ The callback receives the `form` element, the `data` it contains, and a `submit`
 To enable client-driven [single-flight mutations](#form-Single-flight-mutations), use `submit().updates(...)`. For example, if the `getPosts()` query was used on this page, we could refresh it like so:
 
 ```ts
-import type { RemoteQuery, RemoteQueryOverride } from '@sveltejs/kit';
+import type { RemoteQuery, RemoteQueryOverride } from '@tg-svelte/kit';
 interface Post {}
 declare function submit(): Promise<any> & {
 	updates(...queries: Array<RemoteQuery<any> | RemoteQueryOverride>): Promise<any>;
@@ -781,7 +781,7 @@ await submit().updates(getPosts());
 We can also _override_ the current data while the submission is ongoing:
 
 ```ts
-import type { RemoteQuery, RemoteQueryOverride } from '@sveltejs/kit';
+import type { RemoteQuery, RemoteQueryOverride } from '@tg-svelte/kit';
 interface Post {}
 declare function submit(): Promise<any> & {
 	updates(...queries: Array<RemoteQuery<any> | RemoteQueryOverride>): Promise<any>;
@@ -954,7 +954,7 @@ export const addLike = command(v.string(), async (id) => {
 ...or when we call it:
 
 ```ts
-import { RemoteCommand, RemoteQueryFunction } from '@sveltejs/kit';
+import { RemoteCommand, RemoteQueryFunction } from '@tg-svelte/kit';
 
 interface Item { id: string }
 
@@ -973,7 +973,7 @@ try {
 As before, we can use `withOverride` for optimistic updates:
 
 ```ts
-import { RemoteCommand, RemoteQueryFunction } from '@sveltejs/kit';
+import { RemoteCommand, RemoteQueryFunction } from '@tg-svelte/kit';
 
 interface Item { id: string }
 
@@ -1037,7 +1037,7 @@ declare module '$lib/server/database' {
 // @filename: index.js
 // ---cut---
 import * as v from 'valibot';
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 import { prerender } from '$app/server';
 import * as db from '$lib/server/database';
 
@@ -1108,7 +1108,7 @@ In the second case, we don't want to give the attacker any help, so SvelteKit wi
 
 ```js
 /// file: src/hooks.server.ts
-/** @type {import('@sveltejs/kit').HandleValidationError} */
+/** @type {import('@tg-svelte/kit').HandleValidationError} */
 export function handleValidationError({ event, issues }) {
 	return {
 		message: 'Nice try, hacker!'

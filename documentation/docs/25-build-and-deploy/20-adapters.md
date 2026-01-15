@@ -22,7 +22,7 @@ Your adapter is specified in `svelte.config.js`:
 /// file: svelte.config.js
 // @filename: ambient.d.ts
 declare module 'svelte-adapter-foo' {
-	const adapter: (opts: any) => import('@sveltejs/kit').Adapter;
+	const adapter: (opts: any) => import('@tg-svelte/kit').Adapter;
 	export default adapter;
 }
 
@@ -30,7 +30,7 @@ declare module 'svelte-adapter-foo' {
 // ---cut---
 import adapter from 'svelte-adapter-foo';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({

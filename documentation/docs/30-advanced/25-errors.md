@@ -12,7 +12,7 @@ You can add additional properties, like a `code` or a tracking `id`, as shown in
 
 ## Expected errors
 
-An _expected_ error is one created with the [`error`](@sveltejs-kit#error) helper imported from `@sveltejs/kit`:
+An _expected_ error is one created with the [`error`](@sveltejs-kit#error) helper imported from `@tg-svelte/kit`:
 
 ```js
 /// file: src/routes/blog/[slug]/+page.server.js
@@ -23,7 +23,7 @@ declare module '$lib/server/database' {
 
 // @filename: index.js
 // ---cut---
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 import * as db from '$lib/server/database';
 
 /** @type {import('./$types').PageServerLoad} */
@@ -69,7 +69,7 @@ declare global {
 export {}
 
 // @filename: index.js
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 // ---cut---
 error(404, {
 	message: 'Not found',
@@ -80,7 +80,7 @@ error(404, {
 ...otherwise, for convenience, you can pass a string as the second argument:
 
 ```js
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 // ---cut---
 ---error(404, { message: 'Not found' });---
 +++error(404, 'Not found');+++

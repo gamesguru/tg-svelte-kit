@@ -19,7 +19,7 @@
 - fix: include remote functions when deploying to Netlify edge functions ([#14214](https://github.com/sveltejs/kit/pull/14214))
 
 - Updated dependencies [[`c8f7ac3`](https://github.com/sveltejs/kit/commit/c8f7ac38e9ae1763e7880a29b7f7df01df964a6d), [`107f767`](https://github.com/sveltejs/kit/commit/107f767e3a1a54187527defb29dce753c4f5fa3f)]:
-  - @sveltejs/kit@2.33.1
+  - @tg-svelte/kit@2.33.1
 
 ## 5.2.1
 ### Patch Changes
@@ -28,7 +28,7 @@
 - fix: avoid erroring on builder properties that only exist on the latest version of SvelteKit ([#14233](https://github.com/sveltejs/kit/pull/14233))
 
 - Updated dependencies [[`f2db41c`](https://github.com/sveltejs/kit/commit/f2db41c0d3a0aefbb080ab6a9aa5822b3e41625c)]:
-  - @sveltejs/kit@2.31.1
+  - @tg-svelte/kit@2.31.1
 
 ## 5.2.0
 ### Minor Changes
@@ -40,7 +40,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`f635678`](https://github.com/sveltejs/kit/commit/f63567812505597b1edc3e01010eca622b03b126), [`f635678`](https://github.com/sveltejs/kit/commit/f63567812505597b1edc3e01010eca622b03b126)]:
-  - @sveltejs/kit@2.31.0
+  - @tg-svelte/kit@2.31.0
 
 ## 5.1.1
 ### Patch Changes
@@ -49,7 +49,7 @@
 - chore: add `.git` to the end of `package.json` repository url ([#14134](https://github.com/sveltejs/kit/pull/14134))
 
 - Updated dependencies [[`c968aef`](https://github.com/sveltejs/kit/commit/c968aef5727f978244d5160657b4a7ac651384ae)]:
-  - @sveltejs/kit@2.27.3
+  - @tg-svelte/kit@2.27.3
 
 ## 5.1.0
 ### Minor Changes
@@ -61,7 +61,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`e5ce8bb`](https://github.com/sveltejs/kit/commit/e5ce8bb42ea020b88bd0a4ff18dc600745657541), [`cf88369`](https://github.com/sveltejs/kit/commit/cf883692fa0e163cff6b1a2f9b17a568af14124d)]:
-  - @sveltejs/kit@2.25.0
+  - @tg-svelte/kit@2.25.0
 
 ## 5.0.2
 ### Patch Changes
@@ -76,7 +76,7 @@
 - chore(deps): upgrade esbuild to 0.25.2 ([#13716](https://github.com/sveltejs/kit/pull/13716))
 
 - Updated dependencies [[`c51fb554416e0c4a21655c1d79e834f69743d1d5`](https://github.com/sveltejs/kit/commit/c51fb554416e0c4a21655c1d79e834f69743d1d5)]:
-  - @sveltejs/kit@2.20.8
+  - @tg-svelte/kit@2.20.8
 
 ## 5.0.0
 ### Major Changes
@@ -91,7 +91,7 @@
 - fix: correctly import manifest on Windows machines ([#13495](https://github.com/sveltejs/kit/pull/13495))
 
 - Updated dependencies [[`28cf64589a331ea4770c0883216c5e16d1de7496`](https://github.com/sveltejs/kit/commit/28cf64589a331ea4770c0883216c5e16d1de7496), [`ef1e8047225e7a79c6d121d8ed1a571e5ea44f08`](https://github.com/sveltejs/kit/commit/ef1e8047225e7a79c6d121d8ed1a571e5ea44f08), [`2e6527b92875976b79cc00e7b75ee0ad8b69a239`](https://github.com/sveltejs/kit/commit/2e6527b92875976b79cc00e7b75ee0ad8b69a239), [`0c0172e1463218fe63a67c587173bb3065a53c49`](https://github.com/sveltejs/kit/commit/0c0172e1463218fe63a67c587173bb3065a53c49)]:
-  - @sveltejs/kit@2.17.3
+  - @tg-svelte/kit@2.17.3
 
 ## 4.4.1
 ### Patch Changes
@@ -109,7 +109,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`d030f4bb285e70844d09b3f0c87809bae43014b8`](https://github.com/sveltejs/kit/commit/d030f4bb285e70844d09b3f0c87809bae43014b8), [`67dd214863cbc5852eb0e8512efbb7bad5358e8a`](https://github.com/sveltejs/kit/commit/67dd214863cbc5852eb0e8512efbb7bad5358e8a)]:
-  - @sveltejs/kit@2.9.0
+  - @tg-svelte/kit@2.9.0
 
 ## 4.3.6
 ### Patch Changes
@@ -118,7 +118,7 @@
 - docs: update URLs for new svelte.dev site ([#12857](https://github.com/sveltejs/kit/pull/12857))
 
 - Updated dependencies [[`dcbe4222a194c5f90cfc0fc020cf065f7a4e4c46`](https://github.com/sveltejs/kit/commit/dcbe4222a194c5f90cfc0fc020cf065f7a4e4c46), [`4cdbf76fbbf0c0ce7f574ef69c8daddcf954d39d`](https://github.com/sveltejs/kit/commit/4cdbf76fbbf0c0ce7f574ef69c8daddcf954d39d), [`3a9b78f04786898ca93f6d4b75ab18d26bc45192`](https://github.com/sveltejs/kit/commit/3a9b78f04786898ca93f6d4b75ab18d26bc45192), [`723eb8b31e6a22c82f730c30e485386c8676b746`](https://github.com/sveltejs/kit/commit/723eb8b31e6a22c82f730c30e485386c8676b746), [`8ec471c875345b751344e67580ff1b772ef2735b`](https://github.com/sveltejs/kit/commit/8ec471c875345b751344e67580ff1b772ef2735b)]:
-  - @sveltejs/kit@2.7.3
+  - @tg-svelte/kit@2.7.3
 
 ## 4.3.5
 ### Patch Changes
@@ -127,7 +127,7 @@
 - fix: correctly handle relative paths when fetching assets on the server ([#12113](https://github.com/sveltejs/kit/pull/12113))
 
 - Updated dependencies [[`df48fc6ede3859beabaae9fd7c6f722215bb8a42`](https://github.com/sveltejs/kit/commit/df48fc6ede3859beabaae9fd7c6f722215bb8a42), [`5780deba8e3ebd0e2b0abea029068ad0c6daf6ad`](https://github.com/sveltejs/kit/commit/5780deba8e3ebd0e2b0abea029068ad0c6daf6ad), [`6f9aefdb8699fc126d76a88471602cb9a80822eb`](https://github.com/sveltejs/kit/commit/6f9aefdb8699fc126d76a88471602cb9a80822eb), [`8aa95b4b3431e79f62f580abdcdcb157b4de86cd`](https://github.com/sveltejs/kit/commit/8aa95b4b3431e79f62f580abdcdcb157b4de86cd)]:
-  - @sveltejs/kit@2.7.0
+  - @tg-svelte/kit@2.7.0
 
 ## 4.3.4
 ### Patch Changes
@@ -136,7 +136,7 @@
 - fix: import `node:process` instead of using globals ([#12641](https://github.com/sveltejs/kit/pull/12641))
 
 - Updated dependencies [[`e798ef718f163bed4f93e1918bd8294f765376ad`](https://github.com/sveltejs/kit/commit/e798ef718f163bed4f93e1918bd8294f765376ad)]:
-  - @sveltejs/kit@2.5.28
+  - @tg-svelte/kit@2.5.28
 
 ## 4.3.3
 ### Patch Changes
@@ -145,7 +145,7 @@
 - chore: configure provenance in a simpler manner ([#12570](https://github.com/sveltejs/kit/pull/12570))
 
 - Updated dependencies [[`087a43d391fc38b8c008fb39a804dc6988974101`](https://github.com/sveltejs/kit/commit/087a43d391fc38b8c008fb39a804dc6988974101)]:
-  - @sveltejs/kit@2.5.22
+  - @tg-svelte/kit@2.5.22
 
 ## 4.3.2
 ### Patch Changes
@@ -154,7 +154,7 @@
 - chore: package provenance ([#12567](https://github.com/sveltejs/kit/pull/12567))
 
 - Updated dependencies [[`4930a8443caa53bcecee7b690cd28e429b1c8a20`](https://github.com/sveltejs/kit/commit/4930a8443caa53bcecee7b690cd28e429b1c8a20)]:
-  - @sveltejs/kit@2.5.21
+  - @tg-svelte/kit@2.5.21
 
 ## 4.3.1
 ### Patch Changes
@@ -172,7 +172,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`84298477a014ec471839adf7a4448d91bc7949e4`](https://github.com/sveltejs/kit/commit/84298477a014ec471839adf7a4448d91bc7949e4), [`5645614f497931f587b7cb8b3c885fce892a6a72`](https://github.com/sveltejs/kit/commit/5645614f497931f587b7cb8b3c885fce892a6a72), [`84298477a014ec471839adf7a4448d91bc7949e4`](https://github.com/sveltejs/kit/commit/84298477a014ec471839adf7a4448d91bc7949e4)]:
-  - @sveltejs/kit@2.5.18
+  - @tg-svelte/kit@2.5.18
 
 ## 4.2.1
 
@@ -183,7 +183,7 @@
 - chore: add keywords for discovery in npm search ([#12330](https://github.com/sveltejs/kit/pull/12330))
 
 - Updated dependencies [[`25acb1d9fce998dccd8050b93cf4142c2b082611`](https://github.com/sveltejs/kit/commit/25acb1d9fce998dccd8050b93cf4142c2b082611), [`642c4a4aff4351b786fe6274aa2f0bf7d905faf9`](https://github.com/sveltejs/kit/commit/642c4a4aff4351b786fe6274aa2f0bf7d905faf9), [`0a0e9aa897123ebec50af08e9385b2ca4fc5bb28`](https://github.com/sveltejs/kit/commit/0a0e9aa897123ebec50af08e9385b2ca4fc5bb28)]:
-  - @sveltejs/kit@2.5.11
+  - @tg-svelte/kit@2.5.11
 
 ## 4.2.0
 
@@ -194,7 +194,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`bbab296f6fcc05af6b999182798bcdedabbaa4c9`](https://github.com/sveltejs/kit/commit/bbab296f6fcc05af6b999182798bcdedabbaa4c9)]:
-  - @sveltejs/kit@2.5.6
+  - @tg-svelte/kit@2.5.6
 
 ## 4.1.0
 
@@ -205,13 +205,13 @@
 ### Patch Changes
 
 - Updated dependencies [[`36dc54ac740b8b4c6a2b904a1d0aadd8923a875c`](https://github.com/sveltejs/kit/commit/36dc54ac740b8b4c6a2b904a1d0aadd8923a875c), [`5dae3676b8cc6f8ee0def57340e6a6e591bafecd`](https://github.com/sveltejs/kit/commit/5dae3676b8cc6f8ee0def57340e6a6e591bafecd), [`ada595908b5501b8f4ac30c89c0d6314f364fde3`](https://github.com/sveltejs/kit/commit/ada595908b5501b8f4ac30c89c0d6314f364fde3), [`e228f8997840b89c6248e1c5df6f3108008a06be`](https://github.com/sveltejs/kit/commit/e228f8997840b89c6248e1c5df6f3108008a06be)]:
-  - @sveltejs/kit@2.4.1
+  - @tg-svelte/kit@2.4.1
 
 ## 4.0.0
 
 ### Major Changes
 
-- breaking: update peer dependency on `@sveltejs/kit` ([#11649](https://github.com/sveltejs/kit/pull/11649))
+- breaking: update peer dependency on `@tg-svelte/kit` ([#11649](https://github.com/sveltejs/kit/pull/11649))
 
 ### Minor Changes
 
@@ -220,7 +220,7 @@
 ### Patch Changes
 
 - Updated dependencies [[`288f731c8a5b20cadb9e219f9583f3f16bf8c7b8`](https://github.com/sveltejs/kit/commit/288f731c8a5b20cadb9e219f9583f3f16bf8c7b8)]:
-  - @sveltejs/kit@2.4.0
+  - @tg-svelte/kit@2.4.0
 
 ## 3.0.2
 
@@ -235,7 +235,7 @@
 - chore: update primary branch from master to main ([`47779436c5f6c4d50011d0ef8b2709a07c0fec5d`](https://github.com/sveltejs/kit/commit/47779436c5f6c4d50011d0ef8b2709a07c0fec5d))
 
 - Updated dependencies [[`47779436c5f6c4d50011d0ef8b2709a07c0fec5d`](https://github.com/sveltejs/kit/commit/47779436c5f6c4d50011d0ef8b2709a07c0fec5d), [`16961e8cd3fa6a7f382153b1ff056bc2aae9b31b`](https://github.com/sveltejs/kit/commit/16961e8cd3fa6a7f382153b1ff056bc2aae9b31b), [`197e01f95652f511160f38b37b9da73a124ecd48`](https://github.com/sveltejs/kit/commit/197e01f95652f511160f38b37b9da73a124ecd48), [`102e4a5ae5b29624302163faf5a20c94a64a5b2c`](https://github.com/sveltejs/kit/commit/102e4a5ae5b29624302163faf5a20c94a64a5b2c), [`f8e3d8b9728c9f1ab63389342c31d7246b6f9db6`](https://github.com/sveltejs/kit/commit/f8e3d8b9728c9f1ab63389342c31d7246b6f9db6)]:
-  - @sveltejs/kit@2.0.4
+  - @tg-svelte/kit@2.0.4
 
 ## 3.0.0
 
@@ -252,7 +252,7 @@
 - chore: upgrade to esbuild 0.18.11 ([#10330](https://github.com/sveltejs/kit/pull/10330))
 
 - Updated dependencies [[`23d1df702`](https://github.com/sveltejs/kit/commit/23d1df702f0fd77983040404352d8d83fd1dd8a1), [`486a971fe`](https://github.com/sveltejs/kit/commit/486a971fe7c375aae1585f1fa2505e28f86f4b8e)]:
-  - @sveltejs/kit@1.22.2
+  - @tg-svelte/kit@1.22.2
 
 ## 2.0.7
 
@@ -267,7 +267,7 @@
 - docs: remove comment discourage direct use of adapters ([#9344](https://github.com/sveltejs/kit/pull/9344))
 
 - Updated dependencies [[`b575287d`](https://github.com/sveltejs/kit/commit/b575287d063562868d7726f6451352aa43a63453), [`8114c658`](https://github.com/sveltejs/kit/commit/8114c658c0bc053198ff76704c002cfeb8225e2a), [`620f5605`](https://github.com/sveltejs/kit/commit/620f56058de0993e776c146db4c19fca97b9cb39), [`6a91e887`](https://github.com/sveltejs/kit/commit/6a91e887ee4c1bef8aabfafbf1ab6079113c2832), [`1c32723a`](https://github.com/sveltejs/kit/commit/1c32723a52beca0c5aa895b1114341da78d92eaf), [`0f863bbc`](https://github.com/sveltejs/kit/commit/0f863bbc957ab2ed37b04ebd839fc864b945034d), [`78b4a1bb`](https://github.com/sveltejs/kit/commit/78b4a1bb5e1ae11a894d70a0a28cc344ea0b1284), [`66b2f4ef`](https://github.com/sveltejs/kit/commit/66b2f4ef03a5dd60da2757edde4effcfdf3183cf), [`5dada256`](https://github.com/sveltejs/kit/commit/5dada256dc05674a18946f8f19db1f25ba91aeaf), [`a71b5e69`](https://github.com/sveltejs/kit/commit/a71b5e69ef37ce46e8e8590d537036cb7e267d51), [`daad7e48`](https://github.com/sveltejs/kit/commit/daad7e48b175245cbb7efd0e255263bfb52a5ee6), [`18d330b1`](https://github.com/sveltejs/kit/commit/18d330b16330d76c4b2991839c6b4462d5a4163f), [`18d7e81a`](https://github.com/sveltejs/kit/commit/18d7e81a9892e718c3cd07b2366a60f2e09561ab)]:
-  - @sveltejs/kit@1.11.0
+  - @tg-svelte/kit@1.11.0
 
 ## 2.0.5
 
@@ -276,7 +276,7 @@
 - chore: support newest version of undici ([#9005](https://github.com/sveltejs/kit/pull/9005))
 
 - Updated dependencies [[`6cdf54d1`](https://github.com/sveltejs/kit/commit/6cdf54d1f3561348d87f35ddc8330081919eb839)]:
-  - @sveltejs/kit@1.7.1
+  - @tg-svelte/kit@1.7.1
 
 ## 2.0.4
 
@@ -285,7 +285,7 @@
 - fix: Root route data endpoint redirect when using split routes ([#9006](https://github.com/sveltejs/kit/pull/9006))
 
 - Updated dependencies [[`74cfa8d5`](https://github.com/sveltejs/kit/commit/74cfa8d5f1f13f81759e20e90f4ff86a4f96040d), [`bfa2b6ec`](https://github.com/sveltejs/kit/commit/bfa2b6ec88a6d522d87c924d7c466c01e142e66e)]:
-  - @sveltejs/kit@1.5.6
+  - @tg-svelte/kit@1.5.6
 
 ## 2.0.3
 
@@ -296,7 +296,7 @@
 - fix: correctly compare routes when generating split functions ([#8952](https://github.com/sveltejs/kit/pull/8952))
 
 - Updated dependencies [[`0abb8ebf`](https://github.com/sveltejs/kit/commit/0abb8ebffc6121f81c2bbfa0a0f68866d4cc1627), [`bef54f63`](https://github.com/sveltejs/kit/commit/bef54f63d2315066d30e8f1bcf471ddf2bd72c35), [`51cd6e64`](https://github.com/sveltejs/kit/commit/51cd6e643178e3a113fc2c3e8a63755bcbfe902d), [`930c8e4e`](https://github.com/sveltejs/kit/commit/930c8e4ee2e3046ed1b622777dafa23029a19fe5), [`ee8066fc`](https://github.com/sveltejs/kit/commit/ee8066fcb29ed1e7e3ab513cabb7997e38c984f2), [`49d2ec62`](https://github.com/sveltejs/kit/commit/49d2ec62e6385694f11701bf2fa411d07449344c), [`eb943565`](https://github.com/sveltejs/kit/commit/eb943565a4324dbed3da5a581924ca91a24366de)]:
-  - @sveltejs/kit@1.5.3
+  - @tg-svelte/kit@1.5.3
 
 ## 2.0.2
 
@@ -305,7 +305,7 @@
 - fix: preserve functions-internal folder so that auto-generated functions are not removed when ntl build is run ([#8899](https://github.com/sveltejs/kit/pull/8899))
 
 - Updated dependencies [[`1960296d`](https://github.com/sveltejs/kit/commit/1960296da62fdd4ad8e8bb7286940b98fbe8db0f), [`1beb19cb`](https://github.com/sveltejs/kit/commit/1beb19cb487bd6d719048f0feedcb2fbee91a005), [`b915dfe9`](https://github.com/sveltejs/kit/commit/b915dfe9d16a930246a469c9aea8c1a84e5157ba), [`a402d50b`](https://github.com/sveltejs/kit/commit/a402d50b33eba2a937d09e635275c319061ce678)]:
-  - @sveltejs/kit@1.5.1
+  - @tg-svelte/kit@1.5.1
 
 ## 2.0.1
 
@@ -317,12 +317,12 @@
 
 ### Major Changes
 
-- breaking: bump `@sveltejs/kit` peer dependency ([#8740](https://github.com/sveltejs/kit/pull/8740))
+- breaking: bump `@tg-svelte/kit` peer dependency ([#8740](https://github.com/sveltejs/kit/pull/8740))
 
 ### Patch Changes
 
 - Updated dependencies [[`c7648f66`](https://github.com/sveltejs/kit/commit/c7648f6608a413e2654625cbd30f890d2148cf13), [`63613bf1`](https://github.com/sveltejs/kit/commit/63613bf194c18ce50e111585ad770fc93f9e43c7), [`d1f7655e`](https://github.com/sveltejs/kit/commit/d1f7655efdff70d91f94fe0cb0de50ed2511b5e5)]:
-  - @sveltejs/kit@1.5.0
+  - @tg-svelte/kit@1.5.0
 
 ## 1.0.5
 
@@ -331,7 +331,7 @@
 - chore: update link to docs for missing netlify.toml warning ([#8673](https://github.com/sveltejs/kit/pull/8673))
 
 - Updated dependencies [[`24d2efe4`](https://github.com/sveltejs/kit/commit/24d2efe4e5b641b9caacf21ba77a42f812b3b120)]:
-  - @sveltejs/kit@1.2.4
+  - @tg-svelte/kit@1.2.4
 
 ## 1.0.4
 
@@ -352,7 +352,7 @@
 - chore: remove superfluous main field from package.json ([#8519](https://github.com/sveltejs/kit/pull/8519))
 
 - Updated dependencies [[`7e2d3405`](https://github.com/sveltejs/kit/commit/7e2d34056e99f371e22406d941b764df365a2649)]:
-  - @sveltejs/kit@1.1.1
+  - @tg-svelte/kit@1.1.1
 
 ## 1.0.1
 
@@ -361,7 +361,7 @@
 - docs: add note about inability to access file system at runtime ([#8441](https://github.com/sveltejs/kit/pull/8441))
 
 - Updated dependencies [[`9c01c32e`](https://github.com/sveltejs/kit/commit/9c01c32ef72bbed630fadcb8283f8f8533ced5e1), [`b6ca02a6`](https://github.com/sveltejs/kit/commit/b6ca02a684dbf13a3138b552e2d2be64697f2254), [`130abe43`](https://github.com/sveltejs/kit/commit/130abe43cef2cfbaf922aa16b20cbd4332a07c15), [`c4137536`](https://github.com/sveltejs/kit/commit/c4137536f2c6572eaeec1a82ccea0852f5be6b98), [`40464efa`](https://github.com/sveltejs/kit/commit/40464efab172a17f0b637d7dadea30d77ef1ed10), [`ce028470`](https://github.com/sveltejs/kit/commit/ce0284708184198efdd30f3ff72fd579cef830b4)]:
-  - @sveltejs/kit@1.0.12
+  - @tg-svelte/kit@1.0.12
 
 ## 1.0.0
 
@@ -549,7 +549,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 
 ### Patch Changes
 
-- breaking: replace @sveltejs/kit/install-fetch with @sveltejs/kit/node/polyfills ([#4934](https://github.com/sveltejs/kit/pull/4934))
+- breaking: replace @tg-svelte/kit/install-fetch with @tg-svelte/kit/node/polyfills ([#4934](https://github.com/sveltejs/kit/pull/4934))
 
 ## 1.0.0-next.58
 
@@ -825,7 +825,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 - Updated dependencies [bf77940]
 - Updated dependencies [2172469]
 - Updated dependencies [028abd9]
-  - @sveltejs/kit@1.0.0-next.110
+  - @tg-svelte/kit@1.0.0-next.110
 
 ## 1.0.0-next.14
 
@@ -838,7 +838,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 - Updated dependencies [261ee1c]
 - Updated dependencies [ec156c6]
 - Updated dependencies [586785d]
-  - @sveltejs/kit@1.0.0-next.109
+  - @tg-svelte/kit@1.0.0-next.109
 
 ## 1.0.0-next.13
 
@@ -847,7 +847,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 - dad93fc: Fix workspace dependencies ([#1434](https://github.com/sveltejs/kit/pull/1434))
 - Updated dependencies [dad93fc]
 - Updated dependencies [37fc04f]
-  - @sveltejs/kit@1.0.0-next.108
+  - @tg-svelte/kit@1.0.0-next.108
 
 ## 1.0.0-next.12
 
@@ -858,7 +858,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 - Updated dependencies [11e7840]
 - Updated dependencies [9e20873]
 - Updated dependencies [2562ca0]
-  - @sveltejs/kit@1.0.0-next.103
+  - @tg-svelte/kit@1.0.0-next.103
 
 ## 1.0.0-next.11
 
@@ -868,7 +868,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 - Updated dependencies [694f5de]
 - Updated dependencies [0befffb]
 - Updated dependencies [c6fde99]
-  - @sveltejs/kit@1.0.0-next.97
+  - @tg-svelte/kit@1.0.0-next.97
 
 ## 1.0.0-next.10
 
@@ -876,7 +876,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 
 - 2e72a94: Add type declarations ([#1230](https://github.com/sveltejs/kit/pull/1230))
 - Updated dependencies [82955ec]
-  - @sveltejs/kit@1.0.0-next.91
+  - @tg-svelte/kit@1.0.0-next.91
 
 ## 1.0.0-next.9
 
@@ -884,7 +884,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 
 - d3cb858: Convert body to string, unless type is octet-stream ([#1121](https://github.com/sveltejs/kit/pull/1121))
 - Updated dependencies [4af45e1]
-  - @sveltejs/kit@1.0.0-next.82
+  - @tg-svelte/kit@1.0.0-next.82
 
 ## 1.0.0-next.8
 
@@ -894,7 +894,7 @@ Starting from now all releases follow semver and changes will be listed as Major
 - 1237eb3: Pass rawBody from netlify adapter ([#1109](https://github.com/sveltejs/kit/pull/1109))
 - Updated dependencies [1237eb3]
 - Updated dependencies [1237eb3]
-  - @sveltejs/kit@1.0.0-next.81
+  - @tg-svelte/kit@1.0.0-next.81
 
 ## 1.0.0-next.7
 

@@ -22,7 +22,7 @@ If you don't have any server-side logic (i.e. `+page.server.js`, `+layout.server
 /// file: svelte.config.js
 import adapter from '@sveltejs/adapter-static';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		adapter: adapter({
