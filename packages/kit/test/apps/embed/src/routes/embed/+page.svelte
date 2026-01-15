@@ -11,7 +11,6 @@
 
 		const scripts = Array.from(node.querySelectorAll('script'));
 		for (const script of scripts) {
-
 			let code = script.textContent;
 			code = code.replace('__sveltekit_dev =', 'const __sveltekit_dev =');
 			code = code.replace(
@@ -22,7 +21,7 @@
 			// Set the target for this execution
 			// @ts-ignore
 			window.__embed_target = script.parentNode;
-			
+
 			// Execute the script
 			(0, eval)(code);
 		}
