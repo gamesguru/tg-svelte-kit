@@ -12,6 +12,7 @@ packages:
   - packages/create-svelte/templates/*
   - '!.test-tmp/**'
   - playgrounds/*
+  - website-template-svkit-v2-legacy
 catalog:
   '@changesets/cli': ^2.29.6
   '@fontsource/libre-barcode-128-text': ^5.1.0
