@@ -1,4 +1,3 @@
-import { writeFileSync } from 'node:fs';
 import { DEV } from 'esm-env';
 
 import { json, text } from '@tg-svelte/kit';
@@ -85,7 +84,6 @@ export function static_error_page(options, status, message) {
  * @param {unknown} error
  */
 export async function handle_fatal_error(event, state, options, error) {
-	console.error('>>> DEBUG FATAL ERROR:', error);
 	error = error instanceof HttpError ? error : coalesce_to_error(error);
 	const status = get_status(error);
 	const body = await handle_error_and_jsonify(event, state, options, error);

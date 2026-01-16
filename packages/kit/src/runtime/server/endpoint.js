@@ -1,4 +1,3 @@
-console.error('DEBUG: Loaded endpoint.js');
 import { Redirect } from '@tg-svelte/kit/internal';
 import { with_request_store } from '@tg-svelte/kit/internal/server';
 import { ENDPOINT_METHODS, PAGE_METHODS } from '../../constants.js';
