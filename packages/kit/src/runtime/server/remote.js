@@ -214,9 +214,6 @@ async function handle_remote_call_internal(event, state, options, manifest, id) 
 				const [hash, name, payload] = key.split('/');
 
 				const loader = manifest._.remotes[hash];
-				if (typeof loader !== 'function') {
-					error(400, 'Bad Request');
-				}
 				const fn = (await loader?.())?.default?.[name];
 
 				if (!fn) error(400, 'Bad Request');
