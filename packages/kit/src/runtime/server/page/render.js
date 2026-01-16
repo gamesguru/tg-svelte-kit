@@ -488,6 +488,16 @@ export async function render_response({
 					hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
 				}
 
+				if (manifest._.client.routes) {
+					if (route) {
+						const stringified = generate_route_object(route, event.url, manifest).replaceAll(
+							'\n',
+							'\n\t\t\t\t\t\t\t'
+						);
+						hydrate.push(`server_route: ${stringified}`);
+					}
+				}
+
 				args.push(`{\n\t\t\t\t\t\t\t${hydrate.join(',\n\t\t\t\t\t\t\t')}\n\t\t\t\t\t\t}`);
 			}
 

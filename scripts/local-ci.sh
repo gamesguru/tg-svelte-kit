@@ -124,7 +124,7 @@ do_check() {
 }
 
 do_unit() {
-    run_step "Unit Tests" "pnpm test:kit"
+    run_step "Unit Tests" "cd packages/kit && pnpm test:unit"
 }
 
 do_e2e() {
@@ -134,7 +134,7 @@ do_e2e() {
 }
 
 do_kit() {
-    run_step "Kit Tests" "pnpm test:kit"
+    run_step "Kit Tests" "cd packages/kit && pnpm test"
 }
 
 do_cross() {
