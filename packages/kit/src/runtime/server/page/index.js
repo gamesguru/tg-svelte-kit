@@ -52,7 +52,11 @@ export async function render_page(
 	}
 
 	if (is_action_json_request(event)) {
-		const node = await manifest._.nodes[page.leaf]();
+		const loader = manifest._.nodes[page.leaf];
+		if (typeof loader !== 'function') {
+			throw new Error(`DEBUG_SSR_LOADER_ACTION: leaf=${page.leaf}, type=${typeof loader}`);
+		}
+		const node = await loader();
 		return handle_action_json_request(event, event_state, options, node?.server);
 	}
 
@@ -276,7 +280,11 @@ export async function render_page(
 					while (i--) {
 						if (page.errors[i]) {
 							const index = /** @type {number} */ (page.errors[i]);
-							const node = await manifest._.nodes[index]();
+							const loader = manifest._.nodes[index];
+							if (typeof loader !== 'function') {
+								throw new Error(`DEBUG_SSR_LOADER_LOOP: index=${index}, type=${typeof loader}`);
+							}
+							const node = await loader();
 
 							let j = i;
 							while (!branch[j]) j -= 1;
