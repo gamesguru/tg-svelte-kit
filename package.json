@@ -53,8 +53,5 @@
 			"unix-dgram",
 			"workerd"
 		]
-	},
-	"dependencies": {
-		"svelte": "^4.2.20"
 	}
 }

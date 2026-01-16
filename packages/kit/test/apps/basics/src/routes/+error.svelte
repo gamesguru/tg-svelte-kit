@@ -9,6 +9,7 @@
 <h1>{page.status}</h1>
 
 <p id="message">This is your custom error page saying: "<b>{page.error.message}</b>"</p>
+<pre>{JSON.stringify(page.error, null, 2)}</pre>
 
 <style>
 	h1,

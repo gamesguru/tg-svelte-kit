@@ -1039,6 +1039,8 @@ test.describe('cookies', () => {
 
 	test("fetch during SSR doesn't un- and re-escape cookies", async ({ page }) => {
 		await page.goto('/cookies/collect-without-re-escaping');
+		const text = await page.textContent('body');
+		console.log('DEBUG: full page content:', text);
 		await expect(page.locator('p')).toHaveText('cookie-special-characters="foo"');
 	});
 });

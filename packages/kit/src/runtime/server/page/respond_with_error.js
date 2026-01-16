@@ -32,6 +32,7 @@ export async function respond_with_error({
 	error,
 	resolve_opts
 }) {
+	const { handleError } = options.hooks;
 	// reroute to the fallback page to prevent an infinite chain of requests.
 	if (event.request.headers.get('x-sveltekit-error')) {
 		return static_error_page(options, status, /** @type {Error} */ (error).message);
