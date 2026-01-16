@@ -215,7 +215,7 @@ async function handle_remote_call_internal(event, state, options, manifest, id) 
 
 				const loader = manifest._.remotes[hash];
 				if (typeof loader !== 'function') {
-					throw new Error(`DEBUG: loader for ${hash} is not a function, it is ${typeof loader}`);
+					error(400, 'Bad Request');
 				}
 				const fn = (await loader?.())?.default?.[name];
 

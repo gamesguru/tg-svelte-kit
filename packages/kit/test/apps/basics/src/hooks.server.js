@@ -59,7 +59,7 @@ export const handleError = ({ event, error: e, status, message }) => {
 
 	return event.url.pathname.endsWith('404-fallback')
 		? undefined
-		: { message: `${error.message} (${status} ${message}) \n\nSTACK: ${error.stack}` };
+		: { message: `${error.message} (${status} ${message})` };
 };
 
 export const handle = sequence(
