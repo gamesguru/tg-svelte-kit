@@ -156,7 +156,7 @@ do_async() {
 }
 
 do_others() {
-    run_step "Other Tests" "pnpm run test:others"
+    run_step "Other Tests" "pnpm -w run test:others"
 }
 
 do_legacy() {
