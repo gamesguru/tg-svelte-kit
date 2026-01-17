@@ -748,8 +748,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 		search_params: new Set()
 	};
 
-	const node =
-		typeof loader === 'function' ? await loader() : /** @type {import('types').CSRPageNode} */ ({});
+	const node = /** @type {import('types').CSRPageNode} */ (await loader());
 
 	if (DEV) {
 		validate_page_exports(node.universal);
@@ -1438,7 +1437,7 @@ async function get_navigation_intent(url, invalidating) {
 		return {
 			id: get_page_key(url),
 			invalidating,
-			route: parse_server_route(route, app.nodes, app.matchers),
+			route: parse_server_route(route, app.nodes, app.matchers || {}),
 			params,
 			url
 		};
@@ -2774,7 +2773,7 @@ async function _hydrate(
 	} else {
 		// undefined in case of 404
 		if (server_route) {
-			parsed_route = route = parse_server_route(server_route, app.nodes, app.matchers);
+			parsed_route = route = parse_server_route(server_route, app.nodes, app.matchers || {});
 
 			if (Object.keys(params).length === 0) {
 				const path = get_url_path(url);
