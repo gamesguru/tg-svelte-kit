@@ -71,6 +71,122 @@ function processLog(category, logFile, parser) {
 	return parser(stripAnsi(content));
 }
 
+function parseGranularLog(content, categoryPrefix) {
+	const lines = content.split('\n');
+	const packageStats = {};
+	let currentPackage = null;
+	let currentStats = { passed: 0, failed: 0, skipped: 0 };
+
+	const commitPackageStats = () => {
+		if (
+			currentPackage &&
+			(currentStats.passed > 0 ||
+				currentStats.failed > 0 ||
+				currentStats.skipped > 0 ||
+				currentStats.expected)
+		) {
+			if (!packageStats[currentPackage])
+				packageStats[currentPackage] = { passed: 0, failed: 0, skipped: 0 };
+
+			let totalFound = currentStats.passed + currentStats.failed + currentStats.skipped;
+			if (currentStats.expected && currentStats.expected > totalFound) {
+				currentStats.skipped += currentStats.expected - totalFound;
+			}
+
+			packageStats[currentPackage].passed += currentStats.passed;
+			packageStats[currentPackage].failed += currentStats.failed;
+			packageStats[currentPackage].skipped += currentStats.skipped;
+		}
+	};
+
+	for (let line of lines) {
+		line = line.trim();
+		if (!line) continue;
+
+		// Header: > package@version script
+		const headerMatch = line.match(/^> ([@\w/-]+)@[\w.-]+ ([^\s]+)/);
+		if (headerMatch) {
+			commitPackageStats();
+			const pkgName = headerMatch[1];
+			const scriptName = headerMatch[2];
+			currentPackage = `${pkgName} (${scriptName})`;
+			currentStats = { passed: 0, failed: 0, skipped: 0 };
+			continue;
+		}
+
+		if (currentPackage) {
+			// Vitest: Tests  345 passed | ...
+			const vitestTestsMatch = line.match(/Tests\s+.*?(\d+) passed/);
+			if (vitestTestsMatch) {
+				currentStats.passed += parseInt(vitestTestsMatch[1], 10);
+				const f = line.match(/(\d+) failed/);
+				if (f) currentStats.failed += parseInt(f[1], 10);
+				const s = line.match(/(\d+) skipped/);
+				if (s) currentStats.skipped += parseInt(s[1], 10);
+				continue;
+			}
+
+			// Vitest Files: Test Files ... (Ignore to avoid double counting if regex was loose)
+			if (line.includes('Test Files ')) continue;
+
+			// Playwright/Vitest Individual Lines (for incomplete runs)
+			const linePassed = line.match(/^\s*[✓✔]\s+/);
+			if (linePassed) {
+				currentStats.passed++;
+				continue;
+			}
+			const lineFailed = line.match(/^\s*[✘✖]\s+/);
+			if (lineFailed) {
+				currentStats.failed++;
+				continue;
+			}
+
+			// Playwright: 256 passed (50.1s)
+			// Look for digits at start of line followed by " passed"
+			const pwPassed = line.match(/^(\d+) passed/);
+			if (pwPassed) currentStats.passed = Math.max(currentStats.passed, parseInt(pwPassed[1], 10));
+
+			const pwFailed = line.match(/^(\d+) failed/);
+			if (pwFailed) currentStats.failed = Math.max(currentStats.failed, parseInt(pwFailed[1], 10));
+
+			const pwSkipped = line.match(/^(\d+) skipped/);
+			if (pwSkipped)
+				currentStats.skipped = Math.max(currentStats.skipped, parseInt(pwSkipped[1], 10));
+
+			const runningMatch = line.match(/^Running (\d+) tests/);
+			if (runningMatch) {
+				currentStats.expected = parseInt(runningMatch[1], 10);
+			}
+		}
+	}
+	commitPackageStats();
+
+	const entries = [];
+	// Individual Rows
+	if (Object.keys(packageStats).length > 0) {
+		for (const [pkg, stats] of Object.entries(packageStats)) {
+			entries.push({ category: `${categoryPrefix} - ${pkg}`, ...stats });
+		}
+		// Total Row
+		const totalStats = Object.values(packageStats).reduce(
+			(acc, curr) => ({
+				passed: acc.passed + curr.passed,
+				failed: acc.failed + curr.failed,
+				skipped: acc.skipped + curr.skipped
+			}),
+			{ passed: 0, failed: 0, skipped: 0 }
+		);
+		entries.push({ category: `${categoryPrefix} Total`, ...totalStats });
+	} else {
+		// Fallback: Parse entire content as mixed log if no headers found
+		const mixed = parseMixedLog(content);
+		if (mixed.passed > 0 || mixed.failed > 0 || mixed.skipped > 0) {
+			entries.push({ category: `${categoryPrefix} (Unparsed)`, ...mixed });
+		}
+	}
+	return entries;
+}
+
 function updateCSV() {
 	const commit = getCommitInfo();
 	const timestamp = new Date().toISOString();
@@ -101,143 +217,51 @@ function updateCSV() {
 	const kitUnitStats = processLog('Kit Unit', 'kit-unit.log', parseVitestLog);
 	if (kitUnitStats) entries.push({ category: 'Kit Unit', ...kitUnitStats });
 
-	// Kit Integration via Playwright (Split by package)
+	// Kit Integration via Granular Parser
 	const kitIntegrationLog = path.join(LOG_DIR, 'kit-integration.log');
 	if (fs.existsSync(kitIntegrationLog)) {
 		const content = stripAnsi(fs.readFileSync(kitIntegrationLog, 'utf-8'));
-		// Regex to find package headers: > package-name@version command path
-		// We want to capture the package name.
-		// Example: > test-embed@0.0.1 test:dev ...
-
-		// Split by lines starting with "> " (headers)
-		// Note: We use a lookahead or just standard split.
-		// The file usually starts with a header or newline-header.
-		// We'll splits on "\n> " to be safe towards content.
-		// Split by newline and process line by line to be robust against split failures
-		const lines = content.split('\n');
-		const packageStats = {};
-		let currentPackage = null;
-
-		// Temporary stats accumulator for current package
-		let currentStats = { passed: 0, failed: 0, skipped: 0 };
-
-		for (let line of lines) {
-			line = line.trim();
-			if (!line) continue;
-
-			// Check for package header: > package-name@version script path
-			// We ignore "> command" lines like "> DEV=true..." by enforcing the @version pattern
-			// Regex: > package@version script
-			const headerMatch = line.match(/^> ([@\w/-]+)@[\w.-]+ ([^\s]+)/);
-			if (headerMatch) {
-				// Found a new package header.
-				// Save stats for previous package if it existed
-				if (
-					currentPackage &&
-					(currentStats.passed > 0 || currentStats.failed > 0 || currentStats.skipped > 0)
-				) {
-					if (!packageStats[currentPackage])
-						packageStats[currentPackage] = { passed: 0, failed: 0, skipped: 0 };
-					packageStats[currentPackage].passed += currentStats.passed;
-					packageStats[currentPackage].failed += currentStats.failed;
-					packageStats[currentPackage].skipped += currentStats.skipped;
-				}
-
-				const pkgName = headerMatch[1];
-				const scriptName = headerMatch[2];
-				// Use composite key: "package (script)"
-				currentPackage = `${pkgName} (${scriptName})`;
-
-				// Reset accumulator for new package
-				currentStats = { passed: 0, failed: 0, skipped: 0 };
-				continue; // Done with this line
-			}
-
-			// If inside a package/section, check for stats patterns
-			if (currentPackage) {
-				// Parse specific line patterns for Playwright stats
-				// Stats might be on separate lines or same lines.
-				// Regexes from parsePlaywrightLog:
-				// ^\s*(\d+) passed
-				// ^\s*(\d+) failed
-				// ^\s*(\d+) skipped
-
-				const passedMatch = line.match(/(\d+) passed/);
-				if (passedMatch) currentStats.passed += parseInt(passedMatch[1], 10);
-
-				const failedMatch = line.match(/(\d+) failed/);
-				if (failedMatch) currentStats.failed += parseInt(failedMatch[1], 10);
-
-				const skippedMatch = line.match(/(\d+) skipped/);
-				if (skippedMatch) currentStats.skipped += parseInt(skippedMatch[1], 10);
-			}
-		}
-
-		// Commit last package stats
-		if (
-			currentPackage &&
-			(currentStats.passed > 0 || currentStats.failed > 0 || currentStats.skipped > 0)
-		) {
-			if (!packageStats[currentPackage])
-				packageStats[currentPackage] = { passed: 0, failed: 0, skipped: 0 };
-			packageStats[currentPackage].passed += currentStats.passed;
-			packageStats[currentPackage].failed += currentStats.failed;
-			packageStats[currentPackage].skipped += currentStats.skipped;
-		}
-
-		// Add entries for each package
-		if (Object.keys(packageStats).length > 0) {
-			for (const [pkg, stats] of Object.entries(packageStats)) {
-				entries.push({ category: `Kit Integration - ${pkg}`, ...stats });
-			}
-			// Also extract a "Total" for reference? Maybe user doesn't need it if we have granular.
-			// Or keep the "Kit Integration" total as well?
-			// User said "capture each section". Granular is better.
-			// Let's add a Total row too for backward compat/summary.
-			const totalStats = Object.values(packageStats).reduce(
-				(acc, curr) => ({
-					passed: acc.passed + curr.passed,
-					failed: acc.failed + curr.failed,
-					skipped: acc.skipped + curr.skipped
-				}),
-				{ passed: 0, failed: 0, skipped: 0 }
-			);
-
-			entries.push({ category: 'Kit Integration Total', ...totalStats });
-		} else {
-			// Fallback if regex fails (e.g. no headers found), just parse whole file?
-			// Or maybe it's just empty.
-			// Let's try parsing whole file just in case the split failed.
-			const totalStats = parsePlaywrightLog(content);
-			if (totalStats.passed > 0 || totalStats.failed > 0 || totalStats.skipped > 0) {
-				entries.push({ category: 'Kit Integration (Unparsed)', ...totalStats });
-			}
-		}
+		entries.push(...parseGranularLog(content, 'Kit Integration'));
 	}
 
-	// SSRR via Playwright
-	const ssrrStats = processLog('SSRR', 'ssrr.log', parsePlaywrightLog);
-	if (ssrrStats) entries.push({ category: 'SSRR', ...ssrrStats });
+	// SSRR via Granular Parser
+	const ssrrLog = path.join(LOG_DIR, 'ssrr.log');
+	if (fs.existsSync(ssrrLog)) {
+		const content = stripAnsi(fs.readFileSync(ssrrLog, 'utf-8'));
+		entries.push(...parseGranularLog(content, 'SSRR'));
+	}
 
-	// Async via Playwright
-	const asyncStats = processLog('Async', 'async.log', parsePlaywrightLog);
-	if (asyncStats) entries.push({ category: 'Async', ...asyncStats });
+	// Async via Granular Parser
+	const asyncLog = path.join(LOG_DIR, 'async.log');
+	if (fs.existsSync(asyncLog)) {
+		const content = stripAnsi(fs.readFileSync(asyncLog, 'utf-8'));
+		entries.push(...parseGranularLog(content, 'Async'));
+	}
 
 	// Kit Tests (Unit + Integration) via Mixed
 	const kitStats = processLog('Kit', 'kit.log', parseMixedLog);
 	if (kitStats) entries.push({ category: 'Kit', ...kitStats });
 
-	// Cross-Platform via Mixed (Playwright + Vitest)
-	const crossStats = processLog('Cross', 'cross.log', parseMixedLog);
-	if (crossStats) entries.push({ category: 'Cross', ...crossStats });
+	// Cross-Platform via Granular Parser (Mixed Playwright + Vitest)
+	const crossLog = path.join(LOG_DIR, 'cross.log');
+	if (fs.existsSync(crossLog)) {
+		const content = stripAnsi(fs.readFileSync(crossLog, 'utf-8'));
+		entries.push(...parseGranularLog(content, 'Cross'));
+	}
 
-	// Others via Vitest (Adapter tests) and Playwright (E2E)
-	const othersStats = processLog('Others', 'others.log', parseMixedLog);
-	if (othersStats) entries.push({ category: 'Others', ...othersStats });
+	// Others via Granular Parser
+	const othersLog = path.join(LOG_DIR, 'others.log');
+	if (fs.existsSync(othersLog)) {
+		const content = stripAnsi(fs.readFileSync(othersLog, 'utf-8'));
+		entries.push(...parseGranularLog(content, 'Others'));
+	}
 
-	// Legacy Template via Playwright
-	const legacyStats = processLog('Legacy', 'legacy.log', parsePlaywrightLog);
-	if (legacyStats) entries.push({ category: 'Legacy', ...legacyStats });
+	// Legacy Template via Granular Parser
+	const legacyLog = path.join(LOG_DIR, 'legacy.log');
+	if (fs.existsSync(legacyLog)) {
+		const content = stripAnsi(fs.readFileSync(legacyLog, 'utf-8'));
+		entries.push(...parseGranularLog(content, 'Legacy'));
+	}
 
 	// Print to Console (no header check unless -t passed)
 	if (process.argv.includes('-t')) {
