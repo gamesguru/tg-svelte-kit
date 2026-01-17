@@ -1,7 +1,10 @@
 /** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
-		embedded: true
+		embedded: true,
+		paths: {
+			relative: false
+		}
 	}
 };
 
