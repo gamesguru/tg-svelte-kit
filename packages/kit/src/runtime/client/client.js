@@ -746,7 +746,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 		search_params: new Set()
 	};
 
-	const node = await loader();
+	const node = typeof loader === 'function' ? await loader() : {};
 
 	if (DEV) {
 		validate_page_exports(node.universal);

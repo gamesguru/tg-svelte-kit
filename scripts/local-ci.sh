@@ -144,7 +144,17 @@ do_e2e() {
 }
 
 do_kit() {
-	run_step "Kit Tests" "cd packages/kit && pnpm test 2>&1 | tee \"$LOG_DIR/kit.log\""
+	# Legacy wrapper running both
+	do_kit_unit
+	do_kit_integration
+}
+
+do_kit_unit() {
+	run_step "Kit Unit Tests" "cd packages/kit && pnpm test:unit 2>&1 | tee \"$LOG_DIR/kit-unit.log\""
+}
+
+do_kit_integration() {
+	run_step "Kit Integration Tests" "cd packages/kit && pnpm test:integration 2>&1 | tee \"$LOG_DIR/kit-integration.log\""
 }
 
 do_cross() {
@@ -166,18 +176,12 @@ do_async() {
 }
 
 do_others() {
-	run_step "Other Tests" "pnpm -w run test:others 2>&1 | tee \"$LOG_DIR/others.log\""
+	run_step "Other Package Tests" "pnpm -w run test:others 2>&1 | tee \"$LOG_DIR/others.log\""
 }
 
 do_legacy() {
-	if [[ -d "website-template-svkit-v2-legacy" ]]; then
-		run_step "Build Kit" "cd packages/kit && pnpm build && pnpm check 2>&1 | tee \"$LOG_DIR/legacy_build.log\""
-		run_step "Legacy Template Install" "cd website-template-svkit-v2-legacy && pnpm install 2>&1 | tee \"$LOG_DIR/legacy.log\""
-		run_step "Legacy Template Tests" "cd website-template-svkit-v2-legacy && pnpm test 2>&1 | tee -a \"$LOG_DIR/legacy.log\""
-	else
-		log_warn "Legacy template directory not found, skipping"
-		RESULTS["Legacy Template"]="~"
-	fi
+	run_step "Legacy Template Install" "cd website-template-svkit-v2-legacy && npm install 2>&1 | tee \"$LOG_DIR/legacy.log\""
+	run_step "Legacy Template Tests" "cd website-template-svkit-v2-legacy && npm run test 2>&1 | tee -a \"$LOG_DIR/legacy.log\""
 }
 
 do_quick() {
@@ -200,7 +204,8 @@ do_all() {
 
 	do_lint
 	do_check
-	do_kit
+	do_kit_unit
+	do_kit_integration
 	do_cross
 	do_ssrr
 	do_async
@@ -213,21 +218,23 @@ do_all() {
 # ============================================================================
 
 print_usage() {
-	echo "Usage: $0 {quick|lint|check|unit|e2e|kit|cross|ssrr|async|others|legacy|all}"
+	echo "Usage: $0 {quick|lint|check|unit|e2e|kit|kit-unit|kit-integration|cross|ssrr|async|others|legacy|all}"
 	echo ""
 	echo "Options:"
-	echo "  quick   - Fast checks: lint, type check, unit tests"
-	echo "  lint    - Run linter only"
-	echo "  check   - Run type check only"
-	echo "  unit    - Run unit tests only"
-	echo "  e2e     - Run E2E tests (dev + build)"
-	echo "  kit     - Run full kit tests"
-	echo "  cross   - Run cross-platform tests"
-	echo "  ssrr    - Run server-side route resolution tests"
-	echo "  async   - Run svelte async tests"
-	echo "  others  - Run other package tests"
-	echo "  legacy  - Run legacy template tests"
-	echo "  all     - Run everything"
+	echo "  quick            - Fast checks: lint, type check, unit tests"
+	echo "  lint             - Run linter only"
+	echo "  check            - Run type check only"
+	echo "  unit             - Run unit tests only"
+	echo "  e2e              - Run E2E tests (dev + build)"
+	echo "  kit              - Run full kit tests (unit + integration)"
+	echo "  kit-unit         - Run kit unit tests only"
+	echo "  kit-integration  - Run kit integration tests only"
+	echo "  cross            - Run cross-platform tests"
+	echo "  ssrr             - Run server-side route resolution tests"
+	echo "  async            - Run svelte async tests"
+	echo "  others           - Run other package tests"
+	echo "  legacy           - Run legacy template tests"
+	echo "  all              - Run everything"
 }
 
 if [ -z "$1" ]; then
@@ -240,7 +247,7 @@ fi
 
 MODE="$1"
 
-ALL_STEPS=(lint check kit cross ssrr async others legacy)
+ALL_STEPS=(lint check kit-unit kit-integration cross ssrr async others legacy)
 
 # Check for range syntax (start..end or start..)
 if [[ "$MODE" == *".."* ]]; then
@@ -295,20 +302,6 @@ if [[ "$MODE" == *".."* ]]; then
 	for ((i = START_IDX; i <= END_IDX; i++)); do
 		STEP="${ALL_STEPS[$i]}"
 		MODE="$STEP"
-		# We need to set up deps once if we skip earlier steps?
-		# Actually each 'do_step' or case usually calls ensure_deps.
-		# We can just jump to the case block handling for single item?
-		# But 'case' logic is below. We should likely loop and call logic.
-		# But 'ensure_deps' etc are inside case blocks.
-		# Refactoring: Extract case logic or recursively call self?
-		# Recursive call might be easiest but spawns processes.
-		# Better: extract execution logic.
-
-		# Simpler approach: Iterate and match case logic manually or refactor.
-		# Since I am replacing the 'case' block start... wait.
-		# I am inserting BEFORE the case block.
-		# If I execute here, I should EXIT after loop.
-
 		case "$STEP" in
 		lint)
 			ensure_deps
@@ -318,11 +311,16 @@ if [[ "$MODE" == *".."* ]]; then
 			ensure_deps
 			do_check
 			;;
-		kit)
+		kit-unit)
+			ensure_deps
+			pnpm run sync-all
+			do_kit_unit
+			;;
+		kit-integration)
 			ensure_deps
 			ensure_playwright
 			pnpm run sync-all
-			do_kit
+			do_kit_integration
 			;;
 		cross)
 			ensure_deps
@@ -383,7 +381,19 @@ kit)
 	ensure_deps
 	ensure_playwright
 	pnpm run sync-all
-	do_kit
+	do_kit_unit
+	do_kit_integration
+	;;
+kit-unit)
+	ensure_deps
+	pnpm run sync-all
+	do_kit_unit
+	;;
+kit-integration)
+	ensure_deps
+	ensure_playwright
+	pnpm run sync-all
+	do_kit_integration
 	;;
 cross)
 	ensure_deps
