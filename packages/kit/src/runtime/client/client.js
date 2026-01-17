@@ -748,7 +748,8 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 		search_params: new Set()
 	};
 
-	const node = typeof loader === 'function' ? await loader() : /** @type {import('types').CSRPageNode} */ ({});
+	const node =
+		typeof loader === 'function' ? await loader() : /** @type {import('types').CSRPageNode} */ ({});
 
 	if (DEV) {
 		validate_page_exports(node.universal);
