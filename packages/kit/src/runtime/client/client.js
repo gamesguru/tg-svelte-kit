@@ -270,6 +270,8 @@ let current_navigation_index;
 /** @type {{}} */
 let token;
 
+let router_started = false;
+
 /**
  * A set of tokens which are associated to current preloads.
  * If a preload becomes a real navigation, it's removed from the set.
@@ -358,6 +360,9 @@ export async function start(_app, _target, hydrate) {
 	if (hydrate) {
 		restore_scroll();
 
+		// If we are starting a new app, we need to reset the hydrated flag
+		// so that the new app can be properly hydrated.
+		hydrated = false;
 		await _hydrate(target, hydrate);
 	} else {
 		await navigate({
@@ -2415,6 +2420,13 @@ export async function set_nearest_error_page(error, status = 500) {
 function _start_router() {
 	history.scrollRestoration = 'manual';
 
+	if (router_started) {
+		/** @param {MouseEvent} event */
+		container.addEventListener('click', handle_click);
+		return;
+	}
+	router_started = true;
+
 	// Adopted from Nuxt.js
 	// Reset scrollRestoration to auto when leaving page, allowing page reload
 	// and back-navigation from other pages to use the browser to restore the
@@ -2461,7 +2473,7 @@ function _start_router() {
 	}
 
 	/** @param {MouseEvent} event */
-	container.addEventListener('click', async (event) => {
+	async function handle_click(event) {
 		// Adapted from https://github.com/visionmedia/page.js
 		// MIT license https://github.com/visionmedia/page.js#license
 		if (event.button || event.which !== 1) return;
@@ -2578,7 +2590,7 @@ function _start_router() {
 			replace_state: options.replace_state ?? url.href === location.href,
 			event
 		});
-	});
+	}
 
 	container.addEventListener('submit', (event) => {
 		if (event.defaultPrevented) return;
@@ -2626,6 +2638,8 @@ function _start_router() {
 			event
 		});
 	});
+
+	container.addEventListener('click', handle_click);
 
 	addEventListener('popstate', async (event) => {
 		if (resetting_focus) return;
@@ -2790,7 +2804,7 @@ async function _hydrate(
 
 	/** @type {import('./types.js').NavigationFinished | undefined} */
 	let result;
-	let hydrate = true;
+	let hydrate = !__SVELTEKIT_EMBEDDED__;
 
 	try {
 		const branch_promises = node_ids.map(async (n, i) => {

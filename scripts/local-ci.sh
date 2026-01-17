@@ -311,22 +311,31 @@ if [[ "$MODE" == *".."* ]]; then
 			ensure_deps
 			do_check
 			;;
-		kit-unit)
-			ensure_deps
-			pnpm run sync-all
-			do_kit_unit
-			;;
-		kit-integration)
-			ensure_deps
-			ensure_playwright
-			pnpm run sync-all
-			do_kit_integration
-			;;
 		kit)
 			ensure_deps
 			ensure_playwright
 			pnpm run sync-all
 			do_kit
+			SKIP_KIT_SUBSTEPS=true
+			;;
+		kit-unit)
+			if [ "$SKIP_KIT_SUBSTEPS" = true ]; then
+				echo "Skipping kit-unit (already run by kit)"
+			else
+				ensure_deps
+				pnpm run sync-all
+				do_kit_unit
+			fi
+			;;
+		kit-integration)
+			if [ "$SKIP_KIT_SUBSTEPS" = true ]; then
+				echo "Skipping kit-integration (already run by kit)"
+			else
+				ensure_deps
+				ensure_playwright
+				pnpm run sync-all
+				do_kit_integration
+			fi
 			;;
 		unit)
 			ensure_deps
