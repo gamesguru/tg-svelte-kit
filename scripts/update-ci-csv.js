@@ -106,8 +106,8 @@ function updateCSV() {
   const kitStats = processLog('Kit', 'kit.log', parseMixedLog);
   if (kitStats) entries.push({ category: 'Kit', ...kitStats });
 
-  // Cross-Platform via Playwright
-  const crossStats = processLog('Cross', 'cross.log', parsePlaywrightLog);
+  // Cross-Platform via Mixed (Playwright + Vitest)
+  const crossStats = processLog('Cross', 'cross.log', parseMixedLog);
   if (crossStats) entries.push({ category: 'Cross', ...crossStats });
 
   // Others via Vitest (Adapter tests) and Playwright (E2E)

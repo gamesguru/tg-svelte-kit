@@ -6,7 +6,7 @@
 # Define the deployment directory (Work Tree)
 # If your remote is a bare repo, you must checkout the code somewhere to run tests/build.
 # Example: automatically deploying to a folder named 'deploy' next to the git repo
-DEPLOY_DIR="$(pwd)/deploy"   # Adjust this path as needed
+DEPLOY_DIR="$(pwd)/deploy" # Adjust this path as needed
 echo "Deploying to $DEPLOY_DIR..."
 
 # Create the directory if it doesn't exist
@@ -22,8 +22,8 @@ cd "$DEPLOY_DIR" || exit 1
 # Run the verification script
 echo "Running legacy build verification..."
 if ./scripts/verify-legacy-build.sh; then
-    echo "✅ Build Verification Passed"
+	echo "✅ Build Verification Passed"
 else
-    echo "❌ Build Verification Failed"
-    exit 1
+	echo "❌ Build Verification Failed"
+	exit 1
 fi

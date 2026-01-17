@@ -1,0 +1,12 @@
+node_modules
+.DS_Store
+dist
+.svelte-kit
+.netlify
+build
+.tmp
+.ci-logs
+**/test/apps/**/.netlify
+**/test/apps/**/build
+**/test/apps/**/node_modules
+**/test/apps/**/.svelte-kit

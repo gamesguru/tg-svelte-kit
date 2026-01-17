@@ -3,7 +3,7 @@ set -e
 
 # Colors for output
 GREEN='\033[0;32m'
-RED='\033[0;31m'
+# RED='\033[0;31m'
 NC='\033[0m' # No Color
 
 echo -e "${GREEN}Starting Legacy Build Verification...${NC}"
@@ -25,10 +25,10 @@ pnpm install
 
 # Check if playwright browsers are installed, if not, install them
 if [ ! -d "node_modules/.bin/playwright" ]; then
-    echo -e "${GREEN}[4/5] Installing Playwright Dependencies (this may take a while)...${NC}"
-    npx playwright install --with-deps
+	echo -e "${GREEN}[4/5] Installing Playwright Dependencies (this may take a while)...${NC}"
+	npx playwright install --with-deps
 else
-    echo -e "${GREEN}[4/5] Playwright seems installed, skipping full install (run 'npx playwright install' manually if needed)...${NC}"
+	echo -e "${GREEN}[4/5] Playwright seems installed, skipping full install (run 'npx playwright install' manually if needed)...${NC}"
 fi
 
 echo -e "${GREEN}[5/5] Running E2E Tests (Builds & Previews)...${NC}"

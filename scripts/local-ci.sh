@@ -19,6 +19,7 @@ set -o pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$ROOT_DIR"
+export PATH="$ROOT_DIR/node_modules/.bin:$PATH"
 
 # Ensure log directory exists
 CI_ROOT="$ROOT_DIR/.tmp/ci-logs"
@@ -54,6 +55,9 @@ log_step() {
 declare -A RESULTS
 FAILED=0
 
+# Exit on Ctrl+C
+trap "echo ''; log_error 'Script interrupted by user'; exit 1" INT
+
 run_step() {
 	local name="$1"
 	local cmd="$2"
@@ -67,23 +71,7 @@ run_step() {
 	else
 		log_error "$name failed"
 		RESULTS["$name"]="✗"
-		FAILED=$((FAILED + 1))
-	fi
-}
-
-run_step_optional() {
-	local name="$1"
-	local cmd="$2"
-
-	log_step "$name (optional)"
-	echo "$ $cmd"
-
-	if eval "$cmd"; then
-		log_success "$name passed"
-		RESULTS["$name"]="✓"
-	else
-		log_warn "$name failed (non-blocking)"
-		RESULTS["$name"]="~"
+		exit 1
 	fi
 }
 
@@ -219,7 +207,30 @@ do_all() {
 # Main
 # ============================================================================
 
-MODE="${1:-all}"
+print_usage() {
+	echo "Usage: $0 {quick|lint|check|unit|e2e|kit|cross|ssrr|async|others|legacy|all}"
+	echo ""
+	echo "Options:"
+	echo "  quick   - Fast checks: lint, type check, unit tests"
+	echo "  lint    - Run linter only"
+	echo "  check   - Run type check only"
+	echo "  unit    - Run unit tests only"
+	echo "  e2e     - Run E2E tests (dev + build)"
+	echo "  kit     - Run full kit tests"
+	echo "  cross   - Run cross-platform tests"
+	echo "  ssrr    - Run server-side route resolution tests"
+	echo "  async   - Run svelte async tests"
+	echo "  others  - Run other package tests"
+	echo "  legacy  - Run legacy template tests"
+	echo "  all     - Run everything"
+}
+
+if [ -z "$1" ]; then
+	print_usage
+	exit 0
+fi
+
+MODE="$1"
 
 case "$MODE" in
 quick)
@@ -236,7 +247,7 @@ check)
 unit)
 	ensure_deps
 	pnpm run sync-all 2>/dev/null || true
-	run_step "Unit Tests" "cd packages/kit && pnpm test:unit"
+	do_unit
 	;;
 e2e)
 	ensure_deps
@@ -281,21 +292,7 @@ all)
 	do_all
 	;;
 *)
-	echo "Usage: $0 {quick|lint|check|unit|e2e|kit|cross|ssrr|async|others|legacy|all}"
-	echo ""
-	echo "Options:"
-	echo "  quick   - Fast checks: lint, type check, unit tests"
-	echo "  lint    - Run linter only"
-	echo "  check   - Run type check only"
-	echo "  unit    - Run unit tests only"
-	echo "  e2e     - Run E2E tests (dev + build)"
-	echo "  kit     - Run full kit tests"
-	echo "  cross   - Run cross-platform tests"
-	echo "  ssrr    - Run server-side route resolution tests"
-	echo "  async   - Run svelte async tests"
-	echo "  others  - Run other package tests"
-	echo "  legacy  - Run legacy template tests"
-	echo "  all     - Run everything (default)"
+	print_usage
 	exit 1
 	;;
 esac
