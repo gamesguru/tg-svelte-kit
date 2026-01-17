@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch }) {
 	const data = new TextEncoder().encode('{ "oddly" : { "formatted" : "json" } }');
 	const res = await fetch('/load/raw-body.json', {

@@ -11,7 +11,7 @@ import {
 /**
  * If the serialized data contains promises, `chunks` will be an
  * async iterable containing their resolutions
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} event_state
  * @param {import('types').SSROptions} options
  * @returns {import('./types.js').ServerDataSerializer}
@@ -127,7 +127,7 @@ export function server_data_serializer(event, event_state, options) {
 /**
  * If the serialized data contains promises, `chunks` will be an
  * async iterable containing their resolutions
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} event_state
  * @param {import('types').SSROptions} options
  * @returns {import('./types.js').ServerDataSerializerJson}

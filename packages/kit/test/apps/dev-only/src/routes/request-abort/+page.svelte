@@ -8,9 +8,11 @@
 		fetch('/request-abort', { method: 'POST', signal: controller.signal }).then((r) => r.json());
 		setTimeout(() => {
 			controller.abort();
-			fetch('/request-abort', { headers: { accept: 'application/json' } }).then(
-				async (r) => (result = await r.json())
-			);
+			setTimeout(() => {
+				fetch('/request-abort', { headers: { accept: 'application/json' } }).then(
+					async (r) => (result = await r.json())
+				);
+			}, 100);
 		}, 100);
 	}
 

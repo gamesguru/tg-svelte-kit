@@ -73,7 +73,7 @@ If you added [Playwright](https://playwright.dev/) for browser testing when you 
 
 ### package.json
 
-Your `package.json` file must include `@sveltejs/kit`, `svelte` and `vite` as `devDependencies`.
+Your `package.json` file must include `@tg-svelte/kit`, `svelte` and `vite` as `devDependencies`.
 
 When you create a project with `npx sv create`, you'll also notice that `package.json` includes `"type": "module"`. This means that `.js` files are interpreted as native JavaScript modules with `import` and `export` keywords. Legacy CommonJS files need a `.cjs` file extension.
 
@@ -87,7 +87,7 @@ This file (or `jsconfig.json`, if you prefer type-checked `.js` files over `.ts`
 
 ### vite.config.js
 
-A SvelteKit project is really just a [Vite](https://vitejs.dev) project that uses the [`@sveltejs/kit/vite`](@sveltejs-kit-vite) plugin, along with any other [Vite configuration](https://vitejs.dev/config/).
+A SvelteKit project is really just a [Vite](https://vitejs.dev) project that uses the [`@tg-svelte/kit/vite`](@tg-svelte-kit-vite) plugin, along with any other [Vite configuration](https://vitejs.dev/config/).
 
 ## Other files
 

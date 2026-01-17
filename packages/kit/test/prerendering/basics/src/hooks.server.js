@@ -2,7 +2,7 @@ import { building } from '$app/environment';
 
 const initial_building = building;
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export const handle = async ({ event, resolve }) => {
 	if (event.url.pathname === '/prerendering-true' && building) {
 		return await resolve(event, {

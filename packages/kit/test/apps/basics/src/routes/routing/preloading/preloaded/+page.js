@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch }) {
 	const message = await fetch('/routing/preloading/preloaded.json').then((r) => r.json());
 	return { message };

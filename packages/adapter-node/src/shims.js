@@ -1,2 +1,2 @@
-import { installPolyfills } from '@sveltejs/kit/node/polyfills';
+import { installPolyfills } from '@tg-svelte/kit/node/polyfills';
 installPolyfills();

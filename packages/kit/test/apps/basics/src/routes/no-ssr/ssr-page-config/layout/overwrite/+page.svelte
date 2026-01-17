@@ -1,7 +1,14 @@
 <script context="module">
-	document;
+	import { browser } from '$app/environment';
+	if (browser) {
+		document;
+	}
 </script>
 
-{document}
+<script>
+	import { browser as appBrowser } from '$app/environment';
+</script>
 
-<p>You shouldn't see this</p>
+{appBrowser ? document : ''}
+
+<p>Works</p>

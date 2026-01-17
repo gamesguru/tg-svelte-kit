@@ -8,7 +8,7 @@ declare module 'HANDLER' {
 }
 
 declare module 'MANIFEST' {
-	import { SSRManifest } from '@sveltejs/kit';
+	import { SSRManifest } from '@tg-svelte/kit';
 
 	export const base: string;
 	export const manifest: SSRManifest;
@@ -16,5 +16,5 @@ declare module 'MANIFEST' {
 }
 
 declare module 'SERVER' {
-	export { Server } from '@sveltejs/kit';
+	export { Server } from '@tg-svelte/kit';
 }

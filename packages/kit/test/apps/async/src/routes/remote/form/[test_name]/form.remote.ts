@@ -1,5 +1,5 @@
 import { form, getRequestEvent, query } from '$app/server';
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@tg-svelte/kit';
 import * as v from 'valibot';
 
 const instances = new Map<

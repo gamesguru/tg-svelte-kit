@@ -1,4 +1,4 @@
-import { error, redirect } from '@sveltejs/kit';
+import { error, redirect } from '@tg-svelte/kit';
 import { SOME_JSON } from '$env/static/private';
 
 // https://github.com/sveltejs/kit/issues/8646

@@ -1,6 +1,6 @@
-/** @import { Builder } from '@sveltejs/kit' */
+/** @import { Builder } from '@tg-svelte/kit' */
 /** @import { ResolvedConfig } from 'vite' */
-/** @import { RouteDefinition } from '@sveltejs/kit' */
+/** @import { RouteDefinition } from '@tg-svelte/kit' */
 /** @import { RouteData, ValidatedConfig, BuildData, ServerMetadata, ServerMetadataRoute, Prerendered, PrerenderMap, Logger, RemoteChunk } from 'types' */
 import colors from 'kleur';
 import { createReadStream, createWriteStream, existsSync, statSync } from 'node:fs';

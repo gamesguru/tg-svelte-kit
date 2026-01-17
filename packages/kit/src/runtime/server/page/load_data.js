@@ -1,7 +1,7 @@
 import { DEV } from 'esm-env';
 import { disable_search, make_trackable } from '../../../utils/url.js';
 import { validate_depends, validate_load_response } from '../../shared.js';
-import { with_request_store, merge_tracing } from '@sveltejs/kit/internal/server';
+import { with_request_store, merge_tracing } from '@tg-svelte/kit/internal/server';
 import { record_span } from '../../telemetry/record_span.js';
 import { base64_encode, text_decoder } from '../../utils.js';
 import { NULL_BODY_STATUS } from '../constants.js';
@@ -10,7 +10,7 @@ import { get_node_type } from '../utils.js';
 /**
  * Calls the user's server `load` function.
  * @param {{
- *   event: import('@sveltejs/kit').RequestEvent;
+ *   event: import('@tg-svelte/kit').RequestEvent;
  *   event_state: import('types').RequestState;
  *   state: import('types').SSRState;
  *   node: import('types').SSRNode | undefined;
@@ -192,7 +192,7 @@ export async function load_server_data({ event, event_state, state, node, parent
 /**
  * Calls the user's `load` function.
  * @param {{
- *   event: import('@sveltejs/kit').RequestEvent;
+ *   event: import('@tg-svelte/kit').RequestEvent;
  *   event_state: import('types').RequestState;
  *   fetched: import('./types.js').Fetched[];
  *   node: import('types').SSRNode | undefined;
@@ -258,11 +258,11 @@ export async function load_data({
 }
 
 /**
- * @param {Pick<import('@sveltejs/kit').RequestEvent, 'fetch' | 'url' | 'request' | 'route'>} event
+ * @param {Pick<import('@tg-svelte/kit').RequestEvent, 'fetch' | 'url' | 'request' | 'route'>} event
  * @param {import('types').SSRState} state
  * @param {import('./types.js').Fetched[]} fetched
  * @param {boolean} csr
- * @param {Pick<Required<import('@sveltejs/kit').ResolveOptions>, 'filterSerializedResponseHeaders'>} resolve_opts
+ * @param {Pick<Required<import('@tg-svelte/kit').ResolveOptions>, 'filterSerializedResponseHeaders'>} resolve_opts
  * @returns {typeof fetch}
  */
 export function create_universal_fetch(event, state, fetched, csr, resolve_opts) {

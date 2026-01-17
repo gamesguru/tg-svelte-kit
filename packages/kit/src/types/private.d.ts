@@ -1,8 +1,8 @@
 // This module contains types that are visible in the documentation,
-// but which cannot be imported from `@sveltejs/kit`. Care should
+// but which cannot be imported from `@tg-svelte/kit`. Care should
 // be taken to avoid breaking changes when editing this file
 
-import { RouteDefinition } from '@sveltejs/kit';
+import { RouteDefinition } from '@tg-svelte/kit';
 
 export interface AdapterEntry {
 	/**

@@ -1,4 +1,4 @@
-import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekit } from '@tg-svelte/kit/vite';
 import legacy from '@vitejs/plugin-legacy';
 
 /** @type {import('vite').UserConfig} */

@@ -7,6 +7,6 @@
 		".": "./index.js"
 	},
 	"dependencies": {
-		"@sveltejs/kit": "workspace:*"
+		"@tg-svelte/kit": "workspace:*"
 	}
 }

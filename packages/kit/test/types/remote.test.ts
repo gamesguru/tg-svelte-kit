@@ -1,6 +1,6 @@
 import { query, prerender, command, form } from '$app/server';
 import { StandardSchemaV1 } from '@standard-schema/spec';
-import { RemotePrerenderFunction, RemoteQueryFunction, invalid } from '@sveltejs/kit';
+import { RemotePrerenderFunction, RemoteQueryFunction, invalid } from '@tg-svelte/kit';
 
 const schema: StandardSchemaV1<string> = null as any;
 const schema2: StandardSchemaV1<string, number> = null as any;

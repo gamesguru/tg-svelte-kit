@@ -1,6 +1,6 @@
 {
 	"name": "@tg-svelte/kit",
-	"version": "2.49.4",
+	"version": "2.49.4-rc.0",
 	"description": "SvelteKit fork with legacy browser support (IE11) and static builds",
 	"keywords": [
 		"framework",
@@ -10,7 +10,9 @@
 		"vite"
 	],
 	"author": "Shane Jaroch <chown_tee@proton.me>",
-	"contributors": ["Tal Hadad <tal_hd@hotmail.com>"],
+	"contributors": [
+		"Tal Hadad <tal_hd@hotmail.com>"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/sveltejs/kit.git",
@@ -77,7 +79,7 @@
 	],
 	"scripts": {
 		"lint": "prettier --config ../../.prettierrc --check .",
-		"check": "tsc && cd ./test/types && tsc",
+		"check": "tsc && tsc -p ./test/types",
 		"check:all": "tsc && pnpm -r --filter=\"./**\" check",
 		"format": "prettier --config ../../.prettierrc --write .",
 		"test": "pnpm test:unit && pnpm test:integration",
@@ -92,6 +94,7 @@
 		"test:unit:prod": "NODE_ENV=production vitest --config kit.vitest.config.js run csp.spec.js cookie.spec.js",
 		"test:unit": "pnpm test:unit:dev && pnpm test:unit:prod",
 		"prepublishOnly": "pnpm generate:types",
+		"build": "pnpm prepublishOnly",
 		"generate:version": "node scripts/generate-version.js",
 		"generate:types": "node scripts/generate-dts.js"
 	},

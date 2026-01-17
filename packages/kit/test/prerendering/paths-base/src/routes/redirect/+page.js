@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 import { base } from '$app/paths';
 
 export function load() {

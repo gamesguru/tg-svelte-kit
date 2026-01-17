@@ -1,7 +1,7 @@
 import * as devalue from 'devalue';
 import { readable, writable } from 'svelte/store';
 import { DEV } from 'esm-env';
-import { text } from '@sveltejs/kit';
+import { text } from '@tg-svelte/kit';
 import * as paths from '$app/paths/internal/server';
 import { hash } from '../../../utils/hash.js';
 import { serialize_data } from './serialize_data.js';
@@ -13,7 +13,7 @@ import { SVELTE_KIT_ASSETS } from '../../../constants.js';
 import { SCHEME } from '../../../utils/url.js';
 import { create_server_routing_response, generate_route_object } from './server_routing.js';
 import { add_resolution_suffix } from '../../pathname.js';
-import { try_get_request_store, with_request_store } from '@sveltejs/kit/internal/server';
+import { try_get_request_store, with_request_store } from '@tg-svelte/kit/internal/server';
 import { text_encoder } from '../../utils.js';
 import { get_global_name } from '../utils.js';
 import { create_remote_key } from '../../shared.js';
@@ -31,15 +31,15 @@ const updated = {
  *   branch: Array<import('./types.js').Loaded>;
  *   fetched: Array<import('./types.js').Fetched>;
  *   options: import('types').SSROptions;
- *   manifest: import('@sveltejs/kit').SSRManifest;
+ *   manifest: import('@tg-svelte/kit').SSRManifest;
  *   state: import('types').SSRState;
  *   page_config: { ssr: boolean; csr: boolean };
  *   status: number;
  *   error: App.Error | null;
- *   event: import('@sveltejs/kit').RequestEvent;
+ *   event: import('@tg-svelte/kit').RequestEvent;
  *   event_state: import('types').RequestState;
  *   resolve_opts: import('types').RequiredResolveOptions;
- *   action_result?: import('@sveltejs/kit').ActionResult;
+ *   action_result?: import('@tg-svelte/kit').ActionResult;
  *   data_serializer: import('./types.js').ServerDataSerializer
  * }} opts
  */
@@ -97,6 +97,8 @@ export async function render_response({
 		action_result?.type === 'success' || action_result?.type === 'failure'
 			? (action_result.data ?? null)
 			: null;
+
+	let serialized_remote_data = '';
 
 	/** @type {string} */
 	let base = paths.base;
@@ -349,6 +351,7 @@ export async function render_response({
 		const generate_init_script = (legacy_support_and_export_init) => {
 			/** @type {string[]} */
 			const blocks = [];
+			const data_declaration = page_config.ssr ? `const data = ${data};\n` : '';
 
 			/** @type {Record<string, string>} */
 			const pre_init_input = {};
@@ -377,7 +380,7 @@ export async function render_response({
 							...input_list.map(([key, val]) => `const ${key} = ${val};`),
 							'',
 							...codeBlocks
-					  ].join(separator)}`;
+						].join(separator)}`;
 			};
 
 			const import_func = legacy_support_and_export_init ? 'import_func' : 'import';
@@ -403,18 +406,49 @@ export async function render_response({
 							deferred.set(id, { fulfil: fulfil, reject: reject });
 						}) }`);
 
-				properties.push(`resolve: function (result) {
-							${render_code_with_input(
-								[
-									`deferred.delete(result.id);
+				let app_import;
+				if (client.inline) {
+					app_import = `Promise.resolve(__sveltekit_${options.version_hash}.app.app)`;
+				} else if (client.app) {
+					app_import = `${import_func}(${s(prefixed(client.app))})`;
+				} else {
+					app_import = `${import_func}(${s(prefixed(client.start))}).then(function(m) { return m.app })`;
+				}
 
-							if (result.error) deferred_result.reject(result.error);
-							else deferred_result.fulfil(result.data);
-							`
-								],
-								{ deferred_result: 'deferred.get(result.id)' },
-								'\n\t\t\t\t\t\t\t'
-							)}
+				properties.push(`resolve: function (id, fn) {
+							var try_to_resolve = function () {
+								if (!deferred.has(id)) {
+									setTimeout(try_to_resolve, 0);
+									return;
+								}
+								var deferred_result = deferred.get(id);
+								deferred.delete(id);
+
+								${
+									Object.keys(options.hooks.transport).length > 0
+										? `${app_import}.then(function(app) {
+										try {
+											var result = fn(app);
+											var data = result[0];
+											var error = result[1];
+											if (error) deferred_result.reject(error);
+											else deferred_result.fulfil(data);
+										} catch (e) {
+											deferred_result.reject(e);
+										}
+									});`
+										: `try {
+										var result = fn();
+										var data = result[0];
+										var error = result[1];
+										if (error) deferred_result.reject(error);
+										else deferred_result.fulfil(data);
+									} catch (e) {
+										deferred_result.reject(e);
+									}`
+								}
+							};
+							try_to_resolve();
 						}`);
 			}
 
@@ -426,8 +460,6 @@ export async function render_response({
 
 			if (page_config.ssr) {
 				const serialized = { form: 'null', error: 'null' };
-
-				init_input['data'] = data;
 
 				if (form_value) {
 					serialized.form = uneval_action_response(
@@ -450,6 +482,20 @@ export async function render_response({
 
 				if (status !== 200) {
 					hydrate.push(`status: ${status}`);
+				}
+
+				if (options.embedded) {
+					hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
+				}
+
+				if (manifest._.client.routes) {
+					if (route) {
+						const stringified = generate_route_object(route, event.url, manifest).replaceAll(
+							'\n',
+							'\n\t\t\t\t\t\t\t'
+						);
+						hydrate.push(`server_route: ${stringified}`);
+					}
 				}
 
 				if (options.embedded) {
@@ -485,15 +531,22 @@ export async function render_response({
 			blocks.push(
 				legacy_support_and_export_init
 					? `Promise.all(${import_arr_combined}).then(function (modules) {
-						(function (kit, app) { kit.start(${args.join(', ')}) })(modules[0], modules[1]);
+						(function (kit, app) { ${data_declaration}${serialized_remote_data}kit.start(${args.join(', ')}) })(modules[0], modules[1]);
 					});`
 					: `Promise.all(${import_arr_combined}).then(([kit, app]) => {
-						kit.start(${args.join(', ')});
+						${data_declaration}${serialized_remote_data}kit.start(${args.join(', ')});
 					});`
 			);
 
 			if (options.service_worker) {
-				const opts = DEV ? `, { type: 'module' }` : '';
+				let opts = DEV ? ", { type: 'module' }" : '';
+				if (options.service_worker_options != null) {
+					const service_worker_options = { ...options.service_worker_options };
+					if (DEV) {
+						service_worker_options.type = 'module';
+					}
+					opts = `, ${s(service_worker_options)}`;
+				}
 
 				// we use an anonymous function instead of an arrow function to support
 				// older browsers (https://github.com/sveltejs/kit/pull/5417)
@@ -705,12 +758,11 @@ export async function render_response({
 			}
 			// otherwise
 
-
-		/**
-		 *
-		 * @param {string} script
-		 * @param {string | undefined} additionalAttrs
-		 */
+			/**
+			 *
+			 * @param {string} script
+			 * @param {string | undefined} additionalAttrs
+			 */
 			const hydrate = [
 				`node_ids: [${branch.map(({ node }) => node.index).join(', ')}]`,
 				`data: ${data}`,
@@ -722,7 +774,7 @@ export async function render_response({
 				hydrate.push(`status: ${status}`);
 			}
 
-			if (manifest._.client.routes) {
+			if (manifest._.client.routes && (!options.embedded || manifest._.client.nodes)) {
 				if (route) {
 					const stringified = generate_route_object(route, event.url, manifest).replaceAll(
 						'\n',
@@ -730,7 +782,9 @@ export async function render_response({
 					); // make output after it's put together with the rest more readable
 					hydrate.push(`params: ${devalue.uneval(event.params)}`, `server_route: ${stringified}`);
 				}
-			} else if (options.embedded) {
+			}
+
+			if (options.embedded) {
 				hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
 			}
 
@@ -739,8 +793,6 @@ export async function render_response({
 		}
 
 		const { remote_data: remote_cache } = event_state;
-
-		let serialized_remote_data = '';
 
 		if (remote_cache) {
 			/** @type {Record<string, any>} */
@@ -838,7 +890,7 @@ export async function render_response({
 				(client.legacy_polyfills_file
 					? `var n=document.createElement("script");n.src=${s(
 							prefixed(client.legacy_polyfills_file)
-					  )},n.onload=window.${startup_script_var_name},document.body.appendChild(n)`
+						)},n.onload=window.${startup_script_var_name},document.body.appendChild(n)`
 					: `window.${startup_script_var_name}()`) +
 				`}}();`;
 			body += `\n\t\t\t<script type="module"${

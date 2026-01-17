@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+
 import { routeLegacyCommon, detectModernBrowserVarName } from '../../legacy-utils.js';
 import { dev, legacy_polyfill, modern_polyfill } from '../env.js';
 
@@ -49,11 +50,19 @@ legacyStates.forEach((legacyState) =>
 
 				await verifyIndicators(page, legacyState);
 
-				checkGlobalIndicator(page, detectModernBrowserVarName, !dev && legacyState === undefined);
+				await checkGlobalIndicator(
+					page,
+					detectModernBrowserVarName,
+					!dev && legacyState === undefined
+				);
 
-				checkGlobalIndicator(page, 'legacy_polyfill_indicator', legacy_polyfill && !!legacyState);
+				await checkGlobalIndicator(
+					page,
+					'legacy_polyfill_indicator',
+					legacy_polyfill && !!legacyState
+				);
 
-				checkGlobalIndicator(
+				await checkGlobalIndicator(
 					page,
 					'modern_polyfill_indicator',
 					modern_polyfill && (!legacyState || legacyState.simulatePartialESModule)

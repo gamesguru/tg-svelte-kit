@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ url, fetch }) {
 	/** @param {string} body */
 	async function post(body) {

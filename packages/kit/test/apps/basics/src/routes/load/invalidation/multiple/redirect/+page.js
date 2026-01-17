@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 import { redirect_state } from '../state';
 
 /** @type {import('./$types').PageLoad} */

@@ -185,7 +185,7 @@ function update_types(config, routes, route, to_delete = new Set()) {
 	const outdir = path.join(config.kit.outDir, 'types', routes_dir, route.id);
 
 	// now generate new types
-	const imports = ["import type * as Kit from '@sveltejs/kit';"];
+	const imports = ["import type * as Kit from '@tg-svelte/kit';"];
 
 	/** @type {string[]} */
 	const declarations = [];
@@ -238,7 +238,7 @@ function update_types(config, routes, route, to_delete = new Set()) {
 			// of all possible types (typed as undefined), making accessing them more ergonomic
 			'type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends U ? keyof U : never> = U extends unknown ? { [P in Exclude<A, keyof U>]?: never } & U : never;',
 
-			// Re-export `Snapshot` from @sveltejs/kit — in future we could use this to infer <T> from the return type of `snapshot.capture`
+			// Re-export `Snapshot` from @tg-svelte/kit — in future we could use this to infer <T> from the return type of `snapshot.capture`
 			'export type Snapshot<T = any> = Kit.Snapshot<T>;'
 		);
 	}

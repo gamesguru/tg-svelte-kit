@@ -1,7 +1,7 @@
-/** @import { RemoteFormInput, RemoteForm, InvalidField } from '@sveltejs/kit' */
+/** @import { RemoteFormInput, RemoteForm, InvalidField } from '@tg-svelte/kit' */
 /** @import { InternalRemoteFormIssue, MaybePromise, RemoteInfo } from 'types' */
 /** @import { StandardSchemaV1 } from '@standard-schema/spec' */
-import { get_request_store } from '@sveltejs/kit/internal/server';
+import { get_request_store } from '@tg-svelte/kit/internal/server';
 import { DEV } from 'esm-env';
 import {
 	create_field_proxy,
@@ -12,7 +12,7 @@ import {
 	flatten_issues
 } from '../../../form-utils.js';
 import { get_cache, run_remote_function } from './shared.js';
-import { ValidationError } from '@sveltejs/kit/internal';
+import { ValidationError } from '@tg-svelte/kit/internal';
 
 /**
  * Creates a form object that can be spread onto a `<form>` element.
@@ -325,7 +325,7 @@ function create_issues() {
 				// TODO 3.0 remove
 				if (typeof message !== 'string') {
 					throw new Error(
-						'`invalid` should now be imported from `@sveltejs/kit` to throw validation issues. ' +
+						'`invalid` should now be imported from `@tg-svelte/kit` to throw validation issues. ' +
 							"The second parameter provided to the form function (renamed to `issue`) is still used to construct issues, e.g. `invalid(issue.field('message'))`. " +
 							'For more info see https://github.com/sveltejs/kit/pulls/14768'
 					);

@@ -1,7 +1,7 @@
 import process from 'node:process';
 import { assert, expect, test, describe } from 'vitest';
 import { domain_matches, path_matches, get_cookies } from './cookie.js';
-import { installPolyfills } from '@sveltejs/kit/node/polyfills';
+import { installPolyfills } from '@tg-svelte/kit/node/polyfills';
 
 installPolyfills();
 

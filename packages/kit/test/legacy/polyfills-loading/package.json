@@ -6,8 +6,8 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
-		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json --watch",
+		"check": "svelte-kit sync",
+		"check:watch": "svelte-kit sync",
 		"test": "pnpm test:dev && pnpm test:build",
 		"test:dev": "cross-env DEV=true playwright test",
 		"test:build": "pnpm test:build:no-polyfill && pnpm test:build:only-legacy-polyfill && pnpm test:build:only-modern-polyfill && pnpm test:build:both-polyfills",
@@ -17,7 +17,7 @@
 		"test:build:both-polyfills": "cross-env LEGACY_POLYFILL=true MODERN_POLYFILL=true playwright test"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "workspace:*",
+		"@tg-svelte/kit": "workspace:*",
 		"@vitejs/plugin-legacy": "^4.0.0",
 		"cross-env": "^7.0.3",
 		"import-meta-resolve": "^2.2.0",

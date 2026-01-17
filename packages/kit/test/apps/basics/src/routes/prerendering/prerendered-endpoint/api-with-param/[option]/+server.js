@@ -1,5 +1,5 @@
 import { building, dev } from '$app/environment';
-import { error, json } from '@sveltejs/kit';
+import { error, json } from '@tg-svelte/kit';
 
 export const prerender = 'auto';
 

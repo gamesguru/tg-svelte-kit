@@ -1,10 +1,10 @@
 <script>
 	import { afterNavigate } from '$app/navigation';
 
-	/** @type {import('@sveltejs/kit').NavigationTarget | null} */
+	/** @type {import('@tg-svelte/kit').NavigationTarget | null} */
 	let from;
 
-	/** @type {import('@sveltejs/kit').NavigationTarget} */
+	/** @type {import('@tg-svelte/kit').NavigationTarget} */
 	let to;
 
 	afterNavigate((navigation) => {

@@ -31,7 +31,7 @@ The following example caches the built app and any files in `static` eagerly, an
 /// <reference lib="webworker" />
 
 // Ensures that the `$service-worker` import has proper type definitions
-/// <reference types="@sveltejs/kit" />
+/// <reference types="@tg-svelte/kit" />
 
 // Only necessary if you have an import from `$env/static/public`
 /// <reference types="../.svelte-kit/ambient.d.ts" />

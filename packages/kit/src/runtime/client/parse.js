@@ -60,12 +60,18 @@ export function parse({ nodes, server_loads, dictionary, matchers }) {
 /**
  * @param {import('types').CSRRouteServer} input
  * @param {import('types').CSRPageNodeLoader[]} app_nodes Will be modified if a new node is loaded that's not already in the array
+ * @param {Record<string, (param: string) => boolean>} matchers
  * @returns {import('types').CSRRoute}
  */
-export function parse_server_route({ nodes, id, leaf, layouts, errors }, app_nodes) {
+export function parse_server_route({ nodes, id, leaf, layouts, errors }, app_nodes, matchers) {
+	const { pattern, params } = parse_route_id(id);
+
 	return {
 		id,
-		exec: () => ({}), // dummy function; exec already happened on the server
+		exec: (path) => {
+			const match = pattern.exec(path);
+			if (match) return exec(match, params, matchers);
+		},
 		// By writing to app_nodes only when a loader at that index is not already defined,
 		// we ensure that loaders have referential equality when they load the same node.
 		// Code elsewhere in client.js relies on this referential equality to determine

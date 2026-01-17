@@ -1,4 +1,4 @@
-/** @import { Transport } from '@sveltejs/kit' */
+/** @import { Transport } from '@tg-svelte/kit' */
 import * as devalue from 'devalue';
 import { base64_decode, base64_encode, text_decoder } from './utils.js';
 

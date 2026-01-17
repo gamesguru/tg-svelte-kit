@@ -9,7 +9,7 @@ import { ENDPOINT_METHODS } from '../../constants.js';
 import { filter_env } from '../../utils/env.js';
 import { has_server_load, resolve_route } from '../../utils/routing.js';
 import { check_feature } from '../../utils/features.js';
-import { createReadableStream } from '@sveltejs/kit/node';
+import { createReadableStream } from '@tg-svelte/kit/node';
 import { PageNodes } from '../../utils/page_nodes.js';
 import { build_server_nodes } from '../../exports/vite/build/build_server.js';
 
@@ -39,7 +39,7 @@ async function analyse({
 	output_config,
 	remotes
 }) {
-	/** @type {import('@sveltejs/kit').SSRManifest} */
+	/** @type {import('@tg-svelte/kit').SSRManifest} */
 	const manifest = (await import(pathToFileURL(manifest_path).href)).manifest;
 
 	/** @type {import('types').ValidatedKitConfig} */

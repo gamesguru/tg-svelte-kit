@@ -1,17 +1,17 @@
 <script>
-    import { browser } from "$app/environment";
-    
-    import JSIndicator from "../../../components/JSIndicator.svelte";
-    import LegacyIndicator from "../../../components/LegacyIndicator.svelte";
+	import { browser } from '$app/environment';
 
-    if (browser) {
-        // @ts-ignore
-        window.__startedFromRootPage = true;
-    }
+	import JSIndicator from '../../../components/JSIndicator.svelte';
+	import LegacyIndicator from '../../../components/LegacyIndicator.svelte';
+
+	if (browser) {
+		// @ts-ignore
+		window.__startedFromRootPage = true;
+	}
 </script>
 
 <svelte:head>
-    <title>SvelteKit Legacy Basic</title>
+	<title>SvelteKit Legacy Basic</title>
 </svelte:head>
 
 <h1>SvelteKit Legacy Basic</h1>

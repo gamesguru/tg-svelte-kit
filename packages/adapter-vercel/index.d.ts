@@ -1,4 +1,4 @@
-import { Adapter } from '@sveltejs/kit';
+import { Adapter } from '@tg-svelte/kit';
 import './ambient.js';
 import { RuntimeConfigKey } from './utils.js';
 

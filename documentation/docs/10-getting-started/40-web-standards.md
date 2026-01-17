@@ -31,7 +31,7 @@ The [`Headers`](https://developer.mozilla.org/en-US/docs/Web/API/Headers) interf
 ```js
 // @errors: 2461
 /// file: src/routes/what-is-my-user-agent/+server.js
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export function GET({ request }) {
@@ -56,7 +56,7 @@ When dealing with HTML native form submissions you'll be working with [`FormData
 ```js
 // @errors: 2461
 /// file: src/routes/hello/+server.js
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST(event) {

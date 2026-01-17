@@ -12,7 +12,7 @@ import { queue } from './queue.js';
 import { crawl } from './crawl.js';
 import { forked } from '../../utils/fork.js';
 import * as devalue from 'devalue';
-import { createReadableStream } from '@sveltejs/kit/node';
+import { createReadableStream } from '@tg-svelte/kit/node';
 import generate_fallback from './fallback.js';
 import { stringify_remote_arg } from '../../runtime/shared.js';
 import { filter_env } from '../../utils/env.js';
@@ -36,7 +36,7 @@ const SPECIAL_HASHLINKS = new Set(['', 'top']);
  * }} opts
  */
 async function prerender({ hash, out, manifest_path, metadata, verbose, env }) {
-	/** @type {import('@sveltejs/kit').SSRManifest} */
+	/** @type {import('@tg-svelte/kit').SSRManifest} */
 	const manifest = (await import(pathToFileURL(manifest_path).href)).manifest;
 
 	/** @type {import('types').ServerInternalModule} */

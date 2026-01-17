@@ -309,8 +309,8 @@ test('fails if prerender.entries are invalid', () => {
 
 /**
  * @param {string} name
- * @param {import('@sveltejs/kit').KitConfig['paths']} input
- * @param {import('@sveltejs/kit').KitConfig['paths']} output
+ * @param {import('@tg-svelte/kit').KitConfig['paths']} input
+ * @param {import('@tg-svelte/kit').KitConfig['paths']} output
  */
 function validate_paths(name, input, output) {
 	test(name, () => {

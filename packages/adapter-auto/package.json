@@ -40,13 +40,13 @@
 		"test": "vitest run"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "workspace:^",
+		"@tg-svelte/kit": "workspace:^",
 		"@sveltejs/vite-plugin-svelte": "catalog:",
 		"@types/node": "catalog:",
 		"typescript": "^5.3.3",
 		"vitest": "catalog:"
 	},
 	"peerDependencies": {
-		"@sveltejs/kit": "^2.0.0"
+		"@tg-svelte/kit": "^2.0.0"
 	}
 }

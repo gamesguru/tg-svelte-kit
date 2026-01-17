@@ -10,12 +10,12 @@ If the number of route segments is unknown, you can use rest syntax — for exam
 /[org]/[repo]/tree/[branch]/[...file]
 ```
 
-...in which case a request for `/sveltejs/kit/tree/main/documentation/docs/04-advanced-routing.md` would result in the following parameters being available to the page:
+...in which case a request for `/tg-svelte/kit/tree/main/documentation/docs/04-advanced-routing.md` would result in the following parameters being available to the page:
 
 ```js
 // @noErrors
 {
-	org: 'sveltejs',
+	org: 'tg-svelte',
 	repo: 'kit',
 	branch: 'main',
 	file: 'documentation/docs/04-advanced-routing.md'
@@ -53,7 +53,7 @@ src/routes/
 
 ```js
 /// file: src/routes/marx-brothers/[...path]/+page.js
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {import('./$types').PageLoad} */
 export function load(event) {
@@ -78,7 +78,7 @@ A route like `src/routes/fruits/[page]` would match `/fruits/apple`, but it woul
 /**
  * @param {string} param
  * @return {param is ('apple' | 'orange')}
- * @satisfies {import('@sveltejs/kit').ParamMatcher}
+ * @satisfies {import('@tg-svelte/kit').ParamMatcher}
  */
 export function match(param) {
 	return param === 'apple' || param === 'orange';
@@ -272,7 +272,7 @@ Not all use cases are suited for layout grouping, nor should you feel compelled 
 /// file: src/routes/nested/route/+layout.js
 // @filename: ambient.d.ts
 declare module "$lib/reusable-load-function" {
-	export function reusableLoad(event: import('@sveltejs/kit').LoadEvent): Promise<Record<string, any>>;
+	export function reusableLoad(event: import('@tg-svelte/kit').LoadEvent): Promise<Record<string, any>>;
 }
 // @filename: index.js
 // ---cut---

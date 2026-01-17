@@ -1,9 +1,9 @@
-/** @type {import('@sveltejs/kit').HandleValidationError} */
+/** @type {import('@tg-svelte/kit').HandleValidationError} */
 export const handleValidationError = ({ issues }) => {
 	return { message: issues[0].message };
 };
 
-/** @type {import('@sveltejs/kit').HandleServerError} */
+/** @type {import('@tg-svelte/kit').HandleServerError} */
 export const handleError = ({ error: e, status, message }) => {
 	const error = /** @type {Error} */ (e);
 

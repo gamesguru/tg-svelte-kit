@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 import { get } from 'svelte/store';
 import { get_layout, redirect_state } from './state';
 

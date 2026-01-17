@@ -19,7 +19,7 @@ Both of these features are currently experimental, meaning they are likely to co
 
 ```js
 /// file: svelte.config.js
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		experimental: {

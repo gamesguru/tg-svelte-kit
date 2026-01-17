@@ -1,6 +1,6 @@
 let count = 0;
 
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ params, setHeaders }) {
 	count += 1;
 

@@ -11,7 +11,7 @@
 		"moduleResolution": "node16",
 		"baseUrl": ".",
 		"paths": {
-			"@sveltejs/kit": ["../kit/types/index"]
+			"@tg-svelte/kit": ["../kit/types/index"]
 		}
 	},
 	"include": [

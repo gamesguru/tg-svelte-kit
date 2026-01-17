@@ -68,7 +68,7 @@ You can use [the Svelte CLI](/docs/cli/overview) to automatically set up databas
 If you need access to the `document` or `window` variables or otherwise need code to run only on the client-side you can wrap it in a `browser` check:
 
 ```js
-/// <reference types="@sveltejs/kit" />
+/// <reference types="@tg-svelte/kit" />
 // ---cut---
 import { browser } from '$app/environment';
 
@@ -156,11 +156,11 @@ export function GET({ params, url }) {
 ```js
 // @errors: 2322
 // @filename: ambient.d.ts
-declare module '@sveltejs/kit/vite'; // TODO this feels unnecessary, why can't it 'see' the declarations?
+declare module '@tg-svelte/kit/vite'; // TODO this feels unnecessary, why can't it 'see' the declarations?
 
 // @filename: index.js
 // ---cut---
-import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekit } from '@tg-svelte/kit/vite';
 
 /** @type {import('vite').Plugin} */
 const myPlugin = {

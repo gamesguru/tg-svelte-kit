@@ -9,7 +9,7 @@ import {
 	TrailingSlash,
 	Uses
 } from 'types';
-import { Page, ParamMatcher } from '@sveltejs/kit';
+import { Page, ParamMatcher } from '@tg-svelte/kit';
 
 export interface SvelteKitApp {
 	/**

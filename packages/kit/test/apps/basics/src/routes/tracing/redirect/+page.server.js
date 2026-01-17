@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
 export async function load({ url }) {
 	redirect(307, `/tracing/one/two/three/four/five${url.search}`);

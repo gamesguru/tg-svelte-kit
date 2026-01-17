@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import process from 'node:process';
 import { testButtonTest } from '../../components/test-button-test.js';
 import { routeLegacy, routeLegacyCommon, detectModernBrowserVarName } from '../../legacy-utils.js';
 

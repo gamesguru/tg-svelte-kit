@@ -223,7 +223,7 @@ export function isActionFailure(e) {
  *
  * @example
  * ```ts
- * import { invalid } from '@sveltejs/kit';
+ * import { invalid } from '@tg-svelte/kit';
  * import { form } from '$app/server';
  * import { tryLogin } from '$lib/server/auth';
  * import * as v from 'valibot';
@@ -265,7 +265,7 @@ export function isValidationError(e) {
  * Returns the normalized URL as well as a method for adding the potential suffix back
  * based on a new pathname (possibly including search) or URL.
  * ```js
- * import { normalizeUrl } from '@sveltejs/kit';
+ * import { normalizeUrl } from '@tg-svelte/kit';
  *
  * const { url, denormalize } = normalizeUrl('/blog/post/__data.json');
  * console.log(url.pathname); // /blog/post

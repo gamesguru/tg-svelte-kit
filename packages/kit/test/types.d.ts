@@ -8,7 +8,7 @@ import {
 } from '@playwright/test';
 import { IncomingMessage, ServerResponse } from 'node:http';
 import '../types/index';
-import { AfterNavigate, BeforeNavigate } from '@sveltejs/kit';
+import { AfterNavigate, BeforeNavigate } from '@tg-svelte/kit';
 
 export const test: TestType<
 	PlaywrightTestArgs &

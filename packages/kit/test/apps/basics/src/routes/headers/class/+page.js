@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch }) {
 	const res = await fetch('/headers/echo', {
 		headers: new Headers({ foo: 'bar' })

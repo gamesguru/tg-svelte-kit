@@ -1,4 +1,4 @@
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ cookies }) {

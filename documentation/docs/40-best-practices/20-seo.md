@@ -63,7 +63,7 @@ An unfortunate reality of modern web development is that it is sometimes necessa
 
 ```js
 /// file: svelte.config.js
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import('@tg-svelte/kit').Config} */
 const config = {
 	kit: {
 		// since <link rel="stylesheet"> isn't
@@ -95,7 +95,7 @@ export const csr = false;
 /// file: src/hooks.server.js
 import * as amp from '@sveltejs/amp';
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	let buffer = '';
 	return await resolve(event, {
@@ -120,7 +120,7 @@ declare module 'dropcss';
 import * as amp from '@sveltejs/amp';
 import dropcss from 'dropcss';
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	let buffer = '';
 

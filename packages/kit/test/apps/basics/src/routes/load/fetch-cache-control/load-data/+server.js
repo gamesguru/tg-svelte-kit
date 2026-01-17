@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 /** @type {import('./$types').RequestHandler} */
 export async function POST({ request, setHeaders }) {

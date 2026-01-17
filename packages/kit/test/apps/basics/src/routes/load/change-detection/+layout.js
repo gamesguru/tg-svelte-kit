@@ -1,6 +1,6 @@
 let count = 0;
 
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch, depends }) {
 	const res = await fetch('/load/change-detection/data.json');
 	const { type } = await res.json();

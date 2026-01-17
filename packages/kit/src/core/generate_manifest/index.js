@@ -90,7 +90,7 @@ export function generate_manifest({ build_data, prerendered, relative_path, rout
 
 	// prettier-ignore
 	// String representation of
-	/** @template {import('@sveltejs/kit').SSRManifest} T */
+	/** @template {import('@tg-svelte/kit').SSRManifest} T */
 	const manifest_expr = dedent`
 		{
 			appDir: ${s(build_data.app_dir)},

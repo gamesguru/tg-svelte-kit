@@ -425,7 +425,7 @@ export async function load({ params, parent }) {
 
 ## Errors
 
-If an error is thrown during `load`, the nearest [`+error.svelte`](routing#error) will be rendered. For [_expected_](errors#Expected-errors) errors, use the `error` helper from `@sveltejs/kit` to specify the HTTP status code and an optional message:
+If an error is thrown during `load`, the nearest [`+error.svelte`](routing#error) will be rendered. For [_expected_](errors#Expected-errors) errors, use the `error` helper from `@tg-svelte/kit` to specify the HTTP status code and an optional message:
 
 ```js
 /// file: src/routes/admin/+layout.server.js
@@ -441,7 +441,7 @@ declare namespace App {
 
 // @filename: index.js
 // ---cut---
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
 /** @type {import('./$types').LayoutServerLoad} */
 export function load({ locals }) {
@@ -463,7 +463,7 @@ If an [_unexpected_](errors#Unexpected-errors) error is thrown, SvelteKit will i
 
 ## Redirects
 
-To redirect users, use the `redirect` helper from `@sveltejs/kit` to specify the location to which they should be redirected alongside a `3xx` status code. Like `error(...)`, calling `redirect(...)` will throw an exception, making it easy to stop execution from inside helper functions.
+To redirect users, use the `redirect` helper from `@tg-svelte/kit` to specify the location to which they should be redirected alongside a `3xx` status code. Like `error(...)`, calling `redirect(...)` will throw an exception, making it easy to stop execution from inside helper functions.
 
 ```js
 /// file: src/routes/user/+layout.server.js
@@ -478,7 +478,7 @@ declare namespace App {
 
 // @filename: index.js
 // ---cut---
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
 /** @type {import('./$types').LayoutServerLoad} */
 export function load({ locals }) {
@@ -734,7 +734,7 @@ declare namespace App {
 
 // @filename: index.ts
 // ---cut---
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 import { getRequestEvent } from '$app/server';
 
 export function requireLogin() {

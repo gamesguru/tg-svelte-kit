@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch }) {
 	const r1 = await fetch('/file%20with%20spaces.json');
 	const p1 = await r1.json();

@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 // TODO remove this when we're able to replace the global `fetch` call in the
 // neighbouring `+page.server.js` with SvelteKit's `fetch`

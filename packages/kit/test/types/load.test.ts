@@ -1,4 +1,4 @@
-import * as Kit from '@sveltejs/kit';
+import * as Kit from '@tg-svelte/kit';
 
 // Test: Return types inferred correctly and transformed into a union
 type LoadReturn1 =

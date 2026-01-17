@@ -31,7 +31,7 @@ export const getStores = () => {
  * On the server, this store can only be subscribed to during component initialization. In the browser, it can be subscribed to at any time.
  *
  * @deprecated Use `page` from `$app/state` instead (requires Svelte 5, [see docs for more info](https://svelte.dev/docs/kit/migrating-to-sveltekit-2#SvelteKit-2.12:-$app-stores-deprecated))
- * @type {import('svelte/store').Readable<import('@sveltejs/kit').Page>}
+ * @type {import('svelte/store').Readable<import('@tg-svelte/kit').Page>}
  */
 export const page = {
 	subscribe(fn) {
@@ -48,7 +48,7 @@ export const page = {
  * On the server, this store can only be subscribed to during component initialization. In the browser, it can be subscribed to at any time.
  *
  * @deprecated Use `navigating` from `$app/state` instead (requires Svelte 5, [see docs for more info](https://svelte.dev/docs/kit/migrating-to-sveltekit-2#SvelteKit-2.12:-$app-stores-deprecated))
- * @type {import('svelte/store').Readable<import('@sveltejs/kit').Navigation | null>}
+ * @type {import('svelte/store').Readable<import('@tg-svelte/kit').Navigation | null>}
  */
 export const navigating = {
 	subscribe(fn) {

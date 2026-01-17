@@ -172,7 +172,7 @@ declare module '$lib/server/db';
 
 // @filename: index.js
 // ---cut---
-+++import { fail } from '@sveltejs/kit';+++
++++import { fail } from '@tg-svelte/kit';+++
 import * as db from '$lib/server/db';
 
 /** @satisfies {import('./$types').Actions} */
@@ -236,7 +236,7 @@ declare module '$lib/server/db';
 
 // @filename: index.js
 // ---cut---
-import { fail, +++redirect+++ } from '@sveltejs/kit';
+import { fail, +++redirect+++ } from '@tg-svelte/kit';
 import * as db from '$lib/server/db';
 
 /** @satisfies {import('./$types').Actions} */
@@ -297,7 +297,7 @@ export {};
 
 // @filename: index.js
 // ---cut---
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	event.locals.user = await getUser(event.cookies.get('sessionid'));
 	return resolve(event);
@@ -447,7 +447,7 @@ We can also implement progressive enhancement ourselves, without `use:enhance`, 
 			body: data
 		});
 
-		/** @type {import('@sveltejs/kit').ActionResult} */
+		/** @type {import('@tg-svelte/kit').ActionResult} */
 		const result = deserialize(await response.text());
 
 		if (result.type === 'success') {

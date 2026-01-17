@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekit } from '@tg-svelte/kit/vite';
 import { enhancedImages } from '../../../src/index.js';
 
 /** @type {import('vite').UserConfig} */

@@ -1,4 +1,4 @@
-import { HttpError, SvelteKitError } from '@sveltejs/kit/internal';
+import { HttpError, SvelteKitError } from '@tg-svelte/kit/internal';
 
 /**
  * @param {unknown} err

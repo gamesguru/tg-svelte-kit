@@ -1,6 +1,6 @@
-import { error } from '@sveltejs/kit';
+import { error } from '@tg-svelte/kit';
 
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load() {
 	error(404, 'Not found');
 }

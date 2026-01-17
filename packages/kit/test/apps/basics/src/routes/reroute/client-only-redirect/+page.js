@@ -1,5 +1,5 @@
 import { browser } from '$app/environment';
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
 export async function load() {
 	if (browser) {

@@ -29,10 +29,10 @@ pnpm run check
 
 ```bash
 # Unit tests only (fastest - ~6 seconds)
-pnpm -F @sveltejs/kit test:unit
+pnpm -F @tg-svelte/kit test:unit
 
 # Run a single unit test file
-pnpm -F @sveltejs/kit test:unit:dev path/to/test.spec.js
+pnpm -F @tg-svelte/kit test:unit:dev path/to/test.spec.js
 
 # Integration tests (10-30 minutes, set 60+ min timeout)
 pnpm test:kit
@@ -52,22 +52,22 @@ pnpm test:others
 1. `pnpm run format` - Auto-format code
 2. `pnpm run lint` - Check code style (don't cancel early)
 3. `pnpm run check` - Type checking (don't cancel early)
-4. `pnpm -F @sveltejs/kit test:unit` - Run unit tests
-5. For @sveltejs/kit changes: `pnpm -F @sveltejs/kit prepublishOnly` - Generate types
+4. `pnpm -F @tg-svelte/kit test:unit` - Run unit tests
+5. For @tg-svelte/kit changes: `pnpm -F @tg-svelte/kit prepublishOnly` - Generate types
 6. Run `pnpm changeset` to document changes (prefix with `fix`, `feat`, `breaking`, or `chore`)
 
 ## Code Style Examples
 
 The coding style guidelines are in `CONTRIBUTING.md`. Here are additional examples:
 
-### Imports
-
+### Common Imports
 ```javascript
-// JSDoc type imports at the top
-/** @import { Handle, RequestEvent } from '@sveltejs/kit' */
-
-// Named imports (no default exports)
-import { HttpError, SvelteKitError } from '@sveltejs/kit/internal';
+/** @import { Handle, RequestEvent } from '@tg-svelte/kit' */
+import { error, redirect, json } from '@tg-svelte/kit';
+import { env } from '$env/dynamic/private';
+import { building } from '$app/environment';
+import { page, navigating, updated } from '$app/stores';
+import { HttpError, SvelteKitError } from '@tg-svelte/kit/internal';
 ```
 
 ### Functions
@@ -145,7 +145,7 @@ const content_type = request.headers.get('content-type')?.split(';', 1)[0];
 
 ## Key Packages
 
-- `@sveltejs/kit` - Main framework (`packages/kit/`)
+- `@tg-svelte/kit` - Main framework (`packages/kit/`)
 - `adapter-*` - Platform adapters (node, cloudflare, netlify, vercel, static, auto)
 - `@sveltejs/package` - Package building utilities
 - `@sveltejs/enhanced-img` - Enhanced image component
@@ -155,5 +155,5 @@ const content_type = request.headers.get('content-type')?.split(';', 1)[0];
 
 - **Browser tests fail**: `pnpm playwright install chromium`
 - **Build failures**: Ensure `pnpm install --frozen-lockfile` completed
-- **Type errors**: Run `pnpm -F @sveltejs/kit prepublishOnly`
+- **Type errors**: Run `pnpm -F @tg-svelte/kit prepublishOnly`
 - **Lint issues**: Run `pnpm run format` first

@@ -1,11 +1,11 @@
 import './shims';
 import { Server } from '0SERVER';
 import { split_headers } from './headers.js';
-import { createReadableStream } from '@sveltejs/kit/node';
+import { createReadableStream } from '@tg-svelte/kit/node';
 import process from 'node:process';
 
 /**
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @returns {import('@netlify/functions').Handler}
  */
 export function init(manifest) {

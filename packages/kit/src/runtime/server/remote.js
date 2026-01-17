@@ -1,9 +1,9 @@
-/** @import { ActionResult, RemoteForm, RequestEvent, SSRManifest } from '@sveltejs/kit' */
+/** @import { ActionResult, RemoteForm, RequestEvent, SSRManifest } from '@tg-svelte/kit' */
 /** @import { RemoteFunctionResponse, RemoteInfo, RequestState, SSROptions } from 'types' */
 
-import { json, error } from '@sveltejs/kit';
-import { HttpError, Redirect, SvelteKitError } from '@sveltejs/kit/internal';
-import { with_request_store, merge_tracing } from '@sveltejs/kit/internal/server';
+import { json, error } from '@tg-svelte/kit';
+import { HttpError, Redirect, SvelteKitError } from '@tg-svelte/kit/internal';
+import { with_request_store, merge_tracing } from '@tg-svelte/kit/internal/server';
 import { app_dir, base } from '$app/paths/internal/server';
 import { is_form_content_type } from '../../utils/http.js';
 import { parse_remote_arg, stringify } from '../shared.js';
@@ -294,6 +294,7 @@ async function handle_remote_form_post_internal(event, state, manifest, id) {
 		const fn = /** @type {RemoteInfo & { type: 'form' }} */ (/** @type {any} */ (form).__).fn;
 
 		const { data, meta, form_data } = await deserialize_binary_form(event.request);
+
 		if (action_id && !('id' in data)) {
 			data.id = JSON.parse(decodeURIComponent(action_id));
 		}

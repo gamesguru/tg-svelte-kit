@@ -1,6 +1,6 @@
 import { base, assets, relative, initial_base } from './internal/server.js';
 import { resolve_route } from '../../../utils/routing.js';
-import { try_get_request_store } from '@sveltejs/kit/internal/server';
+import { try_get_request_store } from '@tg-svelte/kit/internal/server';
 
 /** @type {import('./client.js').asset} */
 export function asset(file) {

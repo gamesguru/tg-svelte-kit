@@ -1,5 +1,5 @@
 import { building } from '$app/environment';
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 
 if (!building) {
 	// @ts-expect-error

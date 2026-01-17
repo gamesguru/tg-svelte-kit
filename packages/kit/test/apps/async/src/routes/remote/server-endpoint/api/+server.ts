@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+import { json } from '@tg-svelte/kit';
 import { add, get } from '../internal.remote';
 
 export async function GET() {

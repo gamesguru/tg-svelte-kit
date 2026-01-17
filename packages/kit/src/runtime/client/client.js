@@ -1,6 +1,6 @@
 import { BROWSER, DEV } from 'esm-env';
 import * as svelte from 'svelte';
-import { HttpError, Redirect, SvelteKitError } from '@sveltejs/kit/internal';
+import { HttpError, Redirect, SvelteKitError } from '@tg-svelte/kit/internal';
 const { onMount, tick } = svelte;
 // Svelte 4 and under don't have `untrack`, so we have to fallback if `untrack` is not exported
 const untrack = svelte.untrack ?? ((value) => value());
@@ -114,7 +114,7 @@ export const stores = {
 	url: /* @__PURE__ */ notifiable_store({}),
 	page: /* @__PURE__ */ notifiable_store({}),
 	navigating: /* @__PURE__ */ writable(
-		/** @type {import('@sveltejs/kit').Navigation | null} */ (null)
+		/** @type {import('@tg-svelte/kit').Navigation | null} */ (null)
 	),
 	updated: /* @__PURE__ */ create_updated_store()
 };
@@ -229,13 +229,13 @@ const reroute_cache = new Map();
  * Note on before_navigate_callbacks, on_navigate_callbacks and after_navigate_callbacks:
  * do not re-assign as some closures keep references to these Sets
  */
-/** @type {Set<(navigation: import('@sveltejs/kit').BeforeNavigate) => void>} */
+/** @type {Set<(navigation: import('@tg-svelte/kit').BeforeNavigate) => void>} */
 const before_navigate_callbacks = new Set();
 
-/** @type {Set<(navigation: import('@sveltejs/kit').OnNavigate) => import('types').MaybePromise<(() => void) | void>>} */
+/** @type {Set<(navigation: import('@tg-svelte/kit').OnNavigate) => import('types').MaybePromise<(() => void) | void>>} */
 const on_navigate_callbacks = new Set();
 
-/** @type {Set<(navigation: import('@sveltejs/kit').AfterNavigate) => void>} */
+/** @type {Set<(navigation: import('@tg-svelte/kit').AfterNavigate) => void>} */
 const after_navigate_callbacks = new Set();
 
 /** @type {import('./types.js').NavigationState} */
@@ -269,6 +269,8 @@ let current_navigation_index;
 
 /** @type {{}} */
 let token;
+
+let router_started = false;
 
 /**
  * A set of tokens which are associated to current preloads.
@@ -358,6 +360,9 @@ export async function start(_app, _target, hydrate) {
 	if (hydrate) {
 		restore_scroll();
 
+		// If we are starting a new app, we need to reset the hydrated flag
+		// so that the new app can be properly hydrated.
+		hydrated = false;
 		await _hydrate(target, hydrate);
 	} else {
 		await navigate({
@@ -582,7 +587,7 @@ async function initialize(result, target, hydrate) {
 	const style = document.querySelector('style[data-sveltekit]');
 	if (style) style.remove();
 
-	Object.assign(page, /** @type {import('@sveltejs/kit').Page} */ (result.props.page));
+	Object.assign(page, /** @type {import('@tg-svelte/kit').Page} */ (result.props.page));
 
 	root = new app.root({
 		target,
@@ -599,7 +604,7 @@ async function initialize(result, target, hydrate) {
 	restore_snapshot(current_navigation_index);
 
 	if (hydrate) {
-		/** @type {import('@sveltejs/kit').AfterNavigate} */
+		/** @type {import('@tg-svelte/kit').AfterNavigate} */
 		const navigation = {
 			from: null,
 			to: {
@@ -731,6 +736,8 @@ function get_navigation_result_from_branch({ url, params, branch, status, error,
  * @returns {Promise<import('./types.js').BranchNode>}
  */
 async function load_node({ loader, parent, url, params, route, server_data_node }) {
+	// console.error('LOAD_NODE_DEBUG', { params, route }); // Keep logic clean
+
 	/** @type {Record<string, any> | null} */
 	let data = null;
 
@@ -746,7 +753,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 		search_params: new Set()
 	};
 
-	const node = await loader();
+	const node = /** @type {import('types').CSRPageNode} */ (await loader());
 
 	if (DEV) {
 		validate_page_exports(node.universal);
@@ -776,7 +783,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 			}
 		}
 
-		/** @type {import('@sveltejs/kit').LoadEvent} */
+		/** @type {import('@tg-svelte/kit').LoadEvent} */
 		const load_input = {
 			tracing: { enabled: false, root: noop_span, current: noop_span },
 			route: new Proxy(route, {
@@ -787,7 +794,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 					return target[/** @type {'id'} */ (key)];
 				}
 			}),
-			params: new Proxy(params, {
+			params: new Proxy(params || {}, {
 				get: (target, key) => {
 					if (is_tracking) {
 						uses.params.add(/** @type {string} */ (key));
@@ -1435,7 +1442,7 @@ async function get_navigation_intent(url, invalidating) {
 		return {
 			id: get_page_key(url),
 			invalidating,
-			route: parse_server_route(route, app.nodes),
+			route: parse_server_route(route, app.nodes, app.matchers || {}),
 			params,
 			url
 		};
@@ -1459,7 +1466,7 @@ function get_page_key(url) {
 /**
  * @param {{
  *   url: URL;
- *   type: import('@sveltejs/kit').Navigation["type"];
+ *   type: import('@tg-svelte/kit').Navigation["type"];
  *   intent?: import('./types.js').NavigationIntent;
  *   delta?: number;
  *   event?: PopStateEvent | MouseEvent;
@@ -1497,7 +1504,7 @@ function _before_navigate({ url, type, intent, delta, event }) {
 
 /**
  * @param {{
- *   type: import('@sveltejs/kit').NavigationType;
+ *   type: import('@tg-svelte/kit').NavigationType;
  *   url: URL;
  *   popped?: {
  *     state: Record<string, any>;
@@ -1705,7 +1712,7 @@ async function navigate({
 		const after_navigate = (
 			await Promise.all(
 				Array.from(on_navigate_callbacks, (fn) =>
-					fn(/** @type {import('@sveltejs/kit').OnNavigate} */ (nav.navigation))
+					fn(/** @type {import('@tg-svelte/kit').OnNavigate} */ (nav.navigation))
 				)
 			)
 		).filter(/** @returns {value is () => void} */ (value) => typeof value === 'function');
@@ -1809,7 +1816,7 @@ async function navigate({
 	nav.fulfil(undefined);
 
 	after_navigate_callbacks.forEach((fn) =>
-		fn(/** @type {import('@sveltejs/kit').AfterNavigate} */ (nav.navigation))
+		fn(/** @type {import('@tg-svelte/kit').AfterNavigate} */ (nav.navigation))
 	);
 
 	stores.navigating.set((navigating.current = null));
@@ -1970,7 +1977,7 @@ function setup_preload() {
 
 /**
  * @param {unknown} error
- * @param {import('@sveltejs/kit').NavigationEvent} event
+ * @param {import('@tg-svelte/kit').NavigationEvent} event
  * @returns {import('types').MaybePromise<App.Error>}
  */
 function handle_error(error, event) {
@@ -2010,7 +2017,7 @@ function add_navigation_callback(callbacks, callback) {
  * A lifecycle function that runs the supplied `callback` when the current component mounts, and also whenever we navigate to a URL.
  *
  * `afterNavigate` must be called during a component initialization. It remains active as long as the component is mounted.
- * @param {(navigation: import('@sveltejs/kit').AfterNavigate) => void} callback
+ * @param {(navigation: import('@tg-svelte/kit').AfterNavigate) => void} callback
  * @returns {void}
  */
 export function afterNavigate(callback) {
@@ -2027,7 +2034,7 @@ export function afterNavigate(callback) {
  * If the navigation will (if not cancelled) cause the document to unload — in other words `'leave'` navigations and `'link'` navigations where `navigation.to.route === null` — `navigation.willUnload` is `true`.
  *
  * `beforeNavigate` must be called during a component initialization. It remains active as long as the component is mounted.
- * @param {(navigation: import('@sveltejs/kit').BeforeNavigate) => void} callback
+ * @param {(navigation: import('@tg-svelte/kit').BeforeNavigate) => void} callback
  * @returns {void}
  */
 export function beforeNavigate(callback) {
@@ -2042,7 +2049,7 @@ export function beforeNavigate(callback) {
  * If a function (or a `Promise` that resolves to a function) is returned from the callback, it will be called once the DOM has updated.
  *
  * `onNavigate` must be called during a component initialization. It remains active as long as the component is mounted.
- * @param {(navigation: import('@sveltejs/kit').OnNavigate) => import('types').MaybePromise<(() => void) | void>} callback
+ * @param {(navigation: import('@tg-svelte/kit').OnNavigate) => import('types').MaybePromise<(() => void) | void>} callback
  * @returns {void}
  */
 export function onNavigate(callback) {
@@ -2346,7 +2353,7 @@ export function replaceState(url, state) {
  * In case of an error, it redirects to the nearest error page.
  * @template {Record<string, unknown> | undefined} Success
  * @template {Record<string, unknown> | undefined} Failure
- * @param {import('@sveltejs/kit').ActionResult<Success, Failure>} result
+ * @param {import('@tg-svelte/kit').ActionResult<Success, Failure>} result
  * @returns {Promise<void>}
  */
 export async function applyAction(result) {
@@ -2413,6 +2420,13 @@ export async function set_nearest_error_page(error, status = 500) {
 function _start_router() {
 	history.scrollRestoration = 'manual';
 
+	if (router_started) {
+		/** @param {MouseEvent} event */
+		container.addEventListener('click', handle_click);
+		return;
+	}
+	router_started = true;
+
 	// Adopted from Nuxt.js
 	// Reset scrollRestoration to auto when leaving page, allowing page reload
 	// and back-navigation from other pages to use the browser to restore the
@@ -2427,7 +2441,7 @@ function _start_router() {
 
 			// If we're navigating, beforeNavigate was already called. If we end up in here during navigation,
 			// it's due to an external or full-page-reload link, for which we don't want to call the hook again.
-			/** @type {import('@sveltejs/kit').BeforeNavigate} */
+			/** @type {import('@tg-svelte/kit').BeforeNavigate} */
 			const navigation = {
 				...nav.navigation,
 				cancel: () => {
@@ -2459,7 +2473,7 @@ function _start_router() {
 	}
 
 	/** @param {MouseEvent} event */
-	container.addEventListener('click', async (event) => {
+	async function handle_click(event) {
 		// Adapted from https://github.com/visionmedia/page.js
 		// MIT license https://github.com/visionmedia/page.js#license
 		if (event.button || event.which !== 1) return;
@@ -2576,7 +2590,7 @@ function _start_router() {
 			replace_state: options.replace_state ?? url.href === location.href,
 			event
 		});
-	});
+	}
 
 	container.addEventListener('submit', (event) => {
 		if (event.defaultPrevented) return;
@@ -2624,6 +2638,8 @@ function _start_router() {
 			event
 		});
 	});
+
+	container.addEventListener('click', handle_click);
 
 	addEventListener('popstate', async (event) => {
 		if (resetting_focus) return;
@@ -2751,7 +2767,7 @@ function _start_router() {
  */
 async function _hydrate(
 	target,
-	{ status = 200, error, node_ids, params, route, server_route, data: server_data_nodes, form }
+	{ status = 200, error, node_ids, params = {}, route, server_route, data: server_data_nodes, form }
 ) {
 	hydrated = true;
 
@@ -2771,7 +2787,15 @@ async function _hydrate(
 	} else {
 		// undefined in case of 404
 		if (server_route) {
-			parsed_route = route = parse_server_route(server_route, app.nodes);
+			parsed_route = route = parse_server_route(server_route, app.nodes, app.matchers || {});
+
+			if (Object.keys(params).length === 0) {
+				const path = get_url_path(url);
+				const match = parsed_route.exec(path);
+				if (match) {
+					params = decode_params(match);
+				}
+			}
 		} else {
 			route = { id: null };
 			params = {};
@@ -2780,7 +2804,7 @@ async function _hydrate(
 
 	/** @type {import('./types.js').NavigationFinished | undefined} */
 	let result;
-	let hydrate = true;
+	let hydrate = !__SVELTEKIT_EMBEDDED__;
 
 	try {
 		const branch_promises = node_ids.map(async (n, i) => {
@@ -3147,7 +3171,7 @@ function reset_focus(url, scroll = null) {
 }
 
 /**
- * @template {import('@sveltejs/kit').NavigationType} T
+ * @template {import('@tg-svelte/kit').NavigationType} T
  * @param {import('./types.js').NavigationState} current
  * @param {import('./types.js').NavigationIntent | undefined} intent
  * @param {URL | null} url
@@ -3168,7 +3192,7 @@ function create_navigation(current, intent, url, type) {
 	// Handle any errors off-chain so that it doesn't show up as an unhandled rejection
 	complete.catch(() => {});
 
-	/** @type {(import('@sveltejs/kit').Navigation | import('@sveltejs/kit').AfterNavigate) & { type: T }} */
+	/** @type {(import('@tg-svelte/kit').Navigation | import('@tg-svelte/kit').AfterNavigate) & { type: T }} */
 	const navigation = /** @type {any} */ ({
 		from: {
 			params: current.params,
@@ -3201,7 +3225,7 @@ function create_navigation(current, intent, url, type) {
  * However, spreading `{ ...page }` returns an empty object so we manually
  * assign to each property instead.
  *
- * @param {import('@sveltejs/kit').Page} page
+ * @param {import('@tg-svelte/kit').Page} page
  */
 function clone_page(page) {
 	return {

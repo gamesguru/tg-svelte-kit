@@ -2,7 +2,7 @@
  * @param {string} route_id
  * @param {any} config
  * @param {string} feature
- * @param {import('@sveltejs/kit').Adapter | undefined} adapter
+ * @param {import('@tg-svelte/kit').Adapter | undefined} adapter
  */
 export function check_feature(route_id, config, feature, adapter) {
 	if (!adapter) return;

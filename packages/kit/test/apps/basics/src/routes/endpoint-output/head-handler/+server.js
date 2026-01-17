@@ -5,7 +5,7 @@ export function GET() {
 	return new Response('Hello world!');
 }
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export function HEAD() {
 	return new Response('', {
 		headers: {

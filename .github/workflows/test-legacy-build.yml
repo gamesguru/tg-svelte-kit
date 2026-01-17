@@ -1,0 +1,51 @@
+---
+name: Legacy Build Verification
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-legacy-template:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install Root Dependencies
+        run: pnpm install
+
+      - name: Build/Check Kit
+        run: |
+          cd packages/kit
+          pnpm build
+          pnpm check
+
+      - name: Install Template Dependencies
+        working-directory: website-template-svkit-v2-legacy
+        run: |
+          pnpm install
+          npx playwright install --with-deps
+
+      - name: Sync SvelteKit
+        working-directory: website-template-svkit-v2-legacy
+        run: pnpm run prepare
+
+      - name: Run E2E Tests (Builds & Previews)
+        working-directory: website-template-svkit-v2-legacy
+        run: pnpm test

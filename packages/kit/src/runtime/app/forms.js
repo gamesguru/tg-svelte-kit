@@ -26,7 +26,7 @@ export { applyAction };
  * @template {Record<string, unknown> | undefined} Success
  * @template {Record<string, unknown> | undefined} Failure
  * @param {string} result
- * @returns {import('@sveltejs/kit').ActionResult<Success, Failure>}
+ * @returns {import('@tg-svelte/kit').ActionResult<Success, Failure>}
  */
 export function deserialize(result) {
 	const parsed = JSON.parse(result);
@@ -74,7 +74,7 @@ function clone(element) {
  * @template {Record<string, unknown> | undefined} Success
  * @template {Record<string, unknown> | undefined} Failure
  * @param {HTMLFormElement} form_element The form element
- * @param {import('@sveltejs/kit').SubmitFunction<Success, Failure>} submit Submit callback
+ * @param {import('@tg-svelte/kit').SubmitFunction<Success, Failure>} submit Submit callback
  */
 export function enhance(form_element, submit = () => {}) {
 	if (DEV && clone(form_element).method !== 'post') {
@@ -85,7 +85,7 @@ export function enhance(form_element, submit = () => {}) {
 	 * @param {{
 	 *   action: URL;
 	 *   invalidateAll?: boolean;
-	 *   result: import('@sveltejs/kit').ActionResult;
+	 *   result: import('@tg-svelte/kit').ActionResult;
 	 *   reset?: boolean
 	 * }} opts
 	 */
@@ -164,7 +164,7 @@ export function enhance(form_element, submit = () => {}) {
 			})) ?? fallback_callback;
 		if (cancelled) return;
 
-		/** @type {import('@sveltejs/kit').ActionResult} */
+		/** @type {import('@tg-svelte/kit').ActionResult} */
 		let result;
 
 		try {

@@ -1,4 +1,4 @@
-/** @type {import('@sveltejs/kit').Load} */
+/** @type {import('@tg-svelte/kit').Load} */
 export async function load({ fetch }) {
 	const res = await fetch('/errors/endpoint.json');
 	if (res.ok) {

@@ -1,13 +1,13 @@
 <script>
 	import { onNavigate } from '$app/navigation';
 
-	/** @type {import('@sveltejs/kit').NavigationTarget} */
+	/** @type {import('@tg-svelte/kit').NavigationTarget} */
 	let from;
 
-	/** @type {import('@sveltejs/kit').NavigationTarget} */
+	/** @type {import('@tg-svelte/kit').NavigationTarget} */
 	let to;
 
-	/** @type {Omit<import('@sveltejs/kit').NavigationType, 'enter' | 'leave'>} */
+	/** @type {Omit<import('@tg-svelte/kit').NavigationType, 'enter' | 'leave'>} */
 	let type;
 
 	let called_return = false;

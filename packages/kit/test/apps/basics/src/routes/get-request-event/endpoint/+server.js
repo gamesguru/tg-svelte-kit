@@ -1,5 +1,5 @@
 import { getRequestEvent } from '$app/server';
-import { text } from '@sveltejs/kit';
+import { text } from '@tg-svelte/kit';
 
 export function GET() {
 	const event = getRequestEvent();

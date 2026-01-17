@@ -11,7 +11,7 @@
 		"check:watch": "svelte-check --watch"
 	},
 	"devDependencies": {
-		"@sveltejs/kit": "workspace:^",
+		"@tg-svelte/kit": "workspace:^",
 		"@sveltejs/vite-plugin-svelte": "catalog:",
 		"svelte": "catalog:",
 		"svelte-check": "catalog:",

@@ -6,7 +6,7 @@ import { env } from '$env/dynamic/private';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FOO = env.FOO;
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export function handle({ event, resolve }) {
 	return resolve(event, {
 		// this allows us to check that <link rel="stylesheet"> is still added

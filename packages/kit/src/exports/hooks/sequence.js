@@ -1,10 +1,10 @@
-/** @import { Handle, RequestEvent, ResolveOptions } from '@sveltejs/kit' */
+/** @import { Handle, RequestEvent, ResolveOptions } from '@tg-svelte/kit' */
 /** @import { MaybePromise } from 'types' */
 import {
 	merge_tracing,
 	get_request_store,
 	with_request_store
-} from '@sveltejs/kit/internal/server';
+} from '@tg-svelte/kit/internal/server';
 
 /**
  * A helper function for sequencing multiple `handle` calls in a middleware-like manner.
@@ -15,9 +15,9 @@ import {
  *
  * ```js
  * /// file: src/hooks.server.js
- * import { sequence } from '@sveltejs/kit/hooks';
+ * import { sequence } from '@tg-svelte/kit/hooks';
  *
- * /// type: import('@sveltejs/kit').Handle
+ * /// type: import('@tg-svelte/kit').Handle
  * async function first({ event, resolve }) {
  * 	console.log('first pre-processing');
  * 	const result = await resolve(event, {
@@ -36,7 +36,7 @@ import {
  * 	return result;
  * }
  *
- * /// type: import('@sveltejs/kit').Handle
+ * /// type: import('@tg-svelte/kit').Handle
  * async function second({ event, resolve }) {
  * 	console.log('second pre-processing');
  * 	const result = await resolve(event, {

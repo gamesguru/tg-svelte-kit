@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-/** @type {import('@sveltejs/kit').RequestHandler} */
+/** @type {import('@tg-svelte/kit').RequestHandler} */
 export async function PUT({ request }) {
 	const hash = createHash('sha256');
 	const reader = request.body.getReader();

@@ -1,4 +1,4 @@
-import { sveltekit } from '@sveltejs/kit/vite';
+import { sveltekit } from '@tg-svelte/kit/vite';
 import legacy from '@vitejs/plugin-legacy';
 import * as path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -26,7 +26,7 @@ const config = {
 						//  while this is usefull for testing, you should never do this in production
 						//  (see @vitejs/plugin-legacy docs for more info).
 						path.relative(core_js_modules_path, path.resolve(__dirname, 'polyfills/modern'))
-				  ]
+					]
 				: false
 		})
 	],

@@ -1,4 +1,4 @@
-import { redirect } from '@sveltejs/kit';
+import { redirect } from '@tg-svelte/kit';
 
 // This exists to check that an external package importing `redirect`
 // will get something that satisfies the relevant `instanceof` checks

@@ -5,7 +5,7 @@ import process from 'node:process';
 import sirv from 'sirv';
 import { fileURLToPath } from 'node:url';
 import { parse as polka_url_parser } from '@polka/url';
-import { getRequest, setResponse, createReadableStream } from '@sveltejs/kit/node';
+import { getRequest, setResponse, createReadableStream } from '@tg-svelte/kit/node';
 import { Server } from 'SERVER';
 import { manifest, prerendered, base } from 'MANIFEST';
 import { env } from 'ENV';

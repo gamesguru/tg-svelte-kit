@@ -1,5 +1,5 @@
 import { base, assets, relative } from '$app/paths/internal/server';
-import { text } from '@sveltejs/kit';
+import { text } from '@tg-svelte/kit';
 import { s } from '../../../utils/misc.js';
 import { exec } from '../../../utils/routing.js';
 import { decode_params } from '../../../utils/url.js';
@@ -8,7 +8,7 @@ import { get_relative_path } from '../../utils.js';
 /**
  * @param {import('types').SSRClientRoute} route
  * @param {URL} url
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @returns {string}
  */
 export function generate_route_object(route, url, manifest) {
@@ -61,7 +61,7 @@ function create_client_import(import_path, url) {
 /**
  * @param {string} resolved_path
  * @param {URL} url
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @returns {Promise<Response>}
  */
 export async function resolve_route(resolved_path, url, manifest) {
@@ -95,7 +95,7 @@ export async function resolve_route(resolved_path, url, manifest) {
  * @param {import('types').SSRClientRoute | null} route
  * @param {Partial<Record<string, string>>} params
  * @param {URL} url
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @returns {{response: Response, body: string}}
  */
 export function create_server_routing_response(route, params, url, manifest) {
@@ -121,7 +121,7 @@ export function create_server_routing_response(route, params, url, manifest) {
  *
  * @param {import('types').SSRClientRoute} route
  * @param {URL} url
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @returns {string}
  */
 function create_css_import(route, url, manifest) {

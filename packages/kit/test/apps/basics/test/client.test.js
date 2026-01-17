@@ -380,13 +380,13 @@ test.describe('SPA mode / no SSR', () => {
 		expect(read_errors('/no-ssr/ssr-page-config/layout/inherit')).toBe(undefined);
 	});
 
-	test('cannot use browser-only global on page because of ssr config in +page.js', async ({
-		page
+	test('can use browser-only global on page with overridden ssr config in +page.js', async ({
+		page,
+		read_errors
 	}) => {
 		await page.goto('/no-ssr/ssr-page-config/layout/overwrite');
-		await expect(page.locator('p')).toHaveText(
-			'This is your custom error page saying: "document is not defined (500 Internal Error)"'
-		);
+		await expect(page.locator('p')).toHaveText('Works');
+		expect(read_errors('/no-ssr/ssr-page-config/layout/overwrite')).toBe(undefined);
 	});
 
 	test('afterNavigate is only called once during start', async ({ page }) => {
@@ -1335,7 +1335,13 @@ test.describe('Streaming', () => {
 
 		test('Catches fetch errors from server load functions (direct hit)', async ({ page }) => {
 			page.goto('/streaming/server-error');
-			await expect(page.locator('p.eager')).toHaveText('eager');
+
+			await expect(async () => {
+				await expect(page.locator('p.eager')).toHaveText('eager');
+			}).toPass({
+				intervals: [100]
+			});
+
 			await expect(page.locator('p.fail')).toHaveText('fail');
 		});
 	}

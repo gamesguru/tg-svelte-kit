@@ -167,7 +167,7 @@
 ### Patch Changes
 
 - Add more type documentation ([#7003](https://github.com/sveltejs/kit/pull/7003))
-- breaking: move SubmitFunction into @sveltejs/kit ([#7003](https://github.com/sveltejs/kit/pull/7003))
+- breaking: move SubmitFunction into @tg-svelte/kit ([#7003](https://github.com/sveltejs/kit/pull/7003))
 
 ## 1.0.0-next.565
 
@@ -1121,7 +1121,7 @@
 ### Patch Changes
 
 - fix: Prevent import of `$env/*/private` in client ([#6018](https://github.com/sveltejs/kit/pull/6018))
-- Fix vite.config.ts "Cannot find module '@sveltejs/kit/vite' or its corresponding type declarations." ([#6140](https://github.com/sveltejs/kit/pull/6140))
+- Fix vite.config.ts "Cannot find module '@tg-svelte/kit/vite' or its corresponding type declarations." ([#6140](https://github.com/sveltejs/kit/pull/6140))
 
 ## 1.0.0-next.428
 
@@ -1156,7 +1156,7 @@
 
 ### Patch Changes
 
-- prevent duplicate module ids by disabling optimizeDeps for @sveltejs/kit ([#6057](https://github.com/sveltejs/kit/pull/6057))
+- prevent duplicate module ids by disabling optimizeDeps for @tg-svelte/kit ([#6057](https://github.com/sveltejs/kit/pull/6057))
 - Generate types when Svelte file missing, fix layout params ([#6066](https://github.com/sveltejs/kit/pull/6066))
 - Silence unknown prop warnings coming from SvelteKit ([#6071](https://github.com/sveltejs/kit/pull/6071))
 
@@ -1188,7 +1188,7 @@
 
 ### Patch Changes
 
-- fix: support linked `@sveltejs/kit` project in Vite 3.0.3+ ([#5861](https://github.com/sveltejs/kit/pull/5861))
+- fix: support linked `@tg-svelte/kit` project in Vite 3.0.3+ ([#5861](https://github.com/sveltejs/kit/pull/5861))
 
 ## 1.0.0-next.419
 
@@ -1325,7 +1325,7 @@
 
 ### Patch Changes
 
-- Use @sveltejs/kit postinstall lifecycle hook to invoke 'svelte-kit sync' instead of prepare in projects created by create-svelte ([#5760](https://github.com/sveltejs/kit/pull/5760))
+- Use @tg-svelte/kit postinstall lifecycle hook to invoke 'svelte-kit sync' instead of prepare in projects created by create-svelte ([#5760](https://github.com/sveltejs/kit/pull/5760))
 
 ## 1.0.0-next.398
 
@@ -1333,7 +1333,7 @@
 
 - Check url protocol to avoid mailto links navigated by kit in mobile devices ([#5726](https://github.com/sveltejs/kit/pull/5726))
 - fix: Windows correctly errors on `$env/*/private` imports and Illegal module analysis in dev ignores non-js|ts|svelte files ([#5739](https://github.com/sveltejs/kit/pull/5739))
-- feat: include reference to `@sveltejs/kit` types in ambient file ([#5745](https://github.com/sveltejs/kit/pull/5745))
+- feat: include reference to `@tg-svelte/kit` types in ambient file ([#5745](https://github.com/sveltejs/kit/pull/5745))
 
 ## 1.0.0-next.397
 
@@ -1595,7 +1595,7 @@
 
 - Adjust type imports to satisfy TS NodeNext moduleResolution ([#5360](https://github.com/sveltejs/kit/pull/5360))
 - breaking: require vite.config.js ([#5332](https://github.com/sveltejs/kit/pull/5332))
-- breaking: graduate @sveltejs/kit/vite from experimental ([#5332](https://github.com/sveltejs/kit/pull/5332))
+- breaking: graduate @tg-svelte/kit/vite from experimental ([#5332](https://github.com/sveltejs/kit/pull/5332))
 - breaking: switch to vite CLI for dev, build, and preview commands ([#5332](https://github.com/sveltejs/kit/pull/5332))
 
 ## 1.0.0-next.358
@@ -1629,7 +1629,7 @@
 - fix: support vite.config.js on Windows ([#5265](https://github.com/sveltejs/kit/pull/5265))
 - Allow both string and URL as the first argument of `$app/navigation#goto` ([#5282](https://github.com/sveltejs/kit/pull/5282))
 - rename `goto(href)` to `goto(url)` ([#5286](https://github.com/sveltejs/kit/pull/5286))
-- Add types for @sveltejs/kit/experimental/vite ([#5266](https://github.com/sveltejs/kit/pull/5266))
+- Add types for @tg-svelte/kit/experimental/vite ([#5266](https://github.com/sveltejs/kit/pull/5266))
 - fix: port flag doesn't work in preview ([#5284](https://github.com/sveltejs/kit/pull/5284))
 
 ## 1.0.0-next.354
@@ -1642,7 +1642,7 @@
 
 ### Patch Changes
 
-- Expose Vite plugin as @sveltejs/kit/experimental/vite ([#5094](https://github.com/sveltejs/kit/pull/5094))
+- Expose Vite plugin as @tg-svelte/kit/experimental/vite ([#5094](https://github.com/sveltejs/kit/pull/5094))
 
 ## 1.0.0-next.352
 
@@ -1730,7 +1730,7 @@
 ### Patch Changes
 
 - fix: page store correct after navigation when an identical route with a different hash had been prefetched ([#5039](https://github.com/sveltejs/kit/pull/5039))
-- breaking: replace @sveltejs/kit/install-fetch with @sveltejs/kit/node/polyfills ([#4934](https://github.com/sveltejs/kit/pull/4934))
+- breaking: replace @tg-svelte/kit/install-fetch with @tg-svelte/kit/node/polyfills ([#4934](https://github.com/sveltejs/kit/pull/4934))
 - fix: Prerendered pages fail if they access session. ([#4811](https://github.com/sveltejs/kit/pull/4811))
 
 ## 1.0.0-next.340
@@ -3001,13 +3001,13 @@
 ### Patch Changes
 
 - fix: upgrade to Vite 2.5.2 to fix URL decoding ([#2323](https://github.com/sveltejs/kit/pull/2323))
-- Add `@sveltejs/kit` to `noExternal` in dev server as well ([#2332](https://github.com/sveltejs/kit/pull/2332))
+- Add `@tg-svelte/kit` to `noExternal` in dev server as well ([#2332](https://github.com/sveltejs/kit/pull/2332))
 
 ## 1.0.0-next.159
 
 ### Patch Changes
 
-- Add `@sveltejs/kit` to noExternal to resolve hooks module in dev server ([#2306](https://github.com/sveltejs/kit/pull/2306))
+- Add `@tg-svelte/kit` to noExternal to resolve hooks module in dev server ([#2306](https://github.com/sveltejs/kit/pull/2306))
 - fix: HMR on Windows ([#2315](https://github.com/sveltejs/kit/pull/2315))
 
 ## 1.0.0-next.158
@@ -3412,7 +3412,7 @@
 
 ### Patch Changes
 
-- 9b448a6: Rename @sveltejs/kit/http to @sveltejs/kit/node ([#1391](https://github.com/sveltejs/kit/pull/1391))
+- 9b448a6: Rename @tg-svelte/kit/http to @tg-svelte/kit/node ([#1391](https://github.com/sveltejs/kit/pull/1391))
 
 ## 1.0.0-next.103
 
@@ -3670,7 +3670,7 @@
 ### Patch Changes
 
 - 679e997: Fix client-side redirect loop detection ([#811](https://github.com/sveltejs/kit/pull/811))
-- 8d453c8: Specify minimum Node version number in @sveltejs/kit and add .npmrc to enforce it ([#787](https://github.com/sveltejs/kit/pull/787))
+- 8d453c8: Specify minimum Node version number in @tg-svelte/kit and add .npmrc to enforce it ([#787](https://github.com/sveltejs/kit/pull/787))
 - 78aec0c: Detect service worker support
 - f33a22c: Make ...rest parameters optional ([#768](https://github.com/sveltejs/kit/pull/768))
 
@@ -3823,7 +3823,7 @@
 
 - 925638a: Remove endpoints from the files built for the client ([#490](https://github.com/sveltejs/kit/pull/490))
 - c3cf3f3: Bump deps ([#492](https://github.com/sveltejs/kit/pull/492))
-- 625747d: kit: bundle @sveltejs/kit into built application ([#486](https://github.com/sveltejs/kit/pull/486))
+- 625747d: kit: bundle @tg-svelte/kit into built application ([#486](https://github.com/sveltejs/kit/pull/486))
 - Updated dependencies [c3cf3f3]
   - @sveltejs/vite-plugin-svelte@1.0.0-next.3
 

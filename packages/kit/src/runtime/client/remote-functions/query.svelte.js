@@ -1,11 +1,11 @@
-/** @import { RemoteQueryFunction } from '@sveltejs/kit' */
+/** @import { RemoteQueryFunction } from '@tg-svelte/kit' */
 /** @import { RemoteFunctionResponse } from 'types' */
 import { app_dir, base } from '$app/paths/internal/client';
 import { app, goto, query_map, remote_responses } from '../client.js';
 import { tick } from 'svelte';
 import { create_remote_function, remote_request } from './shared.svelte.js';
 import * as devalue from 'devalue';
-import { HttpError, Redirect } from '@sveltejs/kit/internal';
+import { HttpError, Redirect } from '@tg-svelte/kit/internal';
 import { DEV } from 'esm-env';
 
 /**

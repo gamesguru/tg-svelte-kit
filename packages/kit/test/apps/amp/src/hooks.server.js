@@ -1,7 +1,7 @@
 import * as amp from '@sveltejs/amp';
 import dropcss from 'dropcss';
 
-/** @type {import('@sveltejs/kit').Handle} */
+/** @type {import('@tg-svelte/kit').Handle} */
 export async function handle({ event, resolve }) {
 	let buffer = '';
 

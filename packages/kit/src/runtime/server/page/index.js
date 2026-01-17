@@ -1,5 +1,5 @@
-import { text } from '@sveltejs/kit';
-import { Redirect } from '@sveltejs/kit/internal';
+import { text } from '@tg-svelte/kit';
+import { Redirect } from '@tg-svelte/kit/internal';
 import { compact } from '../../../utils/array.js';
 import { get_status, normalize_error } from '../../../utils/error.js';
 import { add_data_suffix } from '../../pathname.js';
@@ -24,11 +24,11 @@ import { PageNodes } from '../../../utils/page_nodes.js';
 const MAX_DEPTH = 10;
 
 /**
- * @param {import('@sveltejs/kit').RequestEvent} event
+ * @param {import('@tg-svelte/kit').RequestEvent} event
  * @param {import('types').RequestState} event_state
  * @param {import('types').PageNodeIndexes} page
  * @param {import('types').SSROptions} options
- * @param {import('@sveltejs/kit').SSRManifest} manifest
+ * @param {import('@tg-svelte/kit').SSRManifest} manifest
  * @param {import('types').SSRState} state
  * @param {import('../../../utils/page_nodes.js').PageNodes} nodes
  * @param {import('types').RequiredResolveOptions} resolve_opts
@@ -52,7 +52,11 @@ export async function render_page(
 	}
 
 	if (is_action_json_request(event)) {
-		const node = await manifest._.nodes[page.leaf]();
+		const loader = manifest._.nodes[page.leaf];
+		if (typeof loader !== 'function') {
+			throw new Error(`DEBUG_SSR_LOADER_ACTION: leaf=${page.leaf}, type=${typeof loader}`);
+		}
+		const node = await loader();
 		return handle_action_json_request(event, event_state, options, node?.server);
 	}
 
@@ -61,7 +65,7 @@ export async function render_page(
 
 		let status = 200;
 
-		/** @type {import('@sveltejs/kit').ActionResult | undefined} */
+		/** @type {import('@tg-svelte/kit').ActionResult | undefined} */
 		let action_result = undefined;
 
 		if (is_action_request(event)) {
@@ -276,7 +280,11 @@ export async function render_page(
 					while (i--) {
 						if (page.errors[i]) {
 							const index = /** @type {number} */ (page.errors[i]);
-							const node = await manifest._.nodes[index]();
+							const loader = manifest._.nodes[index];
+							if (typeof loader !== 'function') {
+								throw new Error(`DEBUG_SSR_LOADER_LOOP: index=${index}, type=${typeof loader}`);
+							}
+							const node = await loader();
 
 							let j = i;
 							while (!branch[j]) j -= 1;

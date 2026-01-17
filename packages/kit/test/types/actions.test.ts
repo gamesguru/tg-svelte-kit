@@ -1,4 +1,4 @@
-import * as Kit from '@sveltejs/kit';
+import * as Kit from '@tg-svelte/kit';
 
 // Test: Action types inferred correctly and transformed into a union
 type Actions = {

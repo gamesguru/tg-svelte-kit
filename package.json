@@ -1,9 +1,13 @@
 {
-	"name": "kit-monorepo",
+	"name": "svelte-kit-legacy",
 	"version": "0.0.1",
-	"description": "monorepo for @sveltejs/kit and friends",
+	"description": "SvelteJS Kit fork with support for static legacy builds",
 	"private": true,
 	"type": "module",
+	"author": "Shane Jaroch <chown_tee@proton.me>",
+	"contributors": [
+		"Tal Hadad <tal_hd@hotmail.com>"
+	],
 	"scripts": {
 		"test:kit": "pnpm run --dir packages/kit test",
 		"test:cross-platform:dev": "pnpm run --dir packages/kit test:cross-platform:dev",
@@ -20,7 +24,7 @@
 		"precommit": "pnpm format && pnpm lint",
 		"changeset:version": "changeset version && pnpm -r generate:version && git add --all",
 		"changeset:release": "changeset publish",
-		"build": "pnpm --filter '@sveltejs/*' -r build",
+		"build": "pnpm --filter '@sveltejs/*' --filter '@tg-svelte/*' -r build",
 		"sync-all": "node scripts/sync-all.js"
 	},
 	"devDependencies": {
