@@ -488,7 +488,7 @@ export async function render_response({
 					hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
 				}
 
-				if (manifest._.client.routes) {
+				if (manifest._.client.routes && (!options.embedded || manifest._.client.nodes)) {
 					if (route) {
 						const stringified = generate_route_object(route, event.url, manifest).replaceAll(
 							'\n',
@@ -774,7 +774,7 @@ export async function render_response({
 				hydrate.push(`status: ${status}`);
 			}
 
-			if (manifest._.client.routes) {
+			if (manifest._.client.routes && (!options.embedded || manifest._.client.nodes)) {
 				if (route) {
 					const stringified = generate_route_object(route, event.url, manifest).replaceAll(
 						'\n',
