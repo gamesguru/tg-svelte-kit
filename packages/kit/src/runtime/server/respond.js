@@ -88,6 +88,7 @@ export function is_origin_match(request, origin) {
 export async function internal_respond(request, options, manifest, state) {
 	/** URL but stripped from the potential `/__data.json` suffix and its search param  */
 	const url = new URL(request.url);
+	if (url.pathname.endsWith('__route.js')) console.log('Respond Hit:', url.pathname); // DEBUG INJECTION
 
 	const is_route_resolution_request = has_resolution_suffix(url.pathname);
 	const is_data_request = has_data_suffix(url.pathname);

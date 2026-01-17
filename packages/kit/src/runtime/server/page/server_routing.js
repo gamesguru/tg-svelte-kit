@@ -106,6 +106,7 @@ export function create_server_routing_response(route, params, url, manifest) {
 	if (route) {
 		const csr_route = generate_route_object(route, url, manifest);
 		const body = `${create_css_import(route, url, manifest)}\nexport const route = ${csr_route}; export const params = ${JSON.stringify(params)};`;
+		console.log('SSRR Debug:', { route_id: route.id, params, body }); // DEBUG INJECTION
 
 		return { response: text(body, { headers }), body };
 	} else {

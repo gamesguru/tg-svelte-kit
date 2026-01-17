@@ -731,6 +731,8 @@ function get_navigation_result_from_branch({ url, params, branch, status, error,
  * @returns {Promise<import('./types.js').BranchNode>}
  */
 async function load_node({ loader, parent, url, params, route, server_data_node }) {
+	// console.error('LOAD_NODE_DEBUG', { params, route }); // Keep logic clean
+
 	/** @type {Record<string, any> | null} */
 	let data = null;
 
@@ -787,7 +789,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 					return target[/** @type {'id'} */ (key)];
 				}
 			}),
-			params: new Proxy(params, {
+			params: new Proxy(params || {}, {
 				get: (target, key) => {
 					if (is_tracking) {
 						uses.params.add(/** @type {string} */ (key));
@@ -1435,7 +1437,7 @@ async function get_navigation_intent(url, invalidating) {
 		return {
 			id: get_page_key(url),
 			invalidating,
-			route: parse_server_route(route, app.nodes),
+			route: parse_server_route(route, app.nodes, app.matchers),
 			params,
 			url
 		};
@@ -2751,7 +2753,7 @@ function _start_router() {
  */
 async function _hydrate(
 	target,
-	{ status = 200, error, node_ids, params, route, server_route, data: server_data_nodes, form }
+	{ status = 200, error, node_ids, params = {}, route, server_route, data: server_data_nodes, form }
 ) {
 	hydrated = true;
 
@@ -2771,7 +2773,15 @@ async function _hydrate(
 	} else {
 		// undefined in case of 404
 		if (server_route) {
-			parsed_route = route = parse_server_route(server_route, app.nodes);
+			parsed_route = route = parse_server_route(server_route, app.nodes, app.matchers);
+
+			if (Object.keys(params).length === 0) {
+				const path = get_url_path(url);
+				const match = parsed_route.exec(path);
+				if (match) {
+					params = decode_params(match);
+				}
+			}
 		} else {
 			route = { id: null };
 			params = {};
