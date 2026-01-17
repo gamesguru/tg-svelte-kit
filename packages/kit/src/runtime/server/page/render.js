@@ -488,7 +488,7 @@ export async function render_response({
 					hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
 				}
 
-				if (manifest._.client.routes && !options.embedded) {
+				if (manifest._.client.routes) {
 					if (route) {
 						const stringified = generate_route_object(route, event.url, manifest).replaceAll(
 							'\n',
@@ -496,6 +496,10 @@ export async function render_response({
 						);
 						hydrate.push(`server_route: ${stringified}`);
 					}
+				}
+
+				if (options.embedded) {
+					hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
 				}
 
 				args.push(`{\n\t\t\t\t\t\t\t${hydrate.join(',\n\t\t\t\t\t\t\t')}\n\t\t\t\t\t\t}`);
@@ -778,7 +782,9 @@ export async function render_response({
 					); // make output after it's put together with the rest more readable
 					hydrate.push(`params: ${devalue.uneval(event.params)}`, `server_route: ${stringified}`);
 				}
-			} else if (options.embedded) {
+			}
+
+			if (options.embedded) {
 				hydrate.push(`params: ${devalue.uneval(event.params)}`, `route: ${s(event.route)}`);
 			}
 
