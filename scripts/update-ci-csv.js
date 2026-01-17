@@ -83,9 +83,9 @@ function parseGranularLog(content, categoryPrefix) {
 				packageStats[currentPackage] = { passed: 0, failed: 0, skipped: 0, unknown: 0 };
 
 			let totalFound = currentStats.passed + currentStats.failed + currentStats.skipped;
-			if (currentStats.expected && currentStats.expected > totalFound) {
+			if (currentStats.expected !== undefined && currentStats.expected > totalFound) {
 				currentStats.unknown += currentStats.expected - totalFound;
-			} else if (totalFound === 0 && !currentStats.expected) {
+			} else if (totalFound === 0 && currentStats.expected === undefined) {
 				// No results found and no "Running X tests" - implies crash or empty
 				currentStats.unknown += 1;
 			}
@@ -195,7 +195,7 @@ function updateCSV() {
 	// Lint
 	const lintLog = path.join(LOG_DIR, 'lint.log');
 	if (fs.existsSync(lintLog)) {
-		const content = fs.readFileSync(lintLog, 'utf-8');
+		const content = stripAnsi(fs.readFileSync(lintLog, 'utf-8'));
 		const passed = !content.includes('ELIFECYCLE'); // Simple check
 		entries.push({ category: 'Lint', passed: passed ? 1 : 0, failed: passed ? 0 : 1 });
 	}

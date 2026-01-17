@@ -73,7 +73,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: pnpm
-      - run: pnpm install --frozen-lockfile --config.engine-strict=false
+      - run: pnpm install --frozen-lockfile ${{ matrix.node-version < 20 && '--config.engine-strict=false' || '' }}
       - run: pnpm playwright install ${{ matrix.e2e-browser }}
       - run: pnpm run sync-all
       - run: pnpm test:kit

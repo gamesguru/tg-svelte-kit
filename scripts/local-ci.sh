@@ -114,7 +114,7 @@ ensure_deps() {
 
 # Ensure Playwright browsers are installed
 ensure_playwright() {
-	if ! command -v playwright &>/dev/null; then
+	if ! pnpm exec playwright --version &>/dev/null; then
 		log_info "Installing Playwright browsers..."
 		pnpm playwright install chromium
 	fi
@@ -247,7 +247,7 @@ fi
 
 MODE="$1"
 
-ALL_STEPS=(lint check kit-unit kit-integration cross ssrr async others legacy)
+ALL_STEPS=(lint check unit kit kit-unit kit-integration e2e cross ssrr async others legacy)
 
 # Check for range syntax (start..end or start..)
 if [[ "$MODE" == *".."* ]]; then
@@ -321,6 +321,23 @@ if [[ "$MODE" == *".."* ]]; then
 			ensure_playwright
 			pnpm run sync-all
 			do_kit_integration
+			;;
+		kit)
+			ensure_deps
+			ensure_playwright
+			pnpm run sync-all
+			do_kit
+			;;
+		unit)
+			ensure_deps
+			pnpm run sync-all
+			do_unit
+			;;
+		e2e)
+			ensure_deps
+			ensure_playwright
+			pnpm run sync-all
+			do_e2e
 			;;
 		cross)
 			ensure_deps
