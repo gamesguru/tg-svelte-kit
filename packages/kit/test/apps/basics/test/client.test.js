@@ -1335,7 +1335,13 @@ test.describe('Streaming', () => {
 
 		test('Catches fetch errors from server load functions (direct hit)', async ({ page }) => {
 			page.goto('/streaming/server-error');
-			await expect(page.locator('p.eager')).toHaveText('eager');
+
+			await expect(async () => {
+				await expect(page.locator('p.eager')).toHaveText('eager');
+			}).toPass({
+				intervals: [100]
+			});
+
 			await expect(page.locator('p.fail')).toHaveText('fail');
 		});
 	}
