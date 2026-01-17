@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 
-const LOG_DIR = '.tmp';
+const LOG_DIR = '.tmp/ci-logs/latest';
 
 function getCommitInfo() {
   return execSync('git describe --dirty --always').toString().trim();
@@ -44,6 +44,16 @@ function parsePlaywrightLog(content) {
   for (const m of skippedMatches) skipped += parseInt(m[1], 10);
 
   return { passed, failed, skipped };
+}
+
+function parseMixedLog(content) {
+  const v = parseVitestLog(content);
+  const p = parsePlaywrightLog(content);
+  return {
+    passed: v.passed + p.passed,
+    failed: v.failed + p.failed,
+    skipped: v.skipped + p.skipped
+  };
 }
 
 function stripAnsi(str) {
@@ -92,12 +102,21 @@ function updateCSV() {
   const asyncStats = processLog('Async', 'async.log', parsePlaywrightLog);
   if (asyncStats) entries.push({ category: 'Async', ...asyncStats });
 
+  // Kit Tests (Unit + Integration) via Mixed
+  const kitStats = processLog('Kit', 'kit.log', parseMixedLog);
+  if (kitStats) entries.push({ category: 'Kit', ...kitStats });
+
+  // Cross-Platform via Playwright
+  const crossStats = processLog('Cross', 'cross.log', parsePlaywrightLog);
+  if (crossStats) entries.push({ category: 'Cross', ...crossStats });
+
   // Others via Vitest (Adapter tests) and Playwright (E2E)
-  // others.log contains mix of Vitest and Playwright output.
-  // We'll simplisticly try both or just regex for "failed" lines if simpler.
-  // For now let's reuse parsePlaywrightLog as it's generic enough for "X passed" lines
-  const othersStats = processLog('Others', 'others.log', parsePlaywrightLog);
+  const othersStats = processLog('Others', 'others.log', parseMixedLog);
   if (othersStats) entries.push({ category: 'Others', ...othersStats });
+
+  // Legacy Template via Playwright
+  const legacyStats = processLog('Legacy', 'legacy.log', parsePlaywrightLog);
+  if (legacyStats) entries.push({ category: 'Legacy', ...legacyStats });
 
   // Print to Console (no header, append-friendly)
   if (entries.length > 0) {
