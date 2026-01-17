@@ -75,27 +75,25 @@ function parseGranularLog(content, categoryPrefix) {
 	const lines = content.split('\n');
 	const packageStats = {};
 	let currentPackage = null;
-	let currentStats = { passed: 0, failed: 0, skipped: 0 };
+	let currentStats = { passed: 0, failed: 0, skipped: 0, unknown: 0 };
 
 	const commitPackageStats = () => {
-		if (
-			currentPackage &&
-			(currentStats.passed > 0 ||
-				currentStats.failed > 0 ||
-				currentStats.skipped > 0 ||
-				currentStats.expected)
-		) {
+		if (currentPackage) {
 			if (!packageStats[currentPackage])
-				packageStats[currentPackage] = { passed: 0, failed: 0, skipped: 0 };
+				packageStats[currentPackage] = { passed: 0, failed: 0, skipped: 0, unknown: 0 };
 
 			let totalFound = currentStats.passed + currentStats.failed + currentStats.skipped;
 			if (currentStats.expected && currentStats.expected > totalFound) {
-				currentStats.skipped += currentStats.expected - totalFound;
+				currentStats.unknown += currentStats.expected - totalFound;
+			} else if (totalFound === 0 && !currentStats.expected) {
+				// No results found and no "Running X tests" - implies crash or empty
+				currentStats.unknown += 1;
 			}
 
 			packageStats[currentPackage].passed += currentStats.passed;
 			packageStats[currentPackage].failed += currentStats.failed;
 			packageStats[currentPackage].skipped += currentStats.skipped;
+			packageStats[currentPackage].unknown += currentStats.unknown;
 		}
 	};
 
@@ -110,7 +108,7 @@ function parseGranularLog(content, categoryPrefix) {
 			const pkgName = headerMatch[1];
 			const scriptName = headerMatch[2];
 			currentPackage = `${pkgName} (${scriptName})`;
-			currentStats = { passed: 0, failed: 0, skipped: 0 };
+			currentStats = { passed: 0, failed: 0, skipped: 0, unknown: 0 };
 			continue;
 		}
 
@@ -172,16 +170,17 @@ function parseGranularLog(content, categoryPrefix) {
 			(acc, curr) => ({
 				passed: acc.passed + curr.passed,
 				failed: acc.failed + curr.failed,
-				skipped: acc.skipped + curr.skipped
+				skipped: acc.skipped + curr.skipped,
+				unknown: (acc.unknown || 0) + (curr.unknown || 0)
 			}),
-			{ passed: 0, failed: 0, skipped: 0 }
+			{ passed: 0, failed: 0, skipped: 0, unknown: 0 }
 		);
 		entries.push({ category: `${categoryPrefix} Total`, ...totalStats });
 	} else {
 		// Fallback: Parse entire content as mixed log if no headers found
 		const mixed = parseMixedLog(content);
 		if (mixed.passed > 0 || mixed.failed > 0 || mixed.skipped > 0) {
-			entries.push({ category: `${categoryPrefix} (Unparsed)`, ...mixed });
+			entries.push({ category: `${categoryPrefix} (Unparsed)`, ...mixed, unknown: 0 });
 		}
 	}
 	return entries;
@@ -265,12 +264,16 @@ function updateCSV() {
 
 	// Print to Console (no header check unless -t passed)
 	if (process.argv.includes('-t')) {
-		console.log('Commit,Timestamp,Category,Passed,Failed,Skipped');
+		console.log('Commit,Timestamp,Category,Passed,Failed,Skipped,Unknown');
 	}
 
 	if (entries.length > 0) {
 		entries.forEach((e) => {
-			console.log(`${commit},${timestamp},${e.category},${e.passed},${e.failed},${e.skipped || 0}`);
+			console.log(
+				`${commit},${timestamp},${e.category},${e.passed},${e.failed},${e.skipped || 0},${
+					e.unknown || 0
+				}`
+			);
 		});
 	} else {
 		console.error('No logs found to process.');
