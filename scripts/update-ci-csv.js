@@ -92,6 +92,13 @@ function updateCSV() {
   const asyncStats = processLog('Async', 'async.log', parsePlaywrightLog);
   if (asyncStats) entries.push({ category: 'Async', ...asyncStats });
 
+  // Others via Vitest (Adapter tests) and Playwright (E2E)
+  // others.log contains mix of Vitest and Playwright output.
+  // We'll simplisticly try both or just regex for "failed" lines if simpler.
+  // For now let's reuse parsePlaywrightLog as it's generic enough for "X passed" lines
+  const othersStats = processLog('Others', 'others.log', parsePlaywrightLog);
+  if (othersStats) entries.push({ category: 'Others', ...othersStats });
+
   // Print to Console (no header, append-friendly)
   if (entries.length > 0) {
       entries.forEach(e => {

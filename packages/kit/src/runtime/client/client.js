@@ -746,8 +746,7 @@ async function load_node({ loader, parent, url, params, route, server_data_node 
 		search_params: new Set()
 	};
 
-	/** @type {import('types').CSRPageNode} */
-	const node = loader ? await loader() : /** @type {any} */ ({ component: null, universal: null });
+	const node = await loader();
 
 	if (DEV) {
 		validate_page_exports(node.universal);

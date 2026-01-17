@@ -42,6 +42,10 @@ jobs:
           pnpm install
           npx playwright install --with-deps
 
+      - name: Sync SvelteKit
+        working-directory: website-template-svkit-v2-legacy
+        run: pnpm run prepare
+
       - name: Run E2E Tests (Builds & Previews)
         working-directory: website-template-svkit-v2-legacy
         run: pnpm test
