@@ -25,6 +25,9 @@ export default [
 	{
 		ignores: [
 			'**/.svelte-kit',
+			'**/.netlify',
+			'**/test/apps/**/.netlify',
+			'**/test/apps/**/packages',
 			'**/.wrangler',
 			'**/test-results',
 			'**/build',

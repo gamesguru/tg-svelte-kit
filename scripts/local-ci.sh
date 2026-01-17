@@ -23,7 +23,12 @@ export PATH="$ROOT_DIR/node_modules/.bin:$PATH"
 
 # Ensure log directory exists
 CI_ROOT="$ROOT_DIR/.tmp/ci-logs"
-TIMESTAMP=$(date +%s)
+if [ -n "$2" ]; then
+	TIMESTAMP="$2"
+	echo "Resuming/Overwriting CI Run ID: $TIMESTAMP"
+else
+	TIMESTAMP=$(date +%s)
+fi
 LOG_DIR="$CI_ROOT/$TIMESTAMP"
 mkdir -p "$LOG_DIR"
 
@@ -65,7 +70,7 @@ run_step() {
 	log_step "$name"
 	echo "$ $cmd"
 
-	if eval "$cmd"; then
+	if (eval "$cmd"); then
 		log_success "$name passed"
 		RESULTS["$name"]="✓"
 	else
@@ -230,7 +235,126 @@ if [ -z "$1" ]; then
 	exit 0
 fi
 
+# restart a run by timestamp. Combined with the ID override, i.e., restart from kit onwards:
+#   ./scripts/local-ci.sh kit.. 1768617476
+
 MODE="$1"
+
+ALL_STEPS=(lint check kit cross ssrr async others legacy)
+
+# Check for range syntax (start..end or start..)
+if [[ "$MODE" == *".."* ]]; then
+	START_STEP="${MODE%..*}"
+	END_STEP="${MODE#*..}"
+
+	# Validate start step
+	FOUND_START=false
+	for i in "${!ALL_STEPS[@]}"; do
+		if [[ "${ALL_STEPS[$i]}" == "$START_STEP" ]]; then
+			START_IDX=$i
+			FOUND_START=true
+			break
+		fi
+	done
+
+	if [ "$FOUND_START" = false ]; then
+		log_error "Invalid start step: $START_STEP"
+		print_usage
+		exit 1
+	fi
+
+	# Validate end step (if provided)
+	if [ -n "$END_STEP" ] && [ "$END_STEP" != "END" ]; then
+		FOUND_END=false
+		for i in "${!ALL_STEPS[@]}"; do
+			if [[ "${ALL_STEPS[$i]}" == "$END_STEP" ]]; then
+				END_IDX=$i
+				FOUND_END=true
+				break
+			fi
+		done
+
+		if [ "$FOUND_END" = false ]; then
+			log_error "Invalid end step: $END_STEP"
+			print_usage
+			exit 1
+		fi
+	else
+		# Default to last step
+		END_IDX=$((${#ALL_STEPS[@]} - 1))
+	fi
+
+	if [ "$START_IDX" -gt "$END_IDX" ]; then
+		log_error "Start step cannot be after end step"
+		exit 1
+	fi
+
+	echo "Running steps: ${ALL_STEPS[*]:$START_IDX:$((END_IDX - START_IDX + 1))}"
+
+	# Run the range
+	for ((i = START_IDX; i <= END_IDX; i++)); do
+		STEP="${ALL_STEPS[$i]}"
+		MODE="$STEP"
+		# We need to set up deps once if we skip earlier steps?
+		# Actually each 'do_step' or case usually calls ensure_deps.
+		# We can just jump to the case block handling for single item?
+		# But 'case' logic is below. We should likely loop and call logic.
+		# But 'ensure_deps' etc are inside case blocks.
+		# Refactoring: Extract case logic or recursively call self?
+		# Recursive call might be easiest but spawns processes.
+		# Better: extract execution logic.
+
+		# Simpler approach: Iterate and match case logic manually or refactor.
+		# Since I am replacing the 'case' block start... wait.
+		# I am inserting BEFORE the case block.
+		# If I execute here, I should EXIT after loop.
+
+		case "$STEP" in
+		lint)
+			ensure_deps
+			do_lint
+			;;
+		check)
+			ensure_deps
+			do_check
+			;;
+		kit)
+			ensure_deps
+			ensure_playwright
+			pnpm run sync-all
+			do_kit
+			;;
+		cross)
+			ensure_deps
+			ensure_playwright
+			pnpm run sync-all
+			do_cross
+			;;
+		ssrr)
+			ensure_deps
+			ensure_playwright
+			pnpm run sync-all
+			do_ssrr
+			;;
+		async)
+			ensure_deps
+			ensure_playwright
+			pnpm run sync-all
+			do_async
+			;;
+		others)
+			ensure_deps
+			pnpm run sync-all 2>/dev/null || true
+			do_others
+			;;
+		legacy)
+			ensure_deps
+			do_legacy
+			;;
+		esac
+	done
+	exit 0
+fi
 
 case "$MODE" in
 quick)
