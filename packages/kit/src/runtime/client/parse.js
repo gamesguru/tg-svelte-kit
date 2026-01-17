@@ -60,6 +60,7 @@ export function parse({ nodes, server_loads, dictionary, matchers }) {
 /**
  * @param {import('types').CSRRouteServer} input
  * @param {import('types').CSRPageNodeLoader[]} app_nodes Will be modified if a new node is loaded that's not already in the array
+ * @param {Record<string, (param: string) => boolean>} matchers
  * @returns {import('types').CSRRoute}
  */
 export function parse_server_route({ nodes, id, leaf, layouts, errors }, app_nodes, matchers) {
